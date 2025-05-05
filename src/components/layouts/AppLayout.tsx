@@ -148,8 +148,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 OA
               </div>
               <div className="overflow-hidden">
-                <div className="font-medium text-gray-900 truncate">Oluwaseun Adeyemi</div>
-                <div className="text-sm text-indigo-600 font-medium">Premium Plan</div>
+                <button
+                  onClick={() => navigate('/')}
+                  className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2"
+                >
+                  <Home className="h-5 w-5" />
+                  <span>Back to Landing Page</span>
+                </button>
               </div>
             </div>
           </div>
