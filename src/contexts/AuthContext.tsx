@@ -72,8 +72,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    console.log('AuthContext: Starting auth initialization...');
     let mounted = true;
-    let initTimeout: NodeJS.Timeout;
 
     const initializeAuth = async () => {
       console.log('AuthContext: Initializing auth, attempt', initAttempts + 1);
@@ -85,17 +85,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (sessionError) {
           console.error('AuthContext: Session error:', sessionError);
           if (initAttempts < MAX_INIT_ATTEMPTS) {
-            setInitAttempts(prev => prev + 1);
-            console.log(`AuthContext: Retrying in 2 seconds (attempt ${initAttempts + 1}/${MAX_INIT_ATTEMPTS})`);
-            initTimeout = setTimeout(initializeAuth, 2000);
+            setTimeout(() => {
+              if (mounted) {
+                setInitAttempts(prev => prev + 1);
+                initializeAuth();
+              }
+            }, 2000);
           } else {
             console.error('AuthContext: Max init attempts reached');
+            if (mounted) {
+              setLoading(false);
+              setInitialized(true);
+            }
           }
           throw sessionError;
         }
         
         console.log('AuthContext: Session result:', initialSession ? 'has session' : 'no session');
-        if (mounted) setSession(initialSession);
+        if (mounted) {
+          setSession(initialSession);
+        }
         
         if (initialSession?.user && mounted) {
           console.log('AuthContext: Got user from session', initialSession.user.id);
@@ -119,7 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } finally {
         if (mounted) {
-          console.log('AuthContext: Auth initialization complete');
+          console.log('AuthContext: Auth initialization complete, setting loading to false');
           setLoading(false);
           setInitialized(true);
         }
@@ -158,6 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
         
+        // Always update loading state
         if (mounted) {
           console.log('AuthContext: Setting loading to false after auth state change');
           setLoading(false);
@@ -168,10 +178,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       console.log('AuthContext: Cleaning up auth context');
       mounted = false;
-      clearTimeout(initTimeout);
       subscription.unsubscribe();
     };
-  }, [initAttempts]);
+  }, [initAttempts, fetchProfile]);
 
   const handleSignOut = async () => {
     try {

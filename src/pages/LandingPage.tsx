@@ -18,13 +18,8 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    console.log("LandingPage: Mounted, auth state:", { user: !!user, loading });
-    
-    // Only auto-redirect after auth is fully initialized
-    if (!loading && user) {
-      console.log("LandingPage: User already logged in, redirecting to dashboard");
-      navigate('/dashboard');
-    }
+    console.log("LandingPage: Auth state:", { user: !!user, loading });
+    // This redirect is now handled at the route level in App.tsx
   }, [user, loading, navigate]);
 
   console.log("LandingPage: Rendering");

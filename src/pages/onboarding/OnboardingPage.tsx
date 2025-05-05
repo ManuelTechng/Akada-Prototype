@@ -187,8 +187,16 @@ const OnboardingPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Final validation before submission
-    if (!validateStep(step)) {
+    // Validate current step before proceeding
+    if (step < totalSteps) {
+      if (validateStep(step)) {
+        nextStep();
+      }
+      return;
+    }
+    
+    // For the final step, validate before submission
+    if (step === totalSteps && !validateStep(step)) {
       console.log('OnboardingPage: Final validation failed');
       return;
     }
@@ -644,32 +652,34 @@ const OnboardingPage: React.FC = () => {
               {step === 4 && renderBudgetStep()}
               
               <div className="flex justify-between mt-8 pt-5 border-t border-gray-200">
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  disabled={step === 1 || loading}
-                  className={`${
-                    step === 1 ? 'invisible' : ''
-                  } inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                    loading ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                >
-                  Previous
-                </button>
-                <button
-                  type={step === totalSteps ? "submit" : "button"}
-                  disabled={loading}
-                  className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                    loading ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
-                >
-                  {loading ? 'Processing...' : step === totalSteps ? 'Complete Setup' : (
-                    <>
-                      Continue
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </button>
+                <div className="flex justify-between w-full">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    disabled={step === 1 || loading}
+                    className={`${
+                      step === 1 ? 'invisible' : ''
+                    } inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                      loading ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                      loading ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {loading ? 'Processing...' : step === totalSteps ? 'Complete Setup' : (
+                      <>
+                        Continue
+                        <ChevronRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

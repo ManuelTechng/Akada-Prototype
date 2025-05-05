@@ -21,63 +21,17 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import OnboardingPage from './pages/onboarding/OnboardingPage';
 import { useAuth } from './contexts/AuthContext';
 
-// Protected route component
-const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
-
-  // Only show loading state if we've been loading for more than 500ms
-  const [showLoading, setShowLoading] = useState(false);
-  
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (loading) {
-      timeout = setTimeout(() => setShowLoading(true), 500);
-    } else {
-      setShowLoading(false);
-    }
-    return () => clearTimeout(timeout);
-  }, [loading]);
-
-  if (loading && showLoading) {
-    console.log("PrivateRoute: Loading...");
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  console.log("PrivateRoute: User:", user ? "authenticated" : "not authenticated");
-  return user ? <>{children}</> : <Navigate to="/login" />;
-};
-
 function AppRoutes() {
-  const { user, loading } = useAuth();
+  const { user, loading, initialized } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
-  
-  // Simplified loading state - only use a single loading indicator with delay
-  const [showLoadingUI, setShowLoadingUI] = useState(false);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    
-    console.log("AppRoutes: Auth loading state changed:", loading);
-    
-    // Only show loading UI if auth loading takes more than 500ms
-    if (loading) {
-      timeout = setTimeout(() => setShowLoadingUI(true), 500);
-    } else {
-      setShowLoadingUI(false);
-    }
-    
-    return () => clearTimeout(timeout);
-  }, [loading]);
+    console.log("AppRoutes: Auth state", { user: !!user, loading, initialized });
+  }, [loading, initialized, user]);
 
-  if (loading && showLoadingUI) {
-    console.log("AppRoutes: Loading UI...");
+  // Only show loading UI if auth is still initializing after the timeout
+  if (loading && !initialized) {
+    console.log("AppRoutes: Showing loading UI");
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="text-center">
@@ -88,39 +42,44 @@ function AppRoutes() {
     );
   }
 
-  console.log("AppRoutes: User:", user ? "authenticated" : "not authenticated");
-
+  console.log("AppRoutes: Rendering routes", { isAuthenticated: !!user });
+  
+  // If auth is initialized but we're still loading, don't render anything
+  if (loading && initialized) {
+    return null;
+  }
+  
   return (
     <Router>
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
       <Routes>
         <Route path="/" element={
-          <>
-            <LandingPage />
-            <AppDrawerButton onAuthClick={() => setShowAuth(true)} />
-          </>
+          user ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <>
+              <LandingPage />
+              <AppDrawerButton onAuthClick={() => setShowAuth(true)} />
+            </>
+          )
         } />
         
         {/* Auth Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
+        <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <SignupPage />} />
+        <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPasswordPage />} />
         <Route path="/auth/callback" element={<Navigate to="/dashboard" />} />
         
         {/* Onboarding Routes */}
         <Route path="/onboarding" element={
-          <PrivateRoute>
-            <OnboardingPage />
-          </PrivateRoute>
+          !user ? <Navigate to="/login" replace /> : <OnboardingPage />
         } />
         
-        {/* App Routes - FIXED: using nested routes properly */}
+        {/* App Routes */}
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
-              <AppLayout />
-            </PrivateRoute>
+            !user ? <Navigate to="/login" replace /> : <AppLayout />
           }
         >
           <Route index element={<Dashboard />} />
@@ -141,12 +100,10 @@ function AppRoutes() {
 }
 
 function App() {
-  console.log("App: Initializing...");
   return (
     <ErrorBoundary>
       <AuthProvider>
         <NotificationProvider>
-          {console.log("App: Providers mounted")}
           <AppRoutes />
         </NotificationProvider>
       </AuthProvider>
