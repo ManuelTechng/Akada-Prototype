@@ -1,0 +1,21 @@
+For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.
+
+By default, this template supports JSX syntax with Tailwind CSS classes, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.
+
+Use icons from lucide-react for logos.
+
+- Project-Specific Instructions for Bolt
+Design Aesthetics and Cultural Relevance
+Create web pages that are visually beautiful, unique, and culturally significant, steering clear of generic or cookie-cutter templates. Designs should be modern, professional, and tailored to the project’s specific context. Incorporate high-quality images of African students to enhance cultural relevance and connect with the target audience. Use distinctive design elements—such as custom layouts, typography, or color schemes—that reflect the project’s identity and elevate the user experience.
+
+- Functionality and Production-Readiness
+Ensure all designs are fully featured, interactive, and production-ready. Web pages should include responsive layouts, smooth transitions, and intuitive navigation, optimized for both desktop and mobile devices. Focus on creating a seamless and engaging user experience that meets real-world usability standards.
+
+- Technical Guidelines
+Use JSX syntax with Tailwind CSS classes for styling, React hooks for state management, and Lucide React for icons. Avoid installing additional packages for UI themes, icons, or other dependencies unless absolutely necessary or explicitly requested. For logos and icons, rely exclusively on Lucide React. Leverage Tailwind’s utility-first approach to keep designs lightweight and performant.
+
+- Content and Imagery
+Prioritize the inclusion of images featuring African students to ensure the designs resonate culturally with the project’s audience. These images should be ethically sourced, high-resolution, and relevant to the project’s goals. Avoid generic stock imagery that doesn’t align with the specified cultural focus.
+
+- Performance Considerations
+Optimize designs for fast load times and efficiency, ensuring compatibility with varying network conditions. Use Tailwind’s Just-In-Time (JIT) compiler to eliminate unused styles and maintain a lean codebase. Minimize reliance on heavy assets or external dependencies to keep the project production-ready.
