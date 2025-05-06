@@ -1113,16 +1113,6 @@ const ProfileSettings: React.FC = () => {
             {/* Main Content */}
             <div className="md:col-span-3">
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                {isEditing && (
-                  <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center">
-                    <User className="h-5 w-5 flex-shrink-0 mr-2" />
-                    <div>
-                      <p className="font-medium">Edit mode active</p>
-                      <p className="text-sm text-blue-600">Make your changes, then click "Save Changes" when done.</p>
-                    </div>
-                  </div>
-                )}
-                
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   {activeSection === 'personal' && 'Personal Information'}
                   {activeSection === 'academic' && 'Academic Information'}

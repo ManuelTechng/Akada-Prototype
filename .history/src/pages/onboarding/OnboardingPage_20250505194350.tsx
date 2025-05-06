@@ -158,26 +158,6 @@ const OnboardingPage: React.FC = () => {
       if (!formData.study_preferences.start_date) {
         errors['study_preferences.start_date'] = 'Please select a preferred start date';
       }
-    } else if (currentStep === 5) {
-      // Personal Information validation
-      if (!formData.phone_number.trim()) {
-        errors['phone_number'] = 'Phone number is required';
-      }
-      if (!formData.address_line1.trim()) {
-        errors['address_line1'] = 'Address Line 1 is required';
-      }
-      if (!formData.city.trim()) {
-        errors['city'] = 'City is required';
-      }
-      if (!formData.state_province.trim()) {
-        errors['state_province'] = 'State/Province is required';
-      }
-      if (!formData.postal_code.trim()) {
-        errors['postal_code'] = 'Postal/Zip Code is required';
-      }
-      if (!formData.country.trim()) {
-        errors['country'] = 'Country is required';
-      }
     }
     
     if (Object.keys(errors).length > 0) {
@@ -651,200 +631,6 @@ const OnboardingPage: React.FC = () => {
       </div>
     </div>
   );
-
-  const renderPersonalInfoStep = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
-        <p className="mt-1 text-sm text-gray-500">
-          Tell us how to contact you and where you're currently located.
-        </p>
-      </div>
-
-      <div>
-        <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
-          Phone Number <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="tel"
-          id="phone_number"
-          name="phone_number"
-          value={formData.phone_number}
-          onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('phone_number') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-          placeholder="e.g., +234 801 234 5678"
-        />
-        {hasError('phone_number') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('phone_number')}</p>
-        )}
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="address_line1" className="block text-sm font-medium text-gray-700">
-            Address Line 1 <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="address_line1"
-            name="address_line1"
-            value={formData.address_line1}
-            onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('address_line1') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-            placeholder="Street address, P.O. box, etc."
-          />
-          {hasError('address_line1') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('address_line1')}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="address_line2" className="block text-sm font-medium text-gray-700">
-            Address Line 2
-          </label>
-          <input
-            type="text"
-            id="address_line2"
-            name="address_line2"
-            value={formData.address_line2}
-            onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('address_line2') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-            placeholder="Apartment, suite, unit, building, floor, etc."
-          />
-          {hasError('address_line2') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('address_line2')}</p>
-          )}
-          <p className="mt-1 text-xs text-gray-500">Optional</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-            City <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('city') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-            placeholder="e.g., Lagos"
-          />
-          {hasError('city') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('city')}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="state_province" className="block text-sm font-medium text-gray-700">
-            State/Province <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="state_province"
-            name="state_province"
-            value={formData.state_province}
-            onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('state_province') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-            placeholder="e.g., Lagos State"
-          />
-          {hasError('state_province') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('state_province')}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700">
-            Postal/Zip Code <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="postal_code"
-            name="postal_code"
-            value={formData.postal_code}
-            onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('postal_code') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-            placeholder="e.g., 100001"
-          />
-          {hasError('postal_code') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('postal_code')}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-            Country <span className="text-red-500">*</span>
-          </label>
-          <select
-            id="country"
-            name="country"
-            value={formData.country}
-            onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('country') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-          >
-            <option value="">Select a country</option>
-            <option value="Nigeria">Nigeria</option>
-            <option value="Ghana">Ghana</option>
-            <option value="Kenya">Kenya</option>
-            <option value="South Africa">South Africa</option>
-            <option value="USA">United States</option>
-            <option value="UK">United Kingdom</option>
-            <option value="Canada">Canada</option>
-            <option value="Australia">Australia</option>
-            <option value="Germany">Germany</option>
-            <option value="France">France</option>
-            <option value="China">China</option>
-            <option value="India">India</option>
-            <option value="Japan">Japan</option>
-          </select>
-          {hasError('country') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('country')}</p>
-          )}
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700">
-          Date of Birth
-        </label>
-        <input
-          type="date"
-          id="date_of_birth"
-          name="date_of_birth"
-          value={formData.date_of_birth}
-          onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('date_of_birth') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-        />
-        {hasError('date_of_birth') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('date_of_birth')}</p>
-        )}
-        <p className="mt-1 text-xs text-gray-500">Optional</p>
-      </div>
-
-      <div>
-        <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
-          Bio / Personal Statement
-        </label>
-        <textarea
-          id="bio"
-          name="bio"
-          rows={4}
-          value={formData.bio}
-          onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('bio') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
-          placeholder="Tell us a bit about yourself..."
-        />
-        {hasError('bio') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('bio')}</p>
-        )}
-        <p className="mt-1 text-xs text-gray-500">Optional</p>
-      </div>
-    </div>
-  );
   
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -923,7 +709,6 @@ const OnboardingPage: React.FC = () => {
               {step === 2 && renderTestScoresStep()}
               {step === 3 && renderStudyPreferencesStep()}
               {step === 4 && renderBudgetStep()}
-              {step === 5 && renderPersonalInfoStep()}
               
               <div className="flex justify-between mt-8 pt-5 border-t border-gray-200">
                 <div className="flex justify-between w-full">
@@ -965,8 +750,7 @@ const OnboardingPage: React.FC = () => {
               step === 1 ? 'Educational Background' : 
               step === 2 ? 'Test Scores' : 
               step === 3 ? 'Study Preferences' :
-              step === 4 ? 'Budget & Timeline' :
-              'Personal Information'
+              'Budget & Timeline'
             }
           </p>
         </div>

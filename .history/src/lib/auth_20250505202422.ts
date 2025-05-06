@@ -76,7 +76,7 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
     // Insert the new profile into the database
     console.log('Creating new profile with data:', newProfile);
     
-    // Use the Supabase client directly instead of manual fetch
+    // Use the Supabase client instead of direct fetch to avoid abort signal issues
     const { data: insertedData, error: insertError } = await supabase
       .from('user_profiles')
       .insert([newProfile])
@@ -235,11 +235,13 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
       throw new Error(`Error checking profile: ${fetchError.message}`);
     }
     
-    // Sanitize input to ensure proper JSON structure
-    const cleanProfile = sanitizeProfileData(profile);
+    let result;
     
     if (existingProfile) {
       console.log('Existing profile found, updating...');
+      
+      // Sanitize input to ensure proper JSON structure
+      const cleanProfile = sanitizeProfileData(profile);
       
       // Create a properly formatted update object - including new fields
       const formattedProfile = {
@@ -266,21 +268,25 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
       
       console.log('Sending formatted profile data:', JSON.stringify(formattedProfile, null, 2));
       
-      // Use Supabase client instead of direct fetch
-      const { data: updatedData, error: updateError } = await supabase
-        .from('user_profiles')
-        .update(formattedProfile)
-        .eq('id', userId)
-        .select()
-        .single();
+      // Use direct fetch with explicit Content-Type header instead of Supabase client
+      const response = await fetch(`${supabase.supabaseUrl}/rest/v1/user_profiles?id=eq.${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabase.supabaseKey,
+          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(formattedProfile)
+      });
       
-      if (updateError) {
-        console.error('Error updating profile:', updateError);
-        throw updateError;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response from server:', response.status, errorText);
+        throw new Error(`Failed to update profile: ${response.status} ${errorText}`);
       }
       
-      console.log('Profile updated successfully:', updatedData);
-      return updatedData;
+      result = await response.json();
       
     } else {
       console.log('No existing profile found, inserting new profile...');
@@ -293,12 +299,15 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
         throw new Error('Could not retrieve user information');
       }
       
+      // Sanitize input to ensure proper JSON structure
+      const cleanProfile = sanitizeProfileData(profile);
+      
       // Create a new profile with all required fields
       const newProfile = {
         id: userId,
         email: userData.user.email || '',
-        full_name: userData.user.user_metadata?.full_name || cleanProfile.full_name || 'User',
-        education_level: userData.user.user_metadata?.education_level || cleanProfile.education_level || 'Not specified',
+        full_name: userData.user.user_metadata?.full_name || 'User',
+        education_level: userData.user.user_metadata?.education_level || 'Not specified',
         current_university: cleanProfile.current_university || '',
         field_of_study: cleanProfile.field_of_study || '',
         gpa: cleanProfile.gpa || null,
@@ -330,21 +339,29 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
       
       console.log('Sending new profile data:', JSON.stringify(newProfile, null, 2));
       
-      // Use Supabase client instead of direct fetch
-      const { data: insertedData, error: insertError } = await supabase
-        .from('user_profiles')
-        .insert([newProfile])
-        .select()
-        .single();
+      // Use direct fetch with explicit Content-Type header instead of Supabase client
+      const response = await fetch(`${supabase.supabaseUrl}/rest/v1/user_profiles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabase.supabaseKey,
+          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify([newProfile]) // Must be an array for POST
+      });
       
-      if (insertError) {
-        console.error('Error creating profile:', insertError);
-        throw insertError;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response from server:', response.status, errorText);
+        throw new Error(`Failed to create profile: ${response.status} ${errorText}`);
       }
       
-      console.log('Profile created successfully:', insertedData);
-      return insertedData;
+      result = await response.json();
     }
+    
+    console.log('Profile updated successfully:', result);
+    return result;
   } catch (error) {
     console.error('Error updating user profile:', error);
     throw error;

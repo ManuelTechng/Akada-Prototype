@@ -60,34 +60,6 @@ const ProfileSettings: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
-
-  // Initialize notification preferences state
-  const [notificationPrefs, setNotificationPrefs] = useState({
-    email: {
-      applicationUpdates: true,
-      deadlines: true,
-      documentReviews: true,
-      marketing: false
-    },
-    inApp: {
-      applicationUpdates: true,
-      newMessages: true,
-      systemAnnouncements: true
-    }
-  });
-
-  // Handle checkbox changes for notification preferences
-  const handleCheckboxChange = (section: 'email' | 'inApp', prefName: string, checked: boolean) => {
-    if (!isEditing) return;
-    
-    setNotificationPrefs(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [prefName]: checked
-      }
-    }));
-  };
   
   // For debugging - log what's coming from auth context
   useEffect(() => {
@@ -191,22 +163,6 @@ const ProfileSettings: React.FC = () => {
       [section]: {
         ...prev[section as keyof typeof prev],
         [field]: selectedValues
-      }
-    }));
-  };
-
-  const handleGREInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const field = name.split('.')[2]; // Get the GRE field name (verbal, quantitative, analytical)
-    
-    setFormData(prev => ({
-      ...prev,
-      test_scores: {
-        ...prev.test_scores,
-        gre: {
-          ...prev.test_scores.gre,
-          [field]: value
-        }
       }
     }));
   };
@@ -556,42 +512,10 @@ const ProfileSettings: React.FC = () => {
               type="text"
               name="test_scores.gre.verbal"
               value={formData.test_scores.gre.verbal}
-              onChange={handleGREInputChange}
+              onChange={handleInputChange}
               disabled={!isEditing}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
               placeholder="Verbal score"
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GRE Quantitative
-            </label>
-            <input
-              type="text"
-              name="test_scores.gre.quantitative"
-              value={formData.test_scores.gre.quantitative}
-              onChange={handleGREInputChange}
-              disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-              placeholder="Quantitative score"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GRE Analytical
-            </label>
-            <input
-              type="text"
-              name="test_scores.gre.analytical"
-              value={formData.test_scores.gre.analytical}
-              onChange={handleGREInputChange}
-              disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-              placeholder="Analytical score"
             />
           </div>
         </div>
@@ -795,8 +719,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.applicationUpdates}
-                onChange={(e) => handleCheckboxChange('email', 'applicationUpdates', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -812,8 +735,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.deadlines}
-                onChange={(e) => handleCheckboxChange('email', 'deadlines', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -829,8 +751,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.documentReviews}
-                onChange={(e) => handleCheckboxChange('email', 'documentReviews', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -846,8 +767,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.marketing}
-                onChange={(e) => handleCheckboxChange('email', 'marketing', e.target.checked)}
+                checked={false}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -868,8 +788,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.inApp.applicationUpdates}
-                onChange={(e) => handleCheckboxChange('inApp', 'applicationUpdates', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -885,8 +804,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.inApp.newMessages}
-                onChange={(e) => handleCheckboxChange('inApp', 'newMessages', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -902,8 +820,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.inApp.systemAnnouncements}
-                onChange={(e) => handleCheckboxChange('inApp', 'systemAnnouncements', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -1113,16 +1030,6 @@ const ProfileSettings: React.FC = () => {
             {/* Main Content */}
             <div className="md:col-span-3">
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                {isEditing && (
-                  <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center">
-                    <User className="h-5 w-5 flex-shrink-0 mr-2" />
-                    <div>
-                      <p className="font-medium">Edit mode active</p>
-                      <p className="text-sm text-blue-600">Make your changes, then click "Save Changes" when done.</p>
-                    </div>
-                  </div>
-                )}
-                
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   {activeSection === 'personal' && 'Personal Information'}
                   {activeSection === 'academic' && 'Academic Information'}

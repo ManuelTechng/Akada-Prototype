@@ -8,93 +8,16 @@ const MAX_RETRIES = 3;
 // Helper function to get user profile
 export const getUserProfile = async (userId: string): Promise<UserProfile | null> => {
   try {
-    console.log('Getting profile for user:', userId);
-    
-    // First try to get existing profile
     const { data, error } = await supabase
       .from('user_profiles')
       .select('*')
       .eq('id', userId)
       .single();
 
-    // If profile exists, return it
-    if (data) {
-      console.log('Found existing profile:', data);
-      return data;
-    }
-    
-    // If error is anything other than "not found", throw it
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error fetching profile:', error);
-      throw error;
-    }
-    
-    // No profile found, we need to create one from the user's metadata
-    console.log('No profile found, creating new profile from user metadata');
-    
-    // Get user data from auth
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    
-    if (userError || !userData?.user) {
-      console.error('Error getting user data for profile creation:', userError);
-      throw new Error('Could not retrieve user information');
-    }
-    
-    // Create a basic profile using auth metadata
-    const newProfile = {
-      id: userId,
-      email: userData.user.email || '',
-      full_name: userData.user.user_metadata?.full_name || 'User',
-      education_level: userData.user.user_metadata?.education_level || 'Not specified',
-      current_university: '',
-      field_of_study: '',
-      gpa: null,
-      phone_number: '',
-      address_line1: '',
-      address_line2: '',
-      city: '',
-      state_province: '',
-      postal_code: '',
-      country: '',
-      date_of_birth: '',
-      bio: '',
-      test_scores: { 
-        ielts: '', 
-        toefl: '', 
-        gre: { verbal: '', quantitative: '', analytical: '' } 
-      },
-      study_preferences: {
-        countries: [],
-        max_tuition: '',
-        program_type: [],
-        start_date: ''
-      },
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    // Insert the new profile into the database
-    console.log('Creating new profile with data:', newProfile);
-    
-    // Use the Supabase client directly instead of manual fetch
-    const { data: insertedData, error: insertError } = await supabase
-      .from('user_profiles')
-      .insert([newProfile])
-      .select()
-      .single();
-    
-    if (insertError) {
-      console.error('Error creating initial profile:', insertError);
-      throw insertError;
-    }
-    
-    console.log('Initial profile created successfully:', insertedData);
-    
-    // Return the newly created profile
-    return insertedData || newProfile;
-    
+    if (error) throw error;
+    return data;
   } catch (error) {
-    console.error('Error getting/creating user profile:', error);
+    console.error('Error getting user profile:', error);
     return null;
   }
 };
@@ -235,13 +158,15 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
       throw new Error(`Error checking profile: ${fetchError.message}`);
     }
     
-    // Sanitize input to ensure proper JSON structure
-    const cleanProfile = sanitizeProfileData(profile);
+    let result;
     
     if (existingProfile) {
       console.log('Existing profile found, updating...');
       
-      // Create a properly formatted update object - including new fields
+      // Sanitize input to ensure proper JSON structure
+      const cleanProfile = sanitizeProfileData(profile);
+      
+      // Create a properly formatted update object
       const formattedProfile = {
         full_name: cleanProfile.full_name,
         email: cleanProfile.email || existingProfile.email,
@@ -249,16 +174,6 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
         current_university: cleanProfile.current_university,
         field_of_study: cleanProfile.field_of_study,
         gpa: cleanProfile.gpa,
-        // Include new profile fields
-        phone_number: cleanProfile.phone_number,
-        address_line1: cleanProfile.address_line1,
-        address_line2: cleanProfile.address_line2,
-        city: cleanProfile.city,
-        state_province: cleanProfile.state_province,
-        postal_code: cleanProfile.postal_code,
-        country: cleanProfile.country,
-        date_of_birth: cleanProfile.date_of_birth,
-        bio: cleanProfile.bio,
         test_scores: cleanProfile.test_scores ? cleanProfile.test_scores : existingProfile.test_scores,
         study_preferences: cleanProfile.study_preferences ? cleanProfile.study_preferences : existingProfile.study_preferences,
         updated_at: new Date().toISOString()
@@ -266,21 +181,25 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
       
       console.log('Sending formatted profile data:', JSON.stringify(formattedProfile, null, 2));
       
-      // Use Supabase client instead of direct fetch
-      const { data: updatedData, error: updateError } = await supabase
-        .from('user_profiles')
-        .update(formattedProfile)
-        .eq('id', userId)
-        .select()
-        .single();
+      // Use direct fetch with explicit Content-Type header instead of Supabase client
+      const response = await fetch(`${supabase.supabaseUrl}/rest/v1/user_profiles?id=eq.${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabase.supabaseKey,
+          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(formattedProfile)
+      });
       
-      if (updateError) {
-        console.error('Error updating profile:', updateError);
-        throw updateError;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response from server:', response.status, errorText);
+        throw new Error(`Failed to update profile: ${response.status} ${errorText}`);
       }
       
-      console.log('Profile updated successfully:', updatedData);
-      return updatedData;
+      result = await response.json();
       
     } else {
       console.log('No existing profile found, inserting new profile...');
@@ -293,26 +212,18 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
         throw new Error('Could not retrieve user information');
       }
       
+      // Sanitize input to ensure proper JSON structure
+      const cleanProfile = sanitizeProfileData(profile);
+      
       // Create a new profile with all required fields
       const newProfile = {
         id: userId,
         email: userData.user.email || '',
-        full_name: userData.user.user_metadata?.full_name || cleanProfile.full_name || 'User',
-        education_level: userData.user.user_metadata?.education_level || cleanProfile.education_level || 'Not specified',
+        full_name: userData.user.user_metadata?.full_name || 'User',
+        education_level: userData.user.user_metadata?.education_level || 'Not specified',
         current_university: cleanProfile.current_university || '',
         field_of_study: cleanProfile.field_of_study || '',
         gpa: cleanProfile.gpa || null,
-        // New profile fields
-        phone_number: cleanProfile.phone_number || '',
-        address_line1: cleanProfile.address_line1 || '',
-        address_line2: cleanProfile.address_line2 || '',
-        city: cleanProfile.city || '',
-        state_province: cleanProfile.state_province || '',
-        postal_code: cleanProfile.postal_code || '',
-        country: cleanProfile.country || '',
-        date_of_birth: cleanProfile.date_of_birth || '',
-        bio: cleanProfile.bio || '',
-        // Existing fields
         test_scores: cleanProfile.test_scores || { 
           ielts: '', 
           toefl: '', 
@@ -330,21 +241,29 @@ export const updateUserProfile = async (userId: string, profile: Partial<UserPro
       
       console.log('Sending new profile data:', JSON.stringify(newProfile, null, 2));
       
-      // Use Supabase client instead of direct fetch
-      const { data: insertedData, error: insertError } = await supabase
-        .from('user_profiles')
-        .insert([newProfile])
-        .select()
-        .single();
+      // Use direct fetch with explicit Content-Type header instead of Supabase client
+      const response = await fetch(`${supabase.supabaseUrl}/rest/v1/user_profiles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabase.supabaseKey,
+          'Authorization': `Bearer ${supabase.supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify([newProfile]) // Must be an array for POST
+      });
       
-      if (insertError) {
-        console.error('Error creating profile:', insertError);
-        throw insertError;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response from server:', response.status, errorText);
+        throw new Error(`Failed to create profile: ${response.status} ${errorText}`);
       }
       
-      console.log('Profile created successfully:', insertedData);
-      return insertedData;
+      result = await response.json();
     }
+    
+    console.log('Profile updated successfully:', result);
+    return result;
   } catch (error) {
     console.error('Error updating user profile:', error);
     throw error;

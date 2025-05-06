@@ -18,26 +18,16 @@ import { useAuth } from '../../contexts/AuthContext';
 import { updateUserProfile } from '../../lib/auth';
 
 const ProfileSettings: React.FC = () => {
-  const { user, profile, refreshProfile } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { user, profile } = useAuth();
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
+    phone: '',
+    location: '',
     current_university: '',
     field_of_study: '',
     gpa: '',
     education_level: '',
-    // New profile fields
-    phone_number: '',
-    address_line1: '',
-    address_line2: '',
-    city: '',
-    state_province: '',
-    postal_code: '',
-    country: '',
-    date_of_birth: '',
-    bio: '',
-    // Existing fields
     test_scores: {
       ielts: '',
       toefl: '',
@@ -60,53 +50,11 @@ const ProfileSettings: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
-
-  // Initialize notification preferences state
-  const [notificationPrefs, setNotificationPrefs] = useState({
-    email: {
-      applicationUpdates: true,
-      deadlines: true,
-      documentReviews: true,
-      marketing: false
-    },
-    inApp: {
-      applicationUpdates: true,
-      newMessages: true,
-      systemAnnouncements: true
-    }
-  });
-
-  // Handle checkbox changes for notification preferences
-  const handleCheckboxChange = (section: 'email' | 'inApp', prefName: string, checked: boolean) => {
-    if (!isEditing) return;
-    
-    setNotificationPrefs(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [prefName]: checked
-      }
-    }));
-  };
   
   // For debugging - log what's coming from auth context
   useEffect(() => {
     console.log('ProfileSettings: User data from auth context:', { user, profile });
   }, [user, profile]);
-  
-  // Explicitly refresh profile data when component mounts
-  useEffect(() => {
-    const loadProfileData = async () => {
-      setLoading(true);
-      if (user) {
-        console.log('ProfileSettings: Explicitly refreshing profile data for user:', user.id);
-        await refreshProfile();
-      }
-      setLoading(false);
-    };
-    
-    loadProfileData();
-  }, [user, refreshProfile]);
   
   // Populate form with user data when available
   useEffect(() => {
@@ -115,21 +63,13 @@ const ProfileSettings: React.FC = () => {
       setFormData({
         full_name: profile.full_name || '',
         email: profile.email || (user?.email || ''),
-        education_level: profile.education_level || '',
+        // Use real data or fallback to empty string, no hardcoded placeholders
+        phone: profile.phone || '',
+        location: profile.location || '',
         current_university: profile.current_university || '',
         field_of_study: profile.field_of_study || '',
         gpa: profile.gpa?.toString() || '',
-        // New profile fields
-        phone_number: profile.phone_number || '',
-        address_line1: profile.address_line1 || '',
-        address_line2: profile.address_line2 || '',
-        city: profile.city || '',
-        state_province: profile.state_province || '',
-        postal_code: profile.postal_code || '',
-        country: profile.country || '',
-        date_of_birth: profile.date_of_birth || '',
-        bio: profile.bio || '',
-        // Existing fields
+        education_level: profile.education_level || '',
         test_scores: {
           ielts: profile.test_scores?.ielts || '',
           toefl: profile.test_scores?.toefl || '',
@@ -147,15 +87,13 @@ const ProfileSettings: React.FC = () => {
         }
       });
     } else if (user) {
-      // If we have a user but no profile, at least set the email and any metadata
+      // If we have a user but no profile, at least set the email
       setFormData(prev => ({
         ...prev,
         email: user.email || '',
-        full_name: user.user_metadata?.full_name || '',
-        education_level: user.user_metadata?.education_level || ''
+        full_name: user.user_metadata?.full_name || ''
       }));
     }
-    setLoading(false);
   }, [profile, user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -191,22 +129,6 @@ const ProfileSettings: React.FC = () => {
       [section]: {
         ...prev[section as keyof typeof prev],
         [field]: selectedValues
-      }
-    }));
-  };
-
-  const handleGREInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const field = name.split('.')[2]; // Get the GRE field name (verbal, quantitative, analytical)
-    
-    setFormData(prev => ({
-      ...prev,
-      test_scores: {
-        ...prev.test_scores,
-        gre: {
-          ...prev.test_scores.gre,
-          [field]: value
-        }
       }
     }));
   };
@@ -293,52 +215,18 @@ const ProfileSettings: React.FC = () => {
             </div>
             <input
               type="tel"
-              name="phone_number"
-              value={formData.phone_number}
+              name="phone"
+              value={formData.phone}
               onChange={handleInputChange}
               disabled={!isEditing}
               className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-              placeholder="+234 801 234 5678"
             />
           </div>
         </div>
         
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Date of Birth
-          </label>
-          <input
-            type="date"
-            name="date_of_birth"
-            value={formData.date_of_birth}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Bio / Personal Statement
-        </label>
-        <textarea
-          name="bio"
-          value={formData.bio}
-          onChange={handleInputChange}
-          disabled={!isEditing}
-          rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-          placeholder="Tell us a bit about yourself..."
-        />
-      </div>
-      
-      <h3 className="text-lg font-medium text-gray-900 mt-8 mb-4">Contact Address</h3>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Address Line 1
+            Location
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -346,99 +234,13 @@ const ProfileSettings: React.FC = () => {
             </div>
             <input
               type="text"
-              name="address_line1"
-              value={formData.address_line1}
+              name="location"
+              value={formData.location}
               onChange={handleInputChange}
               disabled={!isEditing}
               className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-              placeholder="Street address, P.O. box, etc."
             />
           </div>
-        </div>
-        
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Address Line 2
-          </label>
-          <input
-            type="text"
-            name="address_line2"
-            value={formData.address_line2}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-            placeholder="Apartment, suite, unit, building, floor, etc."
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            City
-          </label>
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            State / Province
-          </label>
-          <input
-            type="text"
-            name="state_province"
-            value={formData.state_province}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Postal / Zip Code
-          </label>
-          <input
-            type="text"
-            name="postal_code"
-            value={formData.postal_code}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Country
-          </label>
-          <select
-            name="country"
-            value={formData.country}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-          >
-            <option value="">Select a country</option>
-            <option value="Nigeria">Nigeria</option>
-            <option value="Ghana">Ghana</option>
-            <option value="Kenya">Kenya</option>
-            <option value="South Africa">South Africa</option>
-            <option value="USA">United States</option>
-            <option value="UK">United Kingdom</option>
-            <option value="Canada">Canada</option>
-            <option value="Australia">Australia</option>
-            <option value="Germany">Germany</option>
-            <option value="France">France</option>
-            <option value="China">China</option>
-            <option value="India">India</option>
-            <option value="Japan">Japan</option>
-          </select>
         </div>
       </div>
     </div>
@@ -556,42 +358,10 @@ const ProfileSettings: React.FC = () => {
               type="text"
               name="test_scores.gre.verbal"
               value={formData.test_scores.gre.verbal}
-              onChange={handleGREInputChange}
+              onChange={handleInputChange}
               disabled={!isEditing}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
               placeholder="Verbal score"
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GRE Quantitative
-            </label>
-            <input
-              type="text"
-              name="test_scores.gre.quantitative"
-              value={formData.test_scores.gre.quantitative}
-              onChange={handleGREInputChange}
-              disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-              placeholder="Quantitative score"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              GRE Analytical
-            </label>
-            <input
-              type="text"
-              name="test_scores.gre.analytical"
-              value={formData.test_scores.gre.analytical}
-              onChange={handleGREInputChange}
-              disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-              placeholder="Analytical score"
             />
           </div>
         </div>
@@ -795,8 +565,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.applicationUpdates}
-                onChange={(e) => handleCheckboxChange('email', 'applicationUpdates', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -812,8 +581,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.deadlines}
-                onChange={(e) => handleCheckboxChange('email', 'deadlines', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -829,8 +597,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.documentReviews}
-                onChange={(e) => handleCheckboxChange('email', 'documentReviews', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -846,8 +613,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.email.marketing}
-                onChange={(e) => handleCheckboxChange('email', 'marketing', e.target.checked)}
+                checked={false}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -868,8 +634,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.inApp.applicationUpdates}
-                onChange={(e) => handleCheckboxChange('inApp', 'applicationUpdates', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -885,8 +650,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.inApp.newMessages}
-                onChange={(e) => handleCheckboxChange('inApp', 'newMessages', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -902,8 +666,7 @@ const ProfileSettings: React.FC = () => {
               <input 
                 type="checkbox" 
                 className="sr-only peer" 
-                checked={notificationPrefs.inApp.systemAnnouncements}
-                onChange={(e) => handleCheckboxChange('inApp', 'systemAnnouncements', e.target.checked)}
+                checked={true}
                 disabled={!isEditing}
               />
               <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer ${isEditing ? 'peer-checked:bg-indigo-600' : 'peer-checked:bg-gray-400'} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
@@ -938,227 +701,215 @@ const ProfileSettings: React.FC = () => {
         <p className="text-gray-600">Manage your account settings and preferences</p>
       </div>
       
-      {/* Loading state */}
-      {loading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-10 mb-8 flex flex-col items-center justify-center">
-          <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
-          <p className="text-gray-600">Loading your profile data...</p>
-        </div>
-      ) : (
-        <>
-          {/* Profile Header */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl font-bold flex-shrink-0">
-                {formData.full_name ? formData.full_name.split(' ').map(name => name[0]).join('') : '?'}
+      {/* Profile Header */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+          <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl font-bold flex-shrink-0">
+            {formData.full_name.split(' ').map(name => name[0]).join('')}
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-xl font-bold text-gray-900 mb-1">{formData.full_name}</h2>
+            <p className="text-gray-600 mb-4">{formData.email}</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <span className="truncate">{formData.phone}</span>
               </div>
-              <div className="flex-1 text-center md:text-left">
-                <h2 className="text-xl font-bold text-gray-900 mb-1">{formData.full_name || 'Not provided'}</h2>
-                <p className="text-gray-600 mb-4">{formData.email || 'No email address'}</p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">{formData.current_university || 'Not provided'}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                    <span className="truncate capitalize">{formData.education_level || 'Not provided'}</span>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <span className="truncate">{formData.location}</span>
               </div>
-              <div className="flex flex-col gap-2">
-                {isEditing ? (
-                  <>
-                    <button
-                      onClick={handleSaveProfile}
-                      disabled={isSaving}
-                      className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:bg-indigo-400"
-                    >
-                      {isSaving ? (
-                        <>
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                          Saving...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-5 w-5" />
-                          Save Changes
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => setIsEditing(false)}
-                      disabled={isSaving}
-                      className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-500"
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <User className="h-5 w-5" />
-                    Edit Profile
-                  </button>
-                )}
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <span className="truncate">{formData.current_university || 'No university specified'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <span className="truncate capitalize">{formData.education_level || 'Education level not specified'}</span>
               </div>
             </div>
-            
-            {saveError && (
-              <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 flex-shrink-0" />
-                <span>{saveError}</span>
-              </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={isSaving}
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:bg-indigo-400"
+                >
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5" />
+                      Save Changes
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  disabled={isSaving}
+                  className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-500"
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <User className="h-5 w-5" />
+                Edit Profile
+              </button>
             )}
-            
-            {saveSuccess && (
-              <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 flex-shrink-0" />
-                <span>Profile updated successfully!</span>
-              </div>
-            )}
+          </div>
+        </div>
+        
+        {saveError && (
+          <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <span>{saveError}</span>
+          </div>
+        )}
+        
+        {saveSuccess && (
+          <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 flex-shrink-0" />
+            <span>Profile updated successfully!</span>
+          </div>
+        )}
+      </div>
+      
+      {/* Settings Tabs and Content */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Sidebar */}
+        <div className="md:col-span-1">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <nav className="space-y-1">
+              <button
+                onClick={() => setActiveSection('personal')}
+                className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
+                  activeSection === 'personal' 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <User className="h-5 w-5 flex-shrink-0" />
+                <span>Personal Information</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveSection('academic')}
+                className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
+                  activeSection === 'academic' 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <BookOpen className="h-5 w-5 flex-shrink-0" />
+                <span>Academic Information</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveSection('preferences')}
+                className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
+                  activeSection === 'preferences' 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <MapPin className="h-5 w-5 flex-shrink-0" />
+                <span>Study Preferences</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveSection('security')}
+                className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
+                  activeSection === 'security' 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Lock className="h-5 w-5 flex-shrink-0" />
+                <span>Security</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveSection('notifications')}
+                className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
+                  activeSection === 'notifications' 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Bell className="h-5 w-5 flex-shrink-0" />
+                <span>Notifications</span>
+              </button>
+              
+              <hr className="my-2 border-gray-200" />
+              
+              <button
+                className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="h-5 w-5 flex-shrink-0" />
+                <span>Sign Out</span>
+              </button>
+            </nav>
           </div>
           
-          {/* Settings Tabs and Content */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Sidebar */}
-            <div className="md:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <nav className="space-y-1">
-                  <button
-                    onClick={() => setActiveSection('personal')}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'personal' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <User className="h-5 w-5 flex-shrink-0" />
-                    <span>Personal Information</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => setActiveSection('academic')}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'academic' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <BookOpen className="h-5 w-5 flex-shrink-0" />
-                    <span>Academic Information</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => setActiveSection('preferences')}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'preferences' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <MapPin className="h-5 w-5 flex-shrink-0" />
-                    <span>Study Preferences</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => setActiveSection('security')}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'security' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Lock className="h-5 w-5 flex-shrink-0" />
-                    <span>Security</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => setActiveSection('notifications')}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'notifications' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Bell className="h-5 w-5 flex-shrink-0" />
-                    <span>Notifications</span>
-                  </button>
-                  
-                  <hr className="my-2 border-gray-200" />
-                  
-                  <button
-                    className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    <LogOut className="h-5 w-5 flex-shrink-0" />
-                    <span>Sign Out</span>
-                  </button>
-                </nav>
-              </div>
-              
-              <div className="bg-indigo-600 rounded-xl shadow-sm p-4 mt-4 text-white">
-                <h3 className="font-medium mb-2">Need Help?</h3>
-                <p className="text-sm text-indigo-200 mb-3">
-                  Our support team is here to assist you with any questions about your account settings.
-                </p>
-                <button className="w-full bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 transition-colors text-sm">
-                  Contact Support
+          <div className="bg-indigo-600 rounded-xl shadow-sm p-4 mt-4 text-white">
+            <h3 className="font-medium mb-2">Need Help?</h3>
+            <p className="text-sm text-indigo-200 mb-3">
+              Our support team is here to assist you with any questions about your account settings.
+            </p>
+            <button className="w-full bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 transition-colors text-sm">
+              Contact Support
+            </button>
+          </div>
+        </div>
+        
+        {/* Main Content */}
+        <div className="md:col-span-3">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              {activeSection === 'personal' && 'Personal Information'}
+              {activeSection === 'academic' && 'Academic Information'}
+              {activeSection === 'preferences' && 'Study Preferences'}
+              {activeSection === 'security' && 'Security Settings'}
+              {activeSection === 'notifications' && 'Notification Preferences'}
+            </h2>
+            
+            {renderActiveSection()}
+            
+            {isEditing && (
+              <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
+                <button
+                  onClick={handleSaveProfile}
+                  disabled={isSaving}
+                  className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 disabled:bg-indigo-400"
+                >
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Saving Changes...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5" />
+                      Save Changes
+                    </>
+                  )}
                 </button>
               </div>
-            </div>
-            
-            {/* Main Content */}
-            <div className="md:col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                {isEditing && (
-                  <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center">
-                    <User className="h-5 w-5 flex-shrink-0 mr-2" />
-                    <div>
-                      <p className="font-medium">Edit mode active</p>
-                      <p className="text-sm text-blue-600">Make your changes, then click "Save Changes" when done.</p>
-                    </div>
-                  </div>
-                )}
-                
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  {activeSection === 'personal' && 'Personal Information'}
-                  {activeSection === 'academic' && 'Academic Information'}
-                  {activeSection === 'preferences' && 'Study Preferences'}
-                  {activeSection === 'security' && 'Security Settings'}
-                  {activeSection === 'notifications' && 'Notification Preferences'}
-                </h2>
-                
-                {renderActiveSection()}
-                
-                {isEditing && (
-                  <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
-                    <button
-                      onClick={handleSaveProfile}
-                      disabled={isSaving}
-                      className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 disabled:bg-indigo-400"
-                    >
-                      {isSaving ? (
-                        <>
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                          Saving Changes...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-5 w-5" />
-                          Save Changes
-                        </>
-                      )}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+            )}
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
