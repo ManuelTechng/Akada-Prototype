@@ -9,7 +9,7 @@ if (!supabaseUrl || !supabaseUrl.startsWith('https://')) {
   console.error('Invalid or missing VITE_SUPABASE_URL. Must be a valid HTTPS URL.');
 }
 
-if (!supabaseAnonKey || !supabaseAnonKey.length < 1) {
+if (!supabaseAnonKey || supabaseAnonKey.length === 0) {
   console.error('Invalid or missing VITE_SUPABASE_ANON_KEY. Please check your .env file.');
 }
 
@@ -115,74 +115,19 @@ const getStorage = () => {
   }
 };
 
-const customFetch = (input: RequestInfo | URL, init?: RequestInit) => {
-  console.log("Supabase Fetch: Sending request to", typeof input === 'string' ? input : input.toString());
-  
-  // Create our own abort controller for the timeout
-  const timeoutController = new AbortController();
-  const timeoutId = setTimeout(() => {
-    console.log("Supabase Fetch: Request timed out");
-    timeoutController.abort();
-  }, 30000); // Increase timeout to 30 seconds
-  
-  // Create a combined signal that aborts if either the original signal or our timeout signal aborts
-  let combinedSignal = timeoutController.signal;
-  
-  // If the original request had a signal, we need to handle both signals
-  if (init?.signal) {
-    const originalSignal = init.signal;
-    
-    // If the original signal is already aborted, abort immediately
-    if (originalSignal.aborted) {
-      clearTimeout(timeoutId);
-      const abortError = new DOMException('The user aborted a request.', 'AbortError');
-      return Promise.reject(abortError);
-    }
-    
-    // Create a new AbortController to use as our combined signal
-    const combinedController = new AbortController();
-    combinedSignal = combinedController.signal;
-    
-    // Listen for abort on the original signal
-    const abortListener = () => {
-      clearTimeout(timeoutId);
-      combinedController.abort();
-    };
-    
-    // Listen for abort on the timeout signal
-    const timeoutListener = () => {
-      combinedController.abort();
-    };
-    
-    originalSignal.addEventListener('abort', abortListener);
-    timeoutController.signal.addEventListener('abort', timeoutListener);
+// Custom fetch function to ensure proper content type
+const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+  const headers = new Headers(init?.headers);
+  if (init?.method === 'POST' || init?.method === 'PUT' || init?.method === 'PATCH') {
+    headers.set('Content-Type', 'application/json');
   }
-  
-  return fetch(input, {
-    ...init,
-    signal: combinedSignal,
-    headers: {
-      ...init?.headers,
-      'apikey': supabaseAnonKey,
-      'Authorization': `Bearer ${supabaseAnonKey}`,
-      'x-custom-retry': 'false'
-    }
-  })
-  .then(response => {
-    console.log("Supabase Fetch: Response received", response.status);
-    clearTimeout(timeoutId);
-    return response;
-  })
-  .catch(error => {
-    console.error("Supabase Fetch: Error", error);
-    clearTimeout(timeoutId);
-    throw error;
-  });
+  return fetch(input, { ...init, headers });
 };
 
 console.log("Supabase: Creating client");
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+// Create a single instance of the Supabase client
+const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
@@ -204,3 +149,5 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 });
 
 console.log("Supabase: Client created");
+
+export { supabase };

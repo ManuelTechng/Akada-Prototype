@@ -15,11 +15,14 @@ import {
   Loader2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { updateUserProfile } from '../../lib/auth';
+import { updateUserProfile, signOut as signOutFn } from '../../lib/auth';
+import type { UserProfile } from '../../lib/types';
+import Select from 'react-select';
 
 const ProfileSettings: React.FC = () => {
   const { user, profile, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -60,6 +63,7 @@ const ProfileSettings: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
   // Initialize notification preferences state
   const [notificationPrefs, setNotificationPrefs] = useState({
@@ -75,6 +79,26 @@ const ProfileSettings: React.FC = () => {
       systemAnnouncements: true
     }
   });
+
+  // Define options for countries and program types
+  const countryOptions = [
+    { value: 'USA', label: 'United States' },
+    { value: 'UK', label: 'United Kingdom' },
+    { value: 'Canada', label: 'Canada' },
+    { value: 'Australia', label: 'Australia' },
+    { value: 'Germany', label: 'Germany' },
+    { value: 'Netherlands', label: 'Netherlands' },
+    { value: 'Sweden', label: 'Sweden' },
+    { value: 'Switzerland', label: 'Switzerland' },
+  ];
+  const programTypeOptions = [
+    { value: 'Masters', label: "Master's Degree" },
+    { value: 'PhD', label: 'PhD' },
+    { value: 'Certificate', label: 'Certificate/Diploma' },
+    { value: 'Undergraduate', label: 'Undergraduate' },
+    { value: 'Research', label: 'Research Program' },
+    { value: 'Professional', label: 'Professional Degree' },
+  ];
 
   // Handle checkbox changes for notification preferences
   const handleCheckboxChange = (section: 'email' | 'inApp', prefName: string, checked: boolean) => {
@@ -98,75 +122,93 @@ const ProfileSettings: React.FC = () => {
   useEffect(() => {
     const loadProfileData = async () => {
       setLoading(true);
-      if (user) {
-        console.log('ProfileSettings: Explicitly refreshing profile data for user:', user.id);
-        await refreshProfile();
+      setError(null);
+      try {
+        if (user) {
+          console.log('ProfileSettings: Explicitly refreshing profile data for user:', user.id);
+          await refreshProfile();
+        }
+      } catch (err) {
+        console.error('Error loading profile data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load profile data');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     
     loadProfileData();
   }, [user, refreshProfile]);
   
-  // Populate form with user data when available
+  // Populate form with user data when available - only on initial load
   useEffect(() => {
-    if (profile) {
-      console.log('Setting form data from profile:', profile);
-      setFormData({
-        full_name: profile.full_name || '',
-        email: profile.email || (user?.email || ''),
-        education_level: profile.education_level || '',
-        current_university: profile.current_university || '',
-        field_of_study: profile.field_of_study || '',
-        gpa: profile.gpa?.toString() || '',
-        // New profile fields
-        phone_number: profile.phone_number || '',
-        address_line1: profile.address_line1 || '',
-        address_line2: profile.address_line2 || '',
-        city: profile.city || '',
-        state_province: profile.state_province || '',
-        postal_code: profile.postal_code || '',
-        country: profile.country || '',
-        date_of_birth: profile.date_of_birth || '',
-        bio: profile.bio || '',
-        // Existing fields
-        test_scores: {
-          ielts: profile.test_scores?.ielts || '',
-          toefl: profile.test_scores?.toefl || '',
-          gre: {
-            verbal: profile.test_scores?.gre?.verbal || '',
-            quantitative: profile.test_scores?.gre?.quantitative || '',
-            analytical: profile.test_scores?.gre?.analytical || ''
+    if (!initialLoadComplete && profile) {
+      try {
+        console.log('Setting form data from profile:', profile);
+        setFormData({
+          full_name: profile.full_name || '',
+          email: profile.email || (user?.email || ''),
+          education_level: profile.education_level || '',
+          current_university: profile.current_university || '',
+          field_of_study: profile.field_of_study || '',
+          gpa: profile.gpa?.toString() || '',
+          // New profile fields
+          phone_number: profile.phone_number || '',
+          address_line1: profile.address_line1 || '',
+          address_line2: profile.address_line2 || '',
+          city: profile.city || '',
+          state_province: profile.state_province || '',
+          postal_code: profile.postal_code || '',
+          country: profile.country || '',
+          date_of_birth: profile.date_of_birth || '',
+          bio: profile.bio || '',
+          // Existing fields
+          test_scores: {
+            ielts: profile.test_scores?.ielts?.toString() || '',
+            toefl: profile.test_scores?.toefl?.toString() || '',
+            gre: {
+              verbal: profile.test_scores?.gre?.verbal?.toString() || '',
+              quantitative: profile.test_scores?.gre?.quantitative?.toString() || '',
+              analytical: profile.test_scores?.gre?.analytical?.toString() || ''
+            }
+          },
+          study_preferences: {
+            countries: profile.study_preferences?.countries || [],
+            max_tuition: profile.study_preferences?.max_tuition?.toString() || '',
+            program_type: profile.study_preferences?.program_type || [],
+            start_date: profile.study_preferences?.start_date || ''
           }
-        },
-        study_preferences: {
-          countries: profile.study_preferences?.countries || [],
-          max_tuition: profile.study_preferences?.max_tuition || '',
-          program_type: profile.study_preferences?.program_type || [],
-          start_date: profile.study_preferences?.start_date || ''
-        }
-      });
-    } else if (user) {
-      // If we have a user but no profile, at least set the email and any metadata
-      setFormData(prev => ({
-        ...prev,
-        email: user.email || '',
-        full_name: user.user_metadata?.full_name || '',
-        education_level: user.user_metadata?.education_level || ''
-      }));
+        });
+        setInitialLoadComplete(true);
+      } catch (err) {
+        console.error('Error setting form data:', err);
+        setError('Failed to load profile data. Please try refreshing the page.');
+      }
+    } else if (!initialLoadComplete && user) {
+      try {
+        setFormData(prev => ({
+          ...prev,
+          email: user.email || '',
+          full_name: user.user_metadata?.full_name || '',
+          education_level: user.user_metadata?.education_level || ''
+        }));
+        setInitialLoadComplete(true);
+      } catch (err) {
+        console.error('Error setting initial form data:', err);
+        setError('Failed to load user data. Please try refreshing the page.');
+      }
     }
     setLoading(false);
-  }, [profile, user]);
+  }, [profile, user, initialLoadComplete]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    if (!isEditing) return;
     const { name, value } = e.target;
-    
     if (name.includes('.')) {
       const [section, field] = name.split('.');
       setFormData(prev => ({
         ...prev,
         [section]: {
-          ...prev[section as keyof typeof prev],
+          ...((typeof prev[section as keyof typeof prev] === 'object' && prev[section as keyof typeof prev] !== null) ? prev[section as keyof typeof prev] as object : {}),
           [field]: value
         }
       }));
@@ -179,23 +221,24 @@ const ProfileSettings: React.FC = () => {
   };
 
   const handleMultiSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!isEditing) return;
     const { name, options } = e.target;
     const [section, field] = name.split('.');
-    
     const selectedValues = Array.from(options)
       .filter(option => option.selected)
       .map(option => option.value);
-    
     setFormData(prev => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...((typeof prev[section as keyof typeof prev] === 'object' && prev[section as keyof typeof prev] !== null) ? prev[section as keyof typeof prev] as object : {}),
         [field]: selectedValues
       }
     }));
   };
 
   const handleGREInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isEditing) return;
+    
     const { name, value } = e.target;
     const field = name.split('.')[2]; // Get the GRE field name (verbal, quantitative, analytical)
     
@@ -212,15 +255,53 @@ const ProfileSettings: React.FC = () => {
   };
 
   const handleSaveProfile = async () => {
-    if (!user) return;
+    if (!user) {
+      setError('You must be logged in to save your profile');
+      return;
+    }
     
     setIsSaving(true);
     setSaveError(null);
     setSaveSuccess(false);
+    setError(null);
     
     try {
+      // Convert string values to numbers where needed
+      const profileData: Partial<UserProfile> = {
+        full_name: formData.full_name,
+        email: formData.email,
+        education_level: formData.education_level,
+        current_university: formData.current_university,
+        field_of_study: formData.field_of_study,
+        gpa: formData.gpa ? parseFloat(formData.gpa) : undefined,
+        phone_number: formData.phone_number,
+        address_line1: formData.address_line1,
+        address_line2: formData.address_line2,
+        city: formData.city,
+        state_province: formData.state_province,
+        postal_code: formData.postal_code,
+        country: formData.country,
+        date_of_birth: formData.date_of_birth,
+        bio: formData.bio,
+        test_scores: {
+          ielts: formData.test_scores.ielts ? parseFloat(formData.test_scores.ielts) : '',
+          toefl: formData.test_scores.toefl ? parseFloat(formData.test_scores.toefl) : '',
+          gre: {
+            verbal: formData.test_scores.gre.verbal ? parseFloat(formData.test_scores.gre.verbal) : '',
+            quantitative: formData.test_scores.gre.quantitative ? parseFloat(formData.test_scores.gre.quantitative) : '',
+            analytical: formData.test_scores.gre.analytical ? parseFloat(formData.test_scores.gre.analytical) : ''
+          }
+        },
+        study_preferences: {
+          countries: formData.study_preferences.countries,
+          max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : '',
+          program_type: formData.study_preferences.program_type,
+          start_date: formData.study_preferences.start_date
+        }
+      };
+
       // Send the profile data to the database
-      const result = await updateUserProfile(user.id, formData);
+      const result = await updateUserProfile(user.id, profileData);
       
       console.log('Profile updated successfully:', result);
       
@@ -234,10 +315,54 @@ const ProfileSettings: React.FC = () => {
       }, 3000);
     } catch (error) {
       console.error('Error saving profile:', error);
-      setSaveError(error instanceof Error ? error.message : 'Failed to save profile. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save profile. Please try again.';
+      setSaveError(errorMessage);
+      setError(errorMessage);
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // If we're exiting edit mode without saving, reset the form data
+      if (profile) {
+        const resetFormData = {
+          full_name: profile.full_name || '',
+          email: profile.email || (user?.email || ''),
+          education_level: profile.education_level || '',
+          current_university: profile.current_university || '',
+          field_of_study: profile.field_of_study || '',
+          gpa: profile.gpa?.toString() || '',
+          phone_number: profile.phone_number || '',
+          address_line1: profile.address_line1 || '',
+          address_line2: profile.address_line2 || '',
+          city: profile.city || '',
+          state_province: profile.state_province || '',
+          postal_code: profile.postal_code || '',
+          country: profile.country || '',
+          date_of_birth: profile.date_of_birth || '',
+          bio: profile.bio || '',
+          test_scores: {
+            ielts: profile.test_scores?.ielts?.toString() || '',
+            toefl: profile.test_scores?.toefl?.toString() || '',
+            gre: {
+              verbal: profile.test_scores?.gre?.verbal?.toString() || '',
+              quantitative: profile.test_scores?.gre?.quantitative?.toString() || '',
+              analytical: profile.test_scores?.gre?.analytical?.toString() || ''
+            }
+          },
+          study_preferences: {
+            countries: profile.study_preferences?.countries || [],
+            max_tuition: profile.study_preferences?.max_tuition?.toString() || '',
+            program_type: profile.study_preferences?.program_type || [],
+            start_date: profile.study_preferences?.start_date || ''
+          }
+        };
+        setFormData(resetFormData);
+      }
+    }
+    setIsEditing(!isEditing);
   };
 
   const renderPersonalInfoSection = () => (
@@ -248,36 +373,33 @@ const ProfileSettings: React.FC = () => {
             Full Name
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <User className="h-5 w-5 text-gray-400" />
-            </div>
             <input
               type="text"
               name="full_name"
               value={formData.full_name}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              placeholder="Enter your full name"
             />
+            <User className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
           </div>
         </div>
-        
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
+            Email
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Mail className="h-5 w-5 text-gray-400" />
-            </div>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              disabled={true} // Email should not be editable
-              className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              disabled={true}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              placeholder="Enter your email"
             />
+            <Mail className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
           </div>
         </div>
       </div>
@@ -605,24 +727,28 @@ const ProfileSettings: React.FC = () => {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Preferred Countries
         </label>
-        <select
-          name="study_preferences.countries"
-          multiple
-          value={formData.study_preferences.countries}
-          onChange={handleMultiSelectChange}
-          disabled={!isEditing}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500 h-32"
-        >
-          <option value="USA">United States</option>
-          <option value="UK">United Kingdom</option>
-          <option value="Canada">Canada</option>
-          <option value="Australia">Australia</option>
-          <option value="Germany">Germany</option>
-          <option value="Netherlands">Netherlands</option>
-          <option value="Sweden">Sweden</option>
-          <option value="Switzerland">Switzerland</option>
-        </select>
-        <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple countries</p>
+        <Select
+          isMulti
+          isDisabled={!isEditing}
+          options={countryOptions}
+          value={countryOptions.filter(opt => formData.study_preferences.countries.includes(opt.value))}
+          onChange={selected => {
+            if (!isEditing) return;
+            setFormData(prev => ({
+              ...prev,
+              study_preferences: {
+                ...prev.study_preferences,
+                countries: selected ? selected.map(opt => opt.value) : []
+              }
+            }));
+          }}
+          classNamePrefix="react-select"
+          placeholder="Select preferred countries..."
+        />
+        <p className="text-xs text-gray-500 mt-1">You can search and select multiple countries</p>
+        {!isEditing && (
+          <p className="text-xs text-red-500 mt-2">Click "Edit Profile" to update your study preferences.</p>
+        )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -671,22 +797,25 @@ const ProfileSettings: React.FC = () => {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Program Types
         </label>
-        <select
-          name="study_preferences.program_type"
-          multiple
-          value={formData.study_preferences.program_type}
-          onChange={handleMultiSelectChange}
-          disabled={!isEditing}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500 h-32"
-        >
-          <option value="Masters">Master's Degree</option>
-          <option value="PhD">PhD</option>
-          <option value="Certificate">Certificate/Diploma</option>
-          <option value="Undergraduate">Undergraduate</option>
-          <option value="Research">Research Program</option>
-          <option value="Professional">Professional Degree</option>
-        </select>
-        <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple program types</p>
+        <Select
+          isMulti
+          isDisabled={!isEditing}
+          options={programTypeOptions}
+          value={programTypeOptions.filter(opt => formData.study_preferences.program_type.includes(opt.value))}
+          onChange={selected => {
+            if (!isEditing) return;
+            setFormData(prev => ({
+              ...prev,
+              study_preferences: {
+                ...prev.study_preferences,
+                program_type: selected ? selected.map(opt => opt.value) : []
+              }
+            }));
+          }}
+          classNamePrefix="react-select"
+          placeholder="Select program types..."
+        />
+        <p className="text-xs text-gray-500 mt-1">You can search and select multiple program types</p>
       </div>
     </div>
   );
@@ -931,6 +1060,34 @@ const ProfileSettings: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-gray-600">Loading profile data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center space-y-4 p-6 bg-red-50 rounded-lg">
+          <AlertCircle className="w-8 h-8 text-red-500" />
+          <p className="text-red-700">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
@@ -988,7 +1145,7 @@ const ProfileSettings: React.FC = () => {
                       )}
                     </button>
                     <button
-                      onClick={() => setIsEditing(false)}
+                      onClick={handleEditToggle}
                       disabled={isSaving}
                       className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-500"
                     >
@@ -997,7 +1154,7 @@ const ProfileSettings: React.FC = () => {
                   </>
                 ) : (
                   <button
-                    onClick={() => setIsEditing(true)}
+                    onClick={handleEditToggle}
                     className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
                   >
                     <User className="h-5 w-5" />
@@ -1092,6 +1249,7 @@ const ProfileSettings: React.FC = () => {
                   
                   <button
                     className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                    onClick={async () => { await signOutFn(); window.location.href = '/login'; }}
                   >
                     <LogOut className="h-5 w-5 flex-shrink-0" />
                     <span>Sign Out</span>

@@ -1,5 +1,8 @@
-import { supabase } from './supabase';
+import { useLogger } from '../hooks/useLogger';
 import type { UserProfile, SignUpData, AuthResponse } from './types';
+import { supabase } from './supabase';
+
+const logger = useLogger();
 
 // Constants for authentication configuration
 const AUTH_TIMEOUT = 30000; // 30 seconds
@@ -8,7 +11,7 @@ const MAX_RETRIES = 3;
 // Helper function to get user profile
 export const getUserProfile = async (userId: string): Promise<UserProfile | null> => {
   try {
-    console.log('Getting profile for user:', userId);
+    logger.info('Getting profile for user:', { userId });
     
     // First try to get existing profile
     const { data, error } = await supabase
@@ -17,26 +20,30 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
       .eq('id', userId)
       .single();
 
-    // If profile exists, return it
+    // If profile exists, parse JSON fields and return it
     if (data) {
-      console.log('Found existing profile:', data);
-      return data;
+      logger.info('Found existing profile:', { userId });
+      return {
+        ...data,
+        test_scores: data.test_scores ? JSON.parse(data.test_scores) : null,
+        study_preferences: data.study_preferences ? JSON.parse(data.study_preferences) : null
+      };
     }
     
     // If error is anything other than "not found", throw it
     if (error && error.code !== 'PGRST116') {
-      console.error('Error fetching profile:', error);
+      logger.error('Error fetching profile:', { error });
       throw error;
     }
     
     // No profile found, we need to create one from the user's metadata
-    console.log('No profile found, creating new profile from user metadata');
+    logger.info('No profile found, creating new profile from user metadata');
     
     // Get user data from auth
     const { data: userData, error: userError } = await supabase.auth.getUser();
     
     if (userError || !userData?.user) {
-      console.error('Error getting user data for profile creation:', userError);
+      logger.error('Error getting user data for profile creation:', { error: userError });
       throw new Error('Could not retrieve user information');
     }
     
@@ -44,7 +51,7 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
     const newProfile = {
       id: userId,
       email: userData.user.email || '',
-      full_name: userData.user.user_metadata?.full_name || 'User',
+      full_name: userData.user.user_metadata?.full_name || userData.user.email?.split('@')[0] || 'User',
       education_level: userData.user.user_metadata?.education_level || 'Not specified',
       current_university: '',
       field_of_study: '',
@@ -74,9 +81,8 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
     };
     
     // Insert the new profile into the database
-    console.log('Creating new profile with data:', newProfile);
+    logger.info('Creating new profile with data:', { profile: newProfile });
     
-    // Use the Supabase client directly instead of manual fetch
     const { data: insertedData, error: insertError } = await supabase
       .from('user_profiles')
       .insert([newProfile])
@@ -84,17 +90,15 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
       .single();
     
     if (insertError) {
-      console.error('Error creating initial profile:', insertError);
+      logger.error('Error creating initial profile:', { error: insertError });
       throw insertError;
     }
     
-    console.log('Initial profile created successfully:', insertedData);
-    
-    // Return the newly created profile
+    logger.info('Initial profile created successfully:', { userId });
     return insertedData || newProfile;
     
   } catch (error) {
-    console.error('Error getting/creating user profile:', error);
+    logger.error('Error getting/creating user profile:', { error });
     return null;
   }
 };
@@ -218,202 +222,138 @@ export const getCurrentUser = async () => {
 };
 
 // Update user profile
-export const updateUserProfile = async (userId: string, profile: Partial<UserProfile>) => {
+export const updateUserProfile = async (userId: string, profileData: Partial<UserProfile>): Promise<UserProfile> => {
   try {
-    console.log('Updating profile for user:', userId);
-    console.log('Profile data:', JSON.stringify(profile, null, 2));
-    
-    // First check if the profile exists
+    logger.info('Updating user profile', { userId, profileData });
+
+    // Fetch existing profile
     const { data: existingProfile, error: fetchError } = await supabase
       .from('user_profiles')
       .select('*')
       .eq('id', userId)
       .single();
-      
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      console.error('Error fetching existing profile:', fetchError);
-      throw new Error(`Error checking profile: ${fetchError.message}`);
+
+    if (fetchError) {
+      logger.error('Error fetching existing profile', { error: fetchError });
+      throw new Error('Failed to fetch existing profile');
     }
-    
-    // Sanitize input to ensure proper JSON structure
-    const cleanProfile = sanitizeProfileData(profile);
-    
+
+    // Sanitize and validate input data
+    const sanitizedData = sanitizeProfileData(profileData);
+    validateProfileData(sanitizedData);
+
+    // Prepare the data for update/insert
+    const formattedProfile = {
+      ...sanitizedData,
+      test_scores: sanitizedData.test_scores ? JSON.stringify(sanitizedData.test_scores) : null,
+      study_preferences: sanitizedData.study_preferences ? JSON.stringify(sanitizedData.study_preferences) : null,
+      updated_at: new Date().toISOString()
+    };
+
+    let result;
     if (existingProfile) {
-      console.log('Existing profile found, updating...');
-      
-      // Create a properly formatted update object - including new fields
-      const formattedProfile = {
-        full_name: cleanProfile.full_name,
-        email: cleanProfile.email || existingProfile.email,
-        education_level: cleanProfile.education_level || existingProfile.education_level,
-        current_university: cleanProfile.current_university,
-        field_of_study: cleanProfile.field_of_study,
-        gpa: cleanProfile.gpa,
-        // Include new profile fields
-        phone_number: cleanProfile.phone_number,
-        address_line1: cleanProfile.address_line1,
-        address_line2: cleanProfile.address_line2,
-        city: cleanProfile.city,
-        state_province: cleanProfile.state_province,
-        postal_code: cleanProfile.postal_code,
-        country: cleanProfile.country,
-        date_of_birth: cleanProfile.date_of_birth,
-        bio: cleanProfile.bio,
-        test_scores: cleanProfile.test_scores ? cleanProfile.test_scores : existingProfile.test_scores,
-        study_preferences: cleanProfile.study_preferences ? cleanProfile.study_preferences : existingProfile.study_preferences,
-        updated_at: new Date().toISOString()
-      };
-      
-      console.log('Sending formatted profile data:', JSON.stringify(formattedProfile, null, 2));
-      
-      // Use Supabase client instead of direct fetch
-      const { data: updatedData, error: updateError } = await supabase
+      // Update existing profile
+      const { data, error } = await supabase
         .from('user_profiles')
         .update(formattedProfile)
         .eq('id', userId)
         .select()
         .single();
-      
-      if (updateError) {
-        console.error('Error updating profile:', updateError);
-        throw updateError;
+
+      if (error) {
+        logger.error('Error updating profile', { error });
+        throw new Error('Failed to update profile');
       }
-      
-      console.log('Profile updated successfully:', updatedData);
-      return updatedData;
-      
+      result = data;
     } else {
-      console.log('No existing profile found, inserting new profile...');
-      
-      // Get the user's email from auth
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      
-      if (userError || !userData?.user) {
-        console.error('Error getting user data:', userError);
-        throw new Error('Could not retrieve user information');
-      }
-      
-      // Create a new profile with all required fields
-      const newProfile = {
-        id: userId,
-        email: userData.user.email || '',
-        full_name: userData.user.user_metadata?.full_name || cleanProfile.full_name || 'User',
-        education_level: userData.user.user_metadata?.education_level || cleanProfile.education_level || 'Not specified',
-        current_university: cleanProfile.current_university || '',
-        field_of_study: cleanProfile.field_of_study || '',
-        gpa: cleanProfile.gpa || null,
-        // New profile fields
-        phone_number: cleanProfile.phone_number || '',
-        address_line1: cleanProfile.address_line1 || '',
-        address_line2: cleanProfile.address_line2 || '',
-        city: cleanProfile.city || '',
-        state_province: cleanProfile.state_province || '',
-        postal_code: cleanProfile.postal_code || '',
-        country: cleanProfile.country || '',
-        date_of_birth: cleanProfile.date_of_birth || '',
-        bio: cleanProfile.bio || '',
-        // Existing fields
-        test_scores: cleanProfile.test_scores || { 
-          ielts: '', 
-          toefl: '', 
-          gre: { verbal: '', quantitative: '', analytical: '' } 
-        },
-        study_preferences: cleanProfile.study_preferences || {
-          countries: [],
-          max_tuition: '',
-          program_type: [],
-          start_date: ''
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-      
-      console.log('Sending new profile data:', JSON.stringify(newProfile, null, 2));
-      
-      // Use Supabase client instead of direct fetch
-      const { data: insertedData, error: insertError } = await supabase
+      // Create new profile
+      const { data, error } = await supabase
         .from('user_profiles')
-        .insert([newProfile])
+        .insert([{
+          ...formattedProfile,
+          id: userId,
+          created_at: new Date().toISOString()
+        }])
         .select()
         .single();
-      
-      if (insertError) {
-        console.error('Error creating profile:', insertError);
-        throw insertError;
+
+      if (error) {
+        logger.error('Error creating profile', { error });
+        throw new Error('Failed to create profile');
       }
-      
-      console.log('Profile created successfully:', insertedData);
-      return insertedData;
+      result = data;
     }
+
+    // Parse JSON strings back to objects
+    if (result) {
+      result.test_scores = result.test_scores ? JSON.parse(result.test_scores) : null;
+      result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences) : null;
+    }
+
+    return result;
   } catch (error) {
-    console.error('Error updating user profile:', error);
+    logger.error('Error in updateUserProfile', { error });
     throw error;
   }
 };
 
 // Helper function to sanitize profile data and ensure proper JSON structure
 const sanitizeProfileData = (profile: Partial<UserProfile>): Partial<UserProfile> => {
-  const cleanProfile = { ...profile };
-  
-  // Check and fix test_scores if it exists
-  if (cleanProfile.test_scores) {
-    // If test_scores is a string, try to parse it
-    if (typeof cleanProfile.test_scores === 'string') {
-      try {
-        cleanProfile.test_scores = JSON.parse(cleanProfile.test_scores);
-      } catch (e) {
-        console.warn('Could not parse test_scores as JSON:', e);
-        // Default to an empty object if parsing fails
-        cleanProfile.test_scores = {
-          ielts: '',
-          toefl: '',
-          gre: { verbal: '', quantitative: '', analytical: '' }
-        };
-      }
-    }
-    
-    // Ensure proper structure
-    cleanProfile.test_scores = {
-      ielts: cleanProfile.test_scores.ielts || '',
-      toefl: cleanProfile.test_scores.toefl || '',
+  // Create a new object with default values
+  const cleanProfile: Partial<UserProfile> = {
+    full_name: profile.full_name || '',
+    email: profile.email || '',
+    education_level: profile.education_level || '',
+    current_university: profile.current_university || '',
+    field_of_study: profile.field_of_study || '',
+    gpa: profile.gpa || undefined,
+    phone_number: profile.phone_number || '',
+    address_line1: profile.address_line1 || '',
+    address_line2: profile.address_line2 || '',
+    city: profile.city || '',
+    state_province: profile.state_province || '',
+    postal_code: profile.postal_code || '',
+    country: profile.country || '',
+    date_of_birth: profile.date_of_birth || '',
+    bio: profile.bio || '',
+    test_scores: {
+      ielts: profile.test_scores?.ielts || '',
+      toefl: profile.test_scores?.toefl || '',
       gre: {
-        verbal: cleanProfile.test_scores.gre?.verbal || '',
-        quantitative: cleanProfile.test_scores.gre?.quantitative || '',
-        analytical: cleanProfile.test_scores.gre?.analytical || ''
+        verbal: profile.test_scores?.gre?.verbal || '',
+        quantitative: profile.test_scores?.gre?.quantitative || '',
+        analytical: profile.test_scores?.gre?.analytical || ''
       }
-    };
-  }
-  
-  // Check and fix study_preferences if it exists
-  if (cleanProfile.study_preferences) {
-    // If study_preferences is a string, try to parse it
-    if (typeof cleanProfile.study_preferences === 'string') {
-      try {
-        cleanProfile.study_preferences = JSON.parse(cleanProfile.study_preferences);
-      } catch (e) {
-        console.warn('Could not parse study_preferences as JSON:', e);
-        // Default to an empty object if parsing fails
-        cleanProfile.study_preferences = {
-          countries: [],
-          max_tuition: '',
-          program_type: [],
-          start_date: ''
-        };
-      }
+    },
+    study_preferences: {
+      countries: profile.study_preferences?.countries || [],
+      max_tuition: profile.study_preferences?.max_tuition || '',
+      program_type: profile.study_preferences?.program_type || [],
+      start_date: profile.study_preferences?.start_date || ''
     }
-    
-    // Ensure proper structure
-    cleanProfile.study_preferences = {
-      countries: Array.isArray(cleanProfile.study_preferences.countries) ? 
-        cleanProfile.study_preferences.countries : [],
-      max_tuition: cleanProfile.study_preferences.max_tuition || '',
-      program_type: Array.isArray(cleanProfile.study_preferences.program_type) ? 
-        cleanProfile.study_preferences.program_type : [],
-      start_date: cleanProfile.study_preferences.start_date || ''
-    };
-  }
-  
+  };
+
+  // Remove any undefined or null values
+  Object.keys(cleanProfile).forEach((key: string) => {
+    const typedKey = key as keyof UserProfile;
+    if (cleanProfile[typedKey] === undefined || cleanProfile[typedKey] === null) {
+      delete cleanProfile[typedKey];
+    }
+  });
+
   return cleanProfile;
+};
+
+// Helper function to validate email format
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+// Helper function to validate phone number format
+const isValidPhoneNumber = (phone: string): boolean => {
+  const phoneRegex = /^\+?[\d\s-()]{10,}$/;
+  return phoneRegex.test(phone);
 };
 
 // Password reset functionality
@@ -470,5 +410,20 @@ export const getCurrentSession = async () => {
       session: null, 
       error: error instanceof Error ? error : new Error('Unknown error getting session')
     };
+  }
+};
+
+// Validation function
+const validateProfileData = (data: Partial<UserProfile>) => {
+  if (data.email && !isValidEmail(data.email)) {
+    throw new Error('Invalid email format');
+  }
+
+  if (data.phone_number && !isValidPhoneNumber(data.phone_number)) {
+    throw new Error('Invalid phone number format');
+  }
+
+  if (data.gpa && (isNaN(Number(data.gpa)) || Number(data.gpa) < 0 || Number(data.gpa) > 4.0)) {
+    throw new Error('GPA must be a number between 0 and 4.0');
   }
 };
