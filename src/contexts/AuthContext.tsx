@@ -144,7 +144,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!mounted) return;
 
         console.log('AuthContext: Auth state changed:', event);
-        if (mounted) setSession(newSession);
+        if (mounted) {
+          setSession(newSession);
+          setLoading(true); // Set loading true during state change
+        }
         
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (newSession?.user) {

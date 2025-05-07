@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { useNotifications } from '../../contexts/NotificationContext';
 import NotificationDropdown from '../NotificationDropdown';
+import { useAuth } from '../../contexts/AuthContext';
+import { signOut as signOutFn } from '../../lib/auth';
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -18,6 +20,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { unreadCount } = useNotifications();
   const navigate = useNavigate();
+  const { user, profile } = useAuth();
 
   const toggleSidebar = () => setIsDrawerOpen(!isDrawerOpen);
 
@@ -52,7 +55,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   ];
 
-  const handleNavigation = (id: string) => {
+  const handleNavigation = async (id: string) => {
     setIsDrawerOpen(false);
     switch (id) {
       case 'dashboard':
@@ -77,11 +80,19 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         navigate('/dashboard/profile');
         break;
       case 'signout':
-        // Handle sign out
+        await signOutFn();
+        navigate('/login');
         break;
       default:
         navigate(`/dashboard/${id}`);
     }
+  };
+
+  // Helper to get first name
+  const getFirstName = () => {
+    if (profile?.full_name) return profile.full_name.split(' ')[0];
+    if (user?.email) return user.email.split('@')[0];
+    return 'User';
   };
 
   return (
@@ -175,7 +186,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             
             <div>
               <h1 className="text-xl font-semibold text-gray-900 font-heading">Dashboard</h1>
-              <p className="text-sm text-gray-500 hidden sm:block">Welcome back, Oluwaseun</p>
+              <p className="text-sm text-gray-500 hidden sm:block">Welcome back, {getFirstName()}</p>
             </div>
           </div>
 
@@ -212,9 +223,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               onClick={() => navigate('/dashboard/profile')}
             >
               <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium">
-                OA
+                {profile?.full_name ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'OA'}
               </div>
-              <span className="font-medium text-gray-700 hidden md:inline">Oluwaseun A.</span>
+              <span className="font-medium text-gray-700 hidden md:inline">{profile?.full_name ? profile.full_name : user?.email}</span>
               <ChevronDownIcon className="h-5 w-5 text-gray-400" />
             </button>
           </div>
