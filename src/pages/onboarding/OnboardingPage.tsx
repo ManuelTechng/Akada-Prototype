@@ -6,7 +6,7 @@ import { GraduationCap, Check, ChevronRight, BookOpen, MapPin, DollarSign, Calen
 
 const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -236,66 +236,51 @@ const OnboardingPage: React.FC = () => {
       return;
     }
     
-    console.log('OnboardingPage: Submitting profile data:', formData);
+    // Convert string fields to numbers where appropriate
+    const submissionData = {
+      ...formData,
+      gpa: formData.gpa ? parseFloat(formData.gpa) : undefined,
+      test_scores: {
+        ielts: formData.test_scores.ielts ? parseFloat(formData.test_scores.ielts) : undefined,
+        toefl: formData.test_scores.toefl ? parseFloat(formData.test_scores.toefl) : undefined,
+        gre: {
+          verbal: formData.test_scores.gre.verbal ? parseFloat(formData.test_scores.gre.verbal) : undefined,
+          quantitative: formData.test_scores.gre.quantitative ? parseFloat(formData.test_scores.gre.quantitative) : undefined,
+          analytical: formData.test_scores.gre.analytical ? parseFloat(formData.test_scores.gre.analytical) : undefined,
+        }
+      },
+      study_preferences: {
+        ...formData.study_preferences,
+        max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : undefined,
+      },
+      profile_completed: true
+    };
+    
+    console.log('OnboardingPage: Submitting profile data:', submissionData);
     setLoading(true);
     setError(null);
     
     try {
-      // Add a timeout to handle potential long delays or hanging requests
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Request timed out. Please try again.')), 15000)
       );
-      
-      // Race the actual request against the timeout
       const result = await Promise.race([
-        updateUserProfile(user.id, formData),
+        updateUserProfile(user.id, submissionData),
         timeoutPromise
-      ]) as any; // Cast to any since the types from the race can be mixed
-      
-      console.log('OnboardingPage: Profile updated successfully, result:', result);
-      
-      // Only navigate if we have a successful result
-      if (result) {
-        // Set a success state briefly before navigating
+      ]) as any;
+      console.log('API result:', result);
+      if (result && !result.error) {
         setError(null);
+        await refreshProfile();
         setTimeout(() => {
           navigate('/dashboard');
         }, 500);
       } else {
-        throw new Error('No data returned from profile update');
+        throw new Error(result?.error?.message || 'No data returned from profile update');
       }
-    } catch (err) {
-      console.error('Error saving profile:', err);
-      let errorMessage = err instanceof Error ? err.message : 'Failed to save profile';
-      
-      // Check for network errors
-      if (!navigator.onLine) {
-        errorMessage = 'You appear to be offline. Please check your internet connection and try again.';
-      }
-      // Check for specific Supabase errors that might be more helpful
-      else if (errorMessage.includes('duplicate key')) {
-        errorMessage = 'A profile already exists for this account. Please refresh and try again.';
-      } else if (errorMessage.includes('permission denied')) {
-        errorMessage = 'You don\'t have permission to save this profile. Please contact support.';
-      } else if (errorMessage.includes('not found')) {
-        errorMessage = 'Profile table not found. This is a system error, please contact support.';
-      } else if (errorMessage.includes('timeout')) {
-        errorMessage = 'The request took too long to complete. Please try again.';
-      } else if (errorMessage.includes('JWT')) {
-        errorMessage = 'Your session has expired. Please log out and log back in.';
-      } else if (errorMessage.includes('constraint')) {
-        errorMessage = 'There was a validation error with your profile data. Please check your entries.';
-      }
-      
-      setError(errorMessage);
-      
-      // Log extra diagnostics to help with troubleshooting
-      console.log('Failed profile update details:', {
-        userId: user.id,
-        timestamp: new Date().toISOString(),
-        formDataSize: JSON.stringify(formData).length,
-        errorFull: err
-      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setError(error instanceof Error ? error.message : 'Failed to update profile');
     } finally {
       setLoading(false);
     }

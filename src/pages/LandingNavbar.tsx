@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, GraduationCap } from 'lucide-react';
+import { Menu, X, GraduationCap, LogIn, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const LandingNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,14 +27,13 @@ const LandingNavbar: React.FC = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-4">
             <a href="#features" className="text-gray-600 hover:text-indigo-600 transition-colors">Features</a>
             <a href="#how-it-works" className="text-gray-600 hover:text-indigo-600 transition-colors">How It Works</a>
             <a href="#pricing" className="text-gray-600 hover:text-indigo-600 transition-colors">Pricing</a>
             <a href="#about" className="text-gray-600 hover:text-indigo-600 transition-colors">About</a>
-            <a href="#signup" className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5">
-              Get Started
-            </a>
+            <Link to="/login" className="flex items-center gap-1 px-5 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 border border-indigo-200 transition-all duration-200 ml-2" tabIndex={0}><LogIn size={18}/> Log In</Link>
+            <Link to="/signup" className="flex items-center gap-1 px-5 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-all duration-200 ml-2" tabIndex={0}><UserPlus size={18}/> Sign Up</Link>
           </div>
           
           {/* Mobile Menu Button */}
@@ -50,42 +50,13 @@ const LandingNavbar: React.FC = () => {
       <div className={`md:hidden transition-all duration-300 ease-in-out ${
         isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
       }`}>
-        <div className="bg-white border-t px-4 py-6 space-y-4">
-          <a 
-            href="#features" 
-            className="block text-gray-600 hover:text-indigo-600 transition-colors py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Features
-          </a>
-          <a 
-            href="#how-it-works" 
-            className="block text-gray-600 hover:text-indigo-600 transition-colors py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            How It Works
-          </a>
-          <a 
-            href="#pricing" 
-            className="block text-gray-600 hover:text-indigo-600 transition-colors py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Pricing
-          </a>
-          <a 
-            href="#about" 
-            className="block text-gray-600 hover:text-indigo-600 transition-colors py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About
-          </a>
-          <a 
-            href="#signup" 
-            className="block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors text-center"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Get Started
-          </a>
+        <div className="bg-white border-t px-4 py-6 space-y-4 flex flex-col">
+          <a href="#features" className="block text-gray-600 hover:text-indigo-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>Features</a>
+          <a href="#how-it-works" className="block text-gray-600 hover:text-indigo-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>How It Works</a>
+          <a href="#pricing" className="block text-gray-600 hover:text-indigo-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>Pricing</a>
+          <a href="#about" className="block text-gray-600 hover:text-indigo-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>About</a>
+          <Link to="/login" className="flex items-center gap-1 px-5 py-3 rounded-lg bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 border border-indigo-200 transition-all duration-200" onClick={() => setIsMenuOpen(false)} tabIndex={0}><LogIn size={18}/> Log In</Link>
+          <Link to="/signup" className="flex items-center gap-1 px-5 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-all duration-200" onClick={() => setIsMenuOpen(false)} tabIndex={0}><UserPlus size={18}/> Sign Up</Link>
         </div>
       </div>
     </nav>

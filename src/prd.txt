@@ -1,0 +1,128 @@
+Akada MVP Product Requirements Document (Fully Functional)
+1. Project Overview
+Mission: Akada is an AI-powered platform that empowers Nigerian students (aged 16-30) to explore, plan, and apply to international education programs (tech and non-tech), democratizing access to global education opportunities for African students.
+Vision: To become the go-to tool for African students seeking affordable and accessible international education, with a focus on Nigeria-first usability and real-time data.
+MVP Goal: Launch a fully functional MVP with real data connections, enabling students to authenticate, search programs, calculate costs, plan applications, review documents, and track progress, optimized for Nigerian internet conditions.
+2. MVP Features
+Core Features
+User Authentication:
+Allow users to sign up/login with email/password or Google OAuth.
+Store user data (email, name) in Supabase users table.
+Provide logout functionality.
+Onboarding:
+Guided setup with a multi-step form (study goals, budget range, preferred countries).
+Save preferences to Supabase user_preferences table.
+Display personalized recommendations based on input.
+Program Search:
+Searchable database of international programs with filters (country, cost range, duration, specialization).
+Data sourced from Supabase programs table, populated with real data (e.g., via web scraping or manual entry).
+Display results with program name, university, country, tuition (NGN), duration, and specialization.
+AI Chat Assistance:
+Real-time chat support using an AI model (e.g., Grok 3 via xAI API).
+Answer queries on essays, visas, and program selection.
+Store chat history in Supabase chat_logs table (anonymized).
+Document Review:
+Upload feature for application documents (e.g., transcripts, essays).
+AI-powered review with feedback (e.g., grammar, completeness).
+Store files in Supabase Storage and metadata in documents table.
+Application Tracking:
+Dashboard to monitor application status (e.g., Submitted, In Review, Accepted).
+Store application details in Supabase applications table.
+Send email reminders for deadlines (via third-party service, e.g., SendGrid).
+Supporting Features
+Cost Calculator: Calculate total costs (tuition, living, visa) in NGN, using real data from Supabase.
+Timeline Builder: Generate application timelines with milestones (e.g., “Submit by Jan 2026, ₦75,000”).
+Offline Mode: Cache critical data (programs, user preferences) for offline access.
+Payment Integration: Support Paystack/Flutterwave for premium features (e.g., document review).
+3. User Personas
+Primary User: Nigerian student (16-30), tech-savvy, limited budget, 3G internet, seeks affordable programs.
+Secondary User: Education counselor in Nigeria, assists students, needs reliable data.
+Edge Case: Student with intermittent internet, relies on offline mode.
+4. Success Criteria
+Usability: 85% of users complete onboarding and search a program within 5 minutes (usability testing).
+Performance: Average load time <3s on 3G networks (375px screens).
+Data Accuracy: 95% of program data matches real-world sources (manual validation).
+Adoption: 500 registered users and 1,000 program searches within 1 month of launch.
+Accessibility: Achieve WCAG 2.1 AA compliance (Lighthouse accessibility score >90).
+5. Tech Stack
+Frontend: React with TypeScript, Tailwind CSS (colors: indigo-600 #4f46e5, gray-800 #1f2937, white #ffffff), Lucide React icons.
+Backend: Node.js for server-side logic (e.g., Netlify Functions).
+Database: Supabase (real data connections for users, user_preferences, programs, chat_logs, documents, applications tables).
+AI Services: xAI Grok 3 API for chat assistance.
+Third-Party Services: Paystack/Flutterwave (payments), SendGrid (emails), Calendly (scheduling).
+Build Tool: Vite or Create React App (npm run build to build/ or dist/).
+Deployment: Netlify with environment variables (SUPABASE_URL, SUPABASE_KEY, API keys).
+6. Nigeria-First Requirements
+Mobile-First Design: Optimize UI for 375px screens (Tailwind classes: max-w-md, sm:mx-auto).
+3G Optimization: Minify assets, lazy-load images, ensure <3s load time.
+NGN Localization: Display all costs in NGN (1 USD = 1500 NGN) using toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }).
+Offline Capability: Use service workers (public/service-worker.js) to cache data and UI.
+Accessibility: Implement ARIA labels, keyboard navigation, 4.5:1 contrast ratio (WCAG 2.1 AA).
+Ethical Data: Use only public data, respect robots.txt, avoid personal information.
+7. Data Model
+Tables in Supabase
+users:
+id text primary key, email text unique, name text, created_at timestamp.
+user_preferences:
+user_id text references users(id), goals text, budget_range numeric, countries text[].
+programs:
+id text primary key, name text, university text, country text, tuition numeric, duration text, specialization text.
+Populated with 50+ real programs (e.g., “MSc AI, MIT, USA, ₦30,000,000, 2 years, AI”).
+chat_logs:
+id text primary key, user_id text references users(id), message text, response text, timestamp timestamp.
+documents:
+id text primary key, user_id text references users(id), filename text, url text, status text, feedback text.
+applications:
+id text primary key, user_id text references users(id), program_id text references programs(id), status text, deadline timestamp, notes text.
+Data Sources
+Real data from university websites (via web scraping app) or manual input.
+Initial seeding with 50+ programs, updated weekly.
+8. Subscription Model
+Free Tier: Basic features (authentication, program search, timeline builder).
+Standard Tier ($5/month via Paystack/Flutterwave): AI chat assistance, document review (5 uploads/month).
+Premium Tier ($10/month): Unlimited document reviews, application tracking, email reminders.
+9. Development Roadmap
+Phase 1: Setup and Data (2 Weeks)
+Configure Supabase tables and seed with 50+ programs.
+Build web scraping app (Node.js) to populate programs table.
+Set up Netlify with environment variables.
+Phase 2: Core Features (4 Weeks)
+Implement user authentication and onboarding.
+Develop program search and cost calculator.
+Integrate AI chat assistance (Grok 3 API).
+Phase 3: Advanced Features (3 Weeks)
+Add document review and application tracking.
+Integrate Paystack/Flutterwave and SendGrid.
+Optimize for offline mode and 3G.
+Phase 4: Testing and Launch (2 Weeks)
+Conduct usability testing with 20 Nigerian students.
+Fix bugs, optimize performance (<3s load).
+Deploy to Netlify and promote via X, Instagram.
+10. Risks and Mitigations
+Risk: Slow Supabase queries on 3G.
+Mitigation: Cache data in localStorage, implement pagination.
+Risk: AI API downtime.
+Mitigation: Use fallback messages (“Chat unavailable, try again later”).
+Risk: Legal issues with scraping.
+Mitigation: Adhere to robots.txt, use public data only, consult legal counsel.
+Risk: Low adoption.
+Mitigation: Offer free tier, partner with Nigerian universities.
+11. Acceptance Testing
+Test Cases:
+User logs in, completes onboarding, searches programs (<3s).
+Cost calculator shows NGN totals (e.g., ₦60,650,000 for MIT MSc AI).
+Offline mode loads cached data.
+AI chat responds to “How to write an essay?”.
+Document upload triggers AI feedback.
+Application tracking updates status.
+Tools: Chrome DevTools (3G, 375px), Lighthouse, Postman.
+Criteria: 90% pass rate, no critical bugs.
+12. Documentation
+User Guide: Markdown file (docs/user-guide.md) with setup instructions.
+Developer Guide: Markdown file (docs/dev-guide.md) with API endpoints, Supabase schema.
+Test Plan: Markdown file (docs/test-plan.md) with test results.
+13. Launch Plan
+Date: June 1, 2025.
+Channels: X posts (#Akada, #StudyAbroad), Instagram Reels, WhatsApp university groups.
+Metrics: 500 users, 1,000 searches, 50 document uploads in first month.
+

@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, Bot, GraduationCap, Globe } from 'lucide-react';
+import { ArrowRight, Bot, GraduationCap, Globe, LogIn, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const LandingHero: React.FC = () => {
   return (
@@ -20,18 +21,17 @@ const LandingHero: React.FC = () => {
             <span className="text-indigo-600">Global Tech Education</span>
           </h1>
 
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Akada helps Nigerian students explore, plan, and apply to international academic programs in technology with personalized AI guidance.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg font-medium group">
-              Join Waitlist
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition-all duration-300 border-2 border-indigo-600 font-medium">
-              Watch Demo
-            </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+            <Link to="/signup" className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 font-medium text-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-600" tabIndex={0} aria-label="Sign up for Akada">
+              <UserPlus className="h-5 w-5" /> Sign Up
+            </Link>
+            <Link to="/login" className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition-all duration-300 border-2 border-indigo-600 font-medium text-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-600" tabIndex={0} aria-label="Log in to Akada">
+              <LogIn className="h-5 w-5" /> Log In
+            </Link>
           </div>
 
           <div className="mt-12 flex items-center justify-center gap-8 text-center">
