@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: Setup Project Repository and Initial Configuration
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize the project repository with React, TypeScript, Tailwind CSS, and Vite or Create React App. Configure basic project structure and dependencies.
+# Details:
+Create a new project using `npm create vite@latest akada --template react-ts` or `npx create-react-app akada --template typescript`. Install Tailwind CSS and Lucide React icons. Set up initial folder structure (src, public, docs). Add .gitignore and README.md.
+
+# Test Strategy:
+Verify project builds and runs locally with `npm run dev` or `npm start`. Check Tailwind and icons render in a sample component.

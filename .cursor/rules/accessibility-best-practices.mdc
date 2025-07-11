@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: Guidelines for achieving accessibility in web applications
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+
+- Use semantic HTML elements for better screen reader support.
+- Implement ARIA roles and properties where necessary.
+- Ensure sufficient color contrast for text and backgrounds.
+
+- Test with keyboard navigation to ensure full accessibility.

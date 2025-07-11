@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: Best practices for using Supabase as a backend
+globs: **/*.{ts,tsx}
+---
+
+
+- Use row-level security to protect user data.
+- Implement real-time subscriptions for dynamic data updates.
+- Optimize queries with pagination and filtering.
+
+- Regularly back up your database and monitor performance.

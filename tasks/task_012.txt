@@ -1,0 +1,11 @@
+# Task ID: 12
+# Title: Implement Offline Mode
+# Status: pending
+# Dependencies: 1, 2, 3, 6
+# Priority: medium
+# Description: Cache critical data (programs, user preferences) for offline access using service workers.
+# Details:
+Set up service worker (public/service-worker.js). Cache API responses and UI assets. Sync data on reconnect.
+
+# Test Strategy:
+Test app in offline mode. Verify cached data is available and UI functions without network.

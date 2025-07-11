@@ -1,0 +1,11 @@
+# Task ID: 16
+# Title: Implement NGN Localization
+# Status: pending
+# Dependencies: 1, 10
+# Priority: medium
+# Description: Display all costs in NGN using toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }).
+# Details:
+Format all monetary values in UI using toLocaleString. Ensure consistent NGN display across app.
+
+# Test Strategy:
+Verify all cost displays use NGN format. Test with various values.

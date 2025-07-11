@@ -1,0 +1,11 @@
+# Task ID: 11
+# Title: Develop Timeline Builder
+# Status: pending
+# Dependencies: 2, 4
+# Priority: low
+# Description: Generate application timelines with milestones (e.g., “Submit by Jan 2026, ₦75,000”).
+# Details:
+Design timeline UI. Allow users to add milestones with dates and costs. Display as interactive timeline.
+
+# Test Strategy:
+Test adding milestones. Verify timeline displays correctly and updates on changes.

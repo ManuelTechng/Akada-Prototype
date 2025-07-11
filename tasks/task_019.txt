@@ -1,0 +1,11 @@
+# Task ID: 19
+# Title: Conduct Usability Testing
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+# Priority: high
+# Description: Test with 20 Nigerian students. Gather feedback on onboarding, search, and core features.
+# Details:
+Recruit testers. Conduct moderated sessions. Collect feedback on usability, performance, and accessibility.
+
+# Test Strategy:
+Analyze feedback. Track completion rates and time to complete onboarding/search.

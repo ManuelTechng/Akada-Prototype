@@ -1,26 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
-import AppLayout from './components/layouts/AppLayout';
-import ProgramSearchPage from './pages/ProgramSearchPage';
-import LandingPage from './pages/LandingPage';
-import AppDrawerButton from './components/AppDrawerButton';
-import Dashboard from './components/Dashboard';
-import AuthModal from './components/auth/AuthModal';
-import Applications from './components/app/Applications';
-import Documents from './components/app/Documents';
-import Resources from './components/app/Resources';
-import Community from './components/app/Community';
-import Profile from './components/app/Profile';
-import CostCalculator from './components/app/CostCalculator';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { SavedProgramsProvider } from './contexts/SavedProgramsContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import SignupPage from './pages/auth/SignupPage';
-import LoginPage from './pages/auth/LoginPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import OnboardingPage from './pages/onboarding/OnboardingPage';
 import { useAuth } from './contexts/AuthContext';
 import { checkEnvironmentVariables } from './utils/envCheck';
+
+// Lazy load components for better performance
+const AppLayout = lazy(() => import('./components/layouts/AppLayout'));
+const ProgramSearchPage = lazy(() => import('./pages/ProgramSearchPageFixed'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const AppDrawerButton = lazy(() => import('./components/AppDrawerButton'));
+const SmartDashboard = lazy(() => import('./components/dashboard/SmartDashboard'));
+const AuthModal = lazy(() => import('./components/auth/AuthModal'));
+const Applications = lazy(() => import('./components/app/Applications'));
+const Documents = lazy(() => import('./components/app/Documents'));
+const Resources = lazy(() => import('./components/app/Resources'));
+const Community = lazy(() => import('./components/app/Community'));
+const Profile = lazy(() => import('./components/app/Profile'));
+const CostCalculator = lazy(() => import('./components/app/CostCalculator'));
+const SavedPrograms = lazy(() => import('./components/app/SavedPrograms'));
+const RecommendedPrograms = lazy(() => import('./components/app/RecommendedPrograms'));
+const AIAssistant = lazy(() => import('./components/app/AIAssistant'));
+const Settings = lazy(() => import('./components/app/Settings'));
+const ProgramSearchPageNew = lazy(() => import('./pages/ProgramSearchPageNew'));
+const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const OnboardingPage = lazy(() => import('./pages/onboarding/OnboardingPage'));
+
+// Demo pages for development
+const ApplicationTimelineDemo = lazy(() => import('./pages/ApplicationTimelineDemo'));
+const ApplicationTrackerDemo = lazy(() => import('./pages/ApplicationTrackerDemo'));
+const ProfileCompletionDemo = lazy(() => import('./pages/ProfileCompletionDemo'));
+const DesignSystemDemo = lazy(() => import('./pages/DesignSystemDemo'));
+
+// Loading component for Suspense fallback
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+  </div>
+);
 
 // Environment warning component
 export function EnvironmentWarning() {
@@ -29,7 +51,7 @@ export function EnvironmentWarning() {
   if (envCheck.allValid) return null;
   
   return (
-    <div className="fixed bottom-4 right-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow-lg max-w-md">
+    <div className="fixed bottom-4 right-4 bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 text-yellow-700 dark:text-yellow-300 p-4 rounded shadow-lg max-w-md">
       <div className="flex items-start">
         <div className="flex-shrink-0">
           <svg className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
@@ -54,6 +76,19 @@ export function EnvironmentWarning() {
   );
 }
 
+function AppWithProviders() {
+  const { user } = useAuth();
+  
+  return (
+    <SavedProgramsProvider userId={user?.id}>
+      <NotificationProvider>
+        <AppRoutes />
+        <EnvironmentWarning />
+      </NotificationProvider>
+    </SavedProgramsProvider>
+  );
+}
+
 function AppRoutes() {
   const { user, loading, initialized, profile } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
@@ -66,10 +101,10 @@ function AppRoutes() {
   if (loading && !initialized) {
     console.log("AppRoutes: Showing loading UI");
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
+      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -85,7 +120,8 @@ function AppRoutes() {
   return (
     <Router>
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
-      <Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
         <Route path="/" element={
           user ? (
             <Navigate to="/dashboard" replace />
@@ -96,6 +132,12 @@ function AppRoutes() {
             </>
           )
         } />
+        
+        {/* Demo Routes - for development and testing */}
+        <Route path="/demo/timeline" element={<ApplicationTimelineDemo />} />
+        <Route path="/demo/tracker" element={<ApplicationTrackerDemo />} />
+        <Route path="/demo/profile" element={<ProfileCompletionDemo />} />
+        <Route path="/demo/design-system" element={<DesignSystemDemo />} />
         
         {/* Auth Routes */}
         <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
@@ -121,19 +163,25 @@ function AppRoutes() {
             !user ? <Navigate to="/login" replace /> : <AppLayout />
           }
         >
-          <Route index element={<Dashboard />} />
+          <Route index element={<SmartDashboard />} />
           <Route path="search" element={<ProgramSearchPage />} />
+          <Route path="search-new" element={<ProgramSearchPageNew />} />
+          <Route path="saved" element={<SavedPrograms />} />
+          <Route path="recommended" element={<RecommendedPrograms />} />
+          <Route path="assistant" element={<AIAssistant />} />
           <Route path="applications" element={<Applications />} />
           <Route path="documents" element={<Documents />} />
           <Route path="resources" element={<Resources />} />
           <Route path="community" element={<Community />} />
           <Route path="profile" element={<Profile />} />
           <Route path="calculator" element={<CostCalculator />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
@@ -141,12 +189,11 @@ function AppRoutes() {
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <NotificationProvider>
-          <AppRoutes />
-          <EnvironmentWarning />
-        </NotificationProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppWithProviders />
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: Performance Optimization and Offline Support
+# Status: pending
+# Dependencies: 1, 5
+# Priority: medium
+# Description: Setup service worker for offline caching, lazy loading, bundle splitting, and compression pipeline.
+# Details:
+Implement service worker for caching program data. Add lazy loading for images and heavy components. Configure bundle splitting for 3G optimization. Create compression pipeline for Nigerian internet conditions.
+
+# Test Strategy:
+Test offline access and caching. Measure load times on 3G network simulations. Verify bundle size reduction and compression effectiveness.

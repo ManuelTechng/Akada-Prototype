@@ -1,0 +1,402 @@
+/* ======================================
+   DARK THEME CSS - OPTIMIZED FOR DATA VISUALIZATION
+   Provides better contrast and accessibility
+   ====================================== */
+
+/* ======================================
+   ROOT COLOR VARIABLES
+   ====================================== */
+
+:root {
+  /* Light theme colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+  --color-bg-elevated: #ffffff;
+  --color-bg-overlay: rgba(0, 0, 0, 0.1);
+  
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverse: #ffffff;
+  
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-border-focus: #3b82f6;
+  
+  /* Interactive elements */
+  --color-interactive-primary: #3b82f6;
+  --color-interactive-primary-hover: #2563eb;
+  --color-interactive-secondary: #6b7280;
+  --color-interactive-secondary-hover: #4b5563;
+  
+  /* Status colors (light theme) */
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
+  
+  /* Data visualization colors (light) */
+  --color-chart-primary: #3b82f6;
+  --color-chart-secondary: #8b5cf6;
+  --color-chart-tertiary: #10b981;
+  --color-chart-quaternary: #f59e0b;
+  --color-chart-quinary: #ef4444;
+  --color-chart-senary: #06b6d4;
+  
+  --color-chart-bg: #f9fafb;
+  --color-chart-grid: #e5e7eb;
+  --color-chart-text: #374151;
+  --color-chart-axis: #6b7280;
+  
+  /* Nigerian currency colors */
+  --color-ngn-primary: #059669;
+  --color-ngn-secondary: #065f46;
+  --color-usd-primary: #3b82f6;
+  --color-usd-secondary: #1e40af;
+}
+
+/* ======================================
+   DARK THEME OVERRIDES
+   ====================================== */
+
+.dark {
+  /* Dark theme background colors */
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-bg-tertiary: #374151;
+  --color-bg-elevated: #1f2937;
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Dark theme text colors (optimized contrast) */
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverse: #111827;
+  
+  /* Dark theme borders */
+  --color-border-primary: #374151;
+  --color-border-secondary: #4b5563;
+  --color-border-focus: #60a5fa;
+  
+  /* Interactive elements (dark optimized) */
+  --color-interactive-primary: #60a5fa;
+  --color-interactive-primary-hover: #3b82f6;
+  --color-interactive-secondary: #9ca3af;
+  --color-interactive-secondary-hover: #d1d5db;
+  
+  /* Status colors (dark theme optimized) */
+  --color-success: #34d399;
+  --color-success-bg: #064e3b;
+  --color-warning: #fbbf24;
+  --color-warning-bg: #78350f;
+  --color-error: #f87171;
+  --color-error-bg: #7f1d1d;
+  --color-info: #60a5fa;
+  --color-info-bg: #1e3a8a;
+  
+  /* Data visualization colors (dark optimized for better contrast) */
+  --color-chart-primary: #60a5fa;
+  --color-chart-secondary: #a78bfa;
+  --color-chart-tertiary: #34d399;
+  --color-chart-quaternary: #fbbf24;
+  --color-chart-quinary: #f87171;
+  --color-chart-senary: #22d3ee;
+  
+  --color-chart-bg: #1f2937;
+  --color-chart-grid: #374151;
+  --color-chart-text: #e5e7eb;
+  --color-chart-axis: #9ca3af;
+  
+  /* Nigerian currency colors (dark optimized) */
+  --color-ngn-primary: #34d399;
+  --color-ngn-secondary: #059669;
+  --color-usd-primary: #60a5fa;
+  --color-usd-secondary: #2563eb;
+}
+
+/* ======================================
+   UTILITY CLASSES
+   ====================================== */
+
+/* Background utilities */
+.bg-theme-primary { background-color: var(--color-bg-primary); }
+.bg-theme-secondary { background-color: var(--color-bg-secondary); }
+.bg-theme-tertiary { background-color: var(--color-bg-tertiary); }
+.bg-theme-elevated { background-color: var(--color-bg-elevated); }
+
+/* Text utilities */
+.text-theme-primary { color: var(--color-text-primary); }
+.text-theme-secondary { color: var(--color-text-secondary); }
+.text-theme-tertiary { color: var(--color-text-tertiary); }
+.text-theme-inverse { color: var(--color-text-inverse); }
+
+/* Border utilities */
+.border-theme-primary { border-color: var(--color-border-primary); }
+.border-theme-secondary { border-color: var(--color-border-secondary); }
+.border-theme-focus { border-color: var(--color-border-focus); }
+
+/* Interactive utilities */
+.interactive-primary {
+  color: var(--color-interactive-primary);
+  transition: color 0.2s ease;
+}
+.interactive-primary:hover {
+  color: var(--color-interactive-primary-hover);
+}
+
+/* Status utilities */
+.status-success { color: var(--color-success); }
+.status-warning { color: var(--color-warning); }
+.status-error { color: var(--color-error); }
+.status-info { color: var(--color-info); }
+
+.status-success-bg { background-color: var(--color-success-bg); }
+.status-warning-bg { background-color: var(--color-warning-bg); }
+.status-error-bg { background-color: var(--color-error-bg); }
+.status-info-bg { background-color: var(--color-info-bg); }
+
+/* Currency utilities */
+.currency-ngn { color: var(--color-ngn-primary); }
+.currency-usd { color: var(--color-usd-primary); }
+
+/* ======================================
+   DATA VISUALIZATION COMPONENTS
+   ====================================== */
+
+/* Chart containers */
+.chart-container {
+  background-color: var(--color-chart-bg);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* Chart elements */
+.chart-grid {
+  stroke: var(--color-chart-grid);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.chart-axis {
+  stroke: var(--color-chart-axis);
+  stroke-width: 1;
+}
+
+.chart-text {
+  fill: var(--color-chart-text);
+  font-size: 0.75rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.chart-title {
+  fill: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Chart series colors */
+.chart-series-1 { stroke: var(--color-chart-primary); fill: var(--color-chart-primary); }
+.chart-series-2 { stroke: var(--color-chart-secondary); fill: var(--color-chart-secondary); }
+.chart-series-3 { stroke: var(--color-chart-tertiary); fill: var(--color-chart-tertiary); }
+.chart-series-4 { stroke: var(--color-chart-quaternary); fill: var(--color-chart-quaternary); }
+.chart-series-5 { stroke: var(--color-chart-quinary); fill: var(--color-chart-quinary); }
+.chart-series-6 { stroke: var(--color-chart-senary); fill: var(--color-chart-senary); }
+
+/* Chart tooltips */
+.chart-tooltip {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  color: var(--color-text-primary);
+  font-size: 0.75rem;
+}
+
+/* ======================================
+   COMPONENT OPTIMIZATIONS
+   ====================================== */
+
+/* Cards */
+.card-dark-optimized {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dark-optimized:hover {
+  border-color: var(--color-border-secondary);
+  box-shadow: 0 4px 6px -1px var(--color-bg-overlay);
+}
+
+/* Forms */
+.input-dark-optimized {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-dark-optimized:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  outline: none;
+}
+
+.input-dark-optimized::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Buttons */
+.btn-primary-dark-optimized {
+  background-color: var(--color-interactive-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary-dark-optimized:hover {
+  background-color: var(--color-interactive-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary-dark-optimized {
+  background-color: transparent;
+  color: var(--color-interactive-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary-dark-optimized:hover {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-border-secondary);
+}
+
+/* ======================================
+   DARK MODE TRANSITIONS
+   ====================================== */
+
+/* Smooth transitions for theme changes */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+
+/* Disable transitions for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0s !important;
+  }
+}
+
+/* ======================================
+   MOBILE OPTIMIZATIONS
+   ====================================== */
+
+@media (max-width: 375px) {
+  .chart-container {
+    padding: 0.75rem;
+  }
+  
+  .chart-text {
+    font-size: 0.625rem;
+  }
+  
+  .chart-title {
+    font-size: 0.875rem;
+  }
+}
+
+/* ======================================
+   HIGH CONTRAST MODE
+   ====================================== */
+
+@media (prefers-contrast: high) {
+  .dark {
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #e5e7eb;
+    --color-border-primary: #6b7280;
+    --color-border-secondary: #9ca3af;
+    
+    /* Enhanced chart colors for high contrast */
+    --color-chart-primary: #93c5fd;
+    --color-chart-secondary: #c4b5fd;
+    --color-chart-tertiary: #6ee7b7;
+    --color-chart-quaternary: #fcd34d;
+    --color-chart-quinary: #fca5a5;
+    --color-chart-senary: #67e8f9;
+  }
+}
+
+/* ======================================
+   FORCED COLORS MODE (Windows High Contrast)
+   ====================================== */
+
+@media (forced-colors: active) {
+  .chart-container {
+    border: 1px solid ButtonText;
+    background: Canvas;
+  }
+  
+  .chart-text,
+  .chart-title {
+    fill: CanvasText;
+  }
+  
+  .chart-grid {
+    stroke: ButtonText;
+    opacity: 0.3;
+  }
+  
+  .btn-primary-dark-optimized {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+  
+  .input-dark-optimized {
+    background: Field;
+    color: FieldText;
+    border: 1px solid ButtonText;
+  }
+}
+
+/* ======================================
+   PRINT STYLES
+   ====================================== */
+
+@media print {
+  .dark {
+    /* Force light colors for printing */
+    --color-bg-primary: #ffffff;
+    --color-text-primary: #000000;
+    --color-border-primary: #000000;
+    
+    /* Ensure chart visibility in print */
+    --color-chart-bg: #ffffff;
+    --color-chart-text: #000000;
+    --color-chart-grid: #666666;
+  }
+  
+  .chart-container {
+    border: 1px solid #000000;
+    background: #ffffff !important;
+  }
+}

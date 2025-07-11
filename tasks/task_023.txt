@@ -1,0 +1,41 @@
+# Task ID: 23
+# Title: Implement Mobile-First Responsive Utility Hooks for Akada
+# Status: pending
+# Dependencies: 5, 17
+# Priority: medium
+# Description: Develop a set of mobile-first responsive utility hooks in src/hooks/useResponsive.ts, including useIsMobile, useIsOnline (3G detection), and useReducedData, all designed to work offline for the Cursor agent.
+# Details:
+Create the following custom React hooks in src/hooks/useResponsive.ts:
+
+- useIsMobile(): Returns true if the viewport width is 375px or less. Use window.innerWidth and a resize event listener, with debouncing for performance. Ensure the hook cleans up listeners on unmount and works with server-side rendering (SSR) by checking window existence.
+- useIsOnline(): Detects if the user is online and, if possible, whether the connection is 3G or slower. Use the Network Information API (navigator.connection.effectiveType) where available, falling back to navigator.onLine. Ensure the hook gracefully degrades if APIs are unavailable and works offline by caching the last known state.
+- useReducedData(): Determines if the user prefers reduced data usage (e.g., disables heavy animations). Use the Network Information API's saveData property if available, and/or the prefers-reduced-data media query. Provide a fallback for unsupported browsers.
+
+All hooks must:
+- Be mobile-first and optimized for offline use (cache last known values, avoid network requests, and handle absence of browser APIs).
+- Be thoroughly documented with JSDoc comments.
+- Include unit tests (in a separate file) for all major code paths, including offline scenarios and API fallbacks.
+
+Example for useIsMobile():
+```ts
+import { useState, useEffect } from 'react';
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 375 : false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => setIsMobile(window.innerWidth <= 375);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return isMobile;
+}
+```
+Follow similar patterns for the other hooks, ensuring robust offline and fallback support.
+
+# Test Strategy:
+1. Write unit tests for each hook using a React testing library and Jest. 
+2. For useIsMobile, simulate window resizing and verify correct values at and around the 375px breakpoint.
+3. For useIsOnline, mock navigator.connection and navigator.onLine to test 3G detection, offline, and fallback scenarios.
+4. For useReducedData, mock navigator.connection.saveData and the prefers-reduced-data media query, verifying correct detection and fallback behavior.
+5. Test all hooks in offline mode (simulate absence of APIs and network) to ensure they return sensible defaults and do not throw errors.
+6. Review JSDoc comments and ensure all exported hooks are documented.

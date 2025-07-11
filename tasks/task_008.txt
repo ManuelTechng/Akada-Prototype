@@ -1,0 +1,53 @@
+# Task ID: 8
+# Title: Implement Document Upload and AI Review
+# Status: done
+# Dependencies: 2, 4
+# Priority: medium
+# Description: Integrate the existing DocumentUpload component with Supabase Storage for real file uploads. Implement AI-powered feedback using OpenAI API. Store uploaded files in Supabase Storage and document metadata in the documents table. Provide real-time AI feedback to users on uploaded documents.
+# Details:
+Replace mock data in DocumentUpload with real Supabase Storage integration. Create a documents.ts library for Supabase operations, including file upload and metadata storage. Implement file upload to a designated Supabase bucket (e.g., 'documents'). After upload, call the OpenAI API to review the document for grammar, structure, and completeness. Store metadata (filename, url, status, feedback) in the documents table. Display real-time AI feedback to users as soon as it is available. Use case: Nigerian students upload transcripts, SOPs, and CVs to receive actionable AI feedback before university submission.
+
+# Test Strategy:
+Test uploading various document types (transcripts, SOPs, CVs) through the UI. Verify files are stored in the correct Supabase bucket and accessible via generated URLs. Confirm metadata is correctly saved in the documents table. Ensure AI feedback is generated and displayed in real time after upload. Test error handling for failed uploads and API errors.
+
+# Subtasks:
+## 1. Create documents.ts library for Supabase operations [done]
+### Dependencies: None
+### Description: Develop a TypeScript library (documents.ts) to encapsulate Supabase Storage file upload and metadata operations for documents.
+### Details:
+<info added on 2025-07-06T23:35:25.596Z>
+Created a comprehensive documents.ts library fully integrated with Supabase, enabling file uploads with validation, document metadata storage, and AI review using essay.ts functions. Features include real-time status updates, robust error handling and cleanup, support for SOP, CV, transcript, and recommendation documents, file size and type validation, as well as download and delete capabilities. The implementation supports real-world use cases such as allowing Nigerian students to upload academic documents and receive AI feedback on grammar, structure, and completeness.
+</info added on 2025-07-06T23:35:25.596Z>
+
+## 2. Implement file upload to Supabase Storage [done]
+### Dependencies: None
+### Description: Replace mock upload logic in DocumentUpload with real file upload to Supabase Storage using the documents.ts library. Ensure files are uploaded to the correct bucket and path.
+### Details:
+<info added on 2025-07-06T23:35:37.323Z>
+Replaced mock upload logic in the DocumentUpload component with full Supabase integration using the uploadDocument() function from the documents.ts library. Implemented drag and drop file upload with visual feedback, file validation for size (up to 10MB) and supported types (PDF, DOC, DOCX, TXT), and automatic document type detection based on filename. Added real-time upload progress and status updates, comprehensive error handling with user-friendly notifications, and a document list displaying real-time status (uploading, pending, reviewed, error). Included download and delete functionality for uploaded documents. The UI is responsive and optimized for Nigerian students on mobile devices. Students can now upload multiple documents simultaneously and monitor real-time AI review progress.
+</info added on 2025-07-06T23:35:37.323Z>
+
+## 3. Connect to OpenAI API for document review [done]
+### Dependencies: None
+### Description: After successful upload, send the document to the OpenAI API for review. Retrieve feedback on grammar, structure, and completeness.
+### Details:
+<info added on 2025-07-06T23:41:33.442Z>
+Connected the document review system to the Gemini API, replacing OpenAI, by developing a dedicated gemini.ts library with prompts tailored for Nigerian students. Implemented the reviewDocumentWithGemini() function to apply document type-specific prompts, and added getGeminiResponse() and getStudyAbroadAdvice() functions for enhanced feedback. Updated documents.ts to utilize Gemini for AI-powered reviews, and introduced downloadDocumentContent() to extract text from uploaded files. Configured fallback responses for API errors and optimized all prompts to address the unique needs of Nigerian students, including visa, scholarship, and essay guidance. This enables culturally-aware, context-specific AI feedback for Nigerian students applying internationally.
+</info added on 2025-07-06T23:41:33.442Z>
+
+## 4. Store document metadata in documents table [done]
+### Dependencies: None
+### Description: Save document metadata (filename, storage URL, upload status, AI feedback) in the Supabase documents table after upload and review.
+### Details:
+<info added on 2025-07-06T23:41:43.900Z>
+Completed implementation of document metadata storage in the documents table post-upload and review. The migration includes a comprehensive schema supporting fields for filename, URL, type, status, feedback, file_size, mime_type, created_at, and updated_at, with automatic timestamp triggers. RLS policies ensure user data security, and indexes have been added for optimal query performance. Status tracking covers uploading, pending, reviewed, and error states. The table supports document types including SOP, CV, transcript, recommendation, and other. Error handling and rollback mechanisms are in place to maintain data integrity. The system now fully tracks the document lifecycle from upload through AI review completion.
+</info added on 2025-07-06T23:41:43.900Z>
+
+## 5. Add real-time feedback functionality [done]
+### Dependencies: None
+### Description: Update the UI to display AI feedback as soon as it is available, providing users with immediate insights after document upload.
+### Details:
+<info added on 2025-07-06T23:41:55.737Z>
+Added real-time feedback functionality to the DocumentUpload component, providing users with immediate status updates throughout the upload and AI review process. Features include live document lists with color-coded status indicators (uploading, pending, reviewed, error), automatic UI updates upon AI review completion, loading animations, progress indicators, and instant feedback display. Enhanced error handling delivers user-friendly messages, while real-time document type detection and labeling improve clarity. The interface is optimized for mobile use by Nigerian students, with automatic scrolling and focus management to ensure a seamless and engaging user experience from upload through AI review completion.
+</info added on 2025-07-06T23:41:55.737Z>
+

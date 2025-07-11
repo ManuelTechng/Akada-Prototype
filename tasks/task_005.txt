@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Build Onboarding Multi-Step Form
+# Status: done
+# Dependencies: 2, 4
+# Priority: medium
+# Description: Create a guided onboarding form to capture study goals, budget range, and preferred countries. Save to user_preferences table.
+# Details:
+Design multi-step form in React. Collect: goals (text), budget_range (numeric), countries (array). On submit, save to user_preferences table via Supabase API. Display personalized recommendations based on input.
+
+# Test Strategy:
+Test form submission and verify data in user_preferences table. Check recommendations display logic.

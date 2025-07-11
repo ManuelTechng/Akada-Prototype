@@ -1,0 +1,11 @@
+# Task ID: 26
+# Title: Develop 3G-Optimized Core UI Components for Akada (ProgramCard, SearchFilters, CostCalculator)
+# Status: pending
+# Dependencies: 3, 7
+# Priority: medium
+# Description: Implement three mobile-first, performant React components—ProgramCard, SearchFilters, and CostCalculator—optimized for 3G networks, accessibility, and offline support for the Akada platform.
+# Details:
+Build each component as a focused, reusable functional component using React best practices. For ProgramCard.tsx, implement skeleton loading states, NGN currency formatting, save/unsave toggling with accessible ARIA attributes, and full keyboard navigation. For SearchFilters.tsx, create a country multi-select with flag icons, a budget slider (NGN), a specialization dropdown, and ensure the filter panel is collapsible on mobile and works offline (using local storage or service workers as appropriate). For CostCalculator.tsx, visually break down tuition, living, and visa costs, format all values in NGN, design a mobile-friendly layout, and include an export button (placeholder for future functionality). Prioritize small, maintainable components, consistent naming, and separation of concerns. Ensure all components are optimized for low-bandwidth (3G) environments by minimizing asset size and reducing unnecessary re-renders. Follow accessibility standards throughout, including ARIA roles and keyboard support.
+
+# Test Strategy:
+1. Unit test each component for rendering, props handling, and state changes (e.g., save/unsave, filter selection, cost breakdown). 2. Verify skeleton loading and NGN formatting visually and via automated tests. 3. Test ARIA attributes and keyboard navigation using accessibility tools. 4. Simulate 3G network conditions and confirm acceptable load times and offline functionality (for SearchFilters). 5. Check mobile responsiveness with device emulators. 6. Confirm export button is present and visually correct in CostCalculator. 7. Conduct code review for adherence to React best practices and maintainability.

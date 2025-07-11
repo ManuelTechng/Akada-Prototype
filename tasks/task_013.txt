@@ -1,0 +1,11 @@
+# Task ID: 13
+# Title: Integrate Payment Gateways
+# Status: pending
+# Dependencies: 2, 4, 8, 9
+# Priority: medium
+# Description: Support Paystack/Flutterwave for premium features (document review, application tracking).
+# Details:
+Integrate Paystack/Flutterwave SDKs. Handle payment flows for subscription tiers. Update user access based on payment status.
+
+# Test Strategy:
+Test payment flow with test cards. Verify user access updates on successful payment.

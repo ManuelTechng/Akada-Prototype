@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: Best practices for React applications
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+
+- Use functional components and hooks for state management.
+- Implement React.memo and useCallback to optimize performance.
+- Structure components for reusability and maintainability.
+
+- Use PropTypes or TypeScript for type checking.

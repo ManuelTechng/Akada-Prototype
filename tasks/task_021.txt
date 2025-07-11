@@ -1,0 +1,11 @@
+# Task ID: 21
+# Title: Create Akada Design System Tokens (Nigeria-first, 3G-optimized, Accessible)
+# Status: pending
+# Dependencies: 3
+# Priority: medium
+# Description: Define and export Akada design system tokens in TypeScript, including color palettes, surface colors, spacing, and currency formatting for NGN, optimized for accessibility and low-bandwidth environments.
+# Details:
+Implement a TypeScript module at src/styles/tokens.ts that exports an akadaTokens object. Define primary and secondary color palettes (indigo, gray, white, success, warning, error) with accessible contrast ratios. Include surface/background color tokens for both dark and light modes. Add spacing tokens for both touch-friendly and compact layouts, using clear naming conventions (e.g., spacingTouchMd, spacingCompactSm). Implement a currency formatting utility for NGN using locale 'en-NG', currency 'NGN', and a static exchangeRate of 1500. Ensure all tokens are fully typed for IntelliSense support and maintainability. Optimize the structure for 3G performance by minimizing object size and avoiding unnecessary dependencies. Do not use any database or external runtime dependencies. Reference best practices for TypeScript design tokens, such as using enums or typed objects for color and spacing tokens, and ensure the export is a single akadaTokens object suitable for import by the Cursor agent. Document token structure with inline comments for clarity and future maintenance.
+
+# Test Strategy:
+1. Verify that src/styles/tokens.ts exports a fully typed akadaTokens object with all required token categories (colors, surfaces, spacing, currency formatting). 2. Check that color tokens match the specified palette and provide sufficient contrast for accessibility. 3. Confirm that both dark and light surface color tokens are present and correctly named. 4. Ensure spacing tokens are available for both touch and compact layouts, with clear naming and values. 5. Test the currency formatting utility with various NGN values to confirm correct locale and exchange rate handling. 6. Validate that the module has no database or external runtime dependencies. 7. Confirm that all tokens are accessible via TypeScript IntelliSense and are documented with inline comments.

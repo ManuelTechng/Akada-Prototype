@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: Best practices for using Vite as a build tool
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+
+- Use Vite's built-in features for fast development and hot module replacement.
+- Optimize production builds with code splitting and tree shaking.
+- Configure environment variables for different environments.
+
+- Leverage Vite plugins for enhanced functionality.

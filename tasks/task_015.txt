@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: Optimize for 3G and Mobile
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Minify assets, lazy-load images, ensure <3s load time on 375px screens.
+# Details:
+Use Vite/Tailwind for minification. Lazy-load images with React. Test on 3G throttling in Chrome DevTools. Use Tailwind classes: max-w-md, sm:mx-auto.
+
+# Test Strategy:
+Test load time on 375px, 3G. Use Lighthouse and Chrome DevTools. Ensure <3s load.

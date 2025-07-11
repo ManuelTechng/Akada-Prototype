@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: Best practices for integrating AI services in applications
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+
+- Use asynchronous calls to handle AI API requests efficiently.
+- Implement error handling for API failures and timeouts.
+- Cache responses where applicable to reduce API calls.
+
+- Ensure user data privacy and compliance with regulations.

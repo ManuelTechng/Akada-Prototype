@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Unified Preference Service Implementation
+# Status: done
+# Dependencies: 2
+# Priority: high
+# Description: Build a service to merge user_preferences and user_profiles.study_preferences, and implement intelligent recommendation engine.
+# Details:
+Create a backend service (e.g., Supabase function or custom API) to merge and manage user preferences. Implement recommendation logic using actual user data. Add behavioral tracking for program interactions.
+
+# Test Strategy:
+Test service with mock and real user data. Verify correct merging of preferences and accurate recommendations. Check behavioral tracking integration.
