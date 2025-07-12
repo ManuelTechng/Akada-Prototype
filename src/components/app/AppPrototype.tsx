@@ -16,12 +16,16 @@ import Documents from './Documents';
 import Community from './Community';
 import { useNotifications } from '../../contexts/NotificationContext';
 import NotificationDropdown from '../NotificationDropdown';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const AppPrototype: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { unreadCount } = useNotifications();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -60,6 +64,16 @@ const AppPrototype: React.FC = () => {
 
   const handleReturnToDashboard = () => {
     setActiveTab("dashboard");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      navigate('/login');
+    }
   };
 
   return (
@@ -131,7 +145,11 @@ const AppPrototype: React.FC = () => {
               <div className="font-medium text-gray-900">Oluwaseun A.</div>
               <div className="text-sm text-gray-500">Premium Plan</div>
             </div>
-            <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+            <button 
+              onClick={handleLogout}
+              className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+              title="Log out"
+            >
               <LogOut className="h-5 w-5" />
             </button>
           </div>

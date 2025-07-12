@@ -23,7 +23,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, profile } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const { theme } = useTheme();
   // const { colors, spacing, currency } = useDesignTokens();
 
@@ -135,8 +135,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     setIsDrawerOpen(false);
     
     if (item.id === 'logout') {
-      // Handle logout - you can implement signOut here
-      navigate('/login');
+      try {
+        await signOut();
+        navigate('/login');
+      } catch (error) {
+        console.error('Error signing out:', error);
+        navigate('/login');
+      }
       return;
     }
     
