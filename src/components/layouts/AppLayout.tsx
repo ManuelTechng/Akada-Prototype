@@ -21,6 +21,7 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
@@ -135,12 +136,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     setIsDrawerOpen(false);
     
     if (item.id === 'logout') {
+      setLoading(true);
       try {
+        console.log('Logout button clicked, calling signOut...');
+        if (!signOut) {
+          console.error('signOut function is undefined!');
+          return;
+        }
         await signOut();
+        console.log('SignOut successful, navigating to login...');
         navigate('/login');
       } catch (error) {
         console.error('Error signing out:', error);
         navigate('/login');
+      } finally {
+        setLoading(false);
       }
       return;
     }
@@ -241,12 +251,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   return (
                     <button
                       key={item.id}
-                      onClick={() => handleNavigation(item)}
+                      onClick={() => {
+                        console.log('Button clicked:', item.id, item.label);
+                        handleNavigation(item);
+                      }}
                       className={`flex items-center justify-between w-full px-6 py-2.5 text-left transition-colors ${
                         isActive
                           ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 border-r-2 border-indigo-600'
                           : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                       }`}
+                      disabled={loading}
                     >
                       <div className="flex items-center gap-3">
                         <Icon className={`h-5 w-5 ${isActive ? 'text-indigo-600' : 'text-gray-400 dark:text-gray-500'}`} />

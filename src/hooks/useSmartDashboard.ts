@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useProfileCompletion, useApplicationTimeline, useCostAnalysis } from './useDashboard'
 import { usePersonalizedPrograms } from './usePreferences'
 import { formatNGN, formatCompactNGN } from './usePreferences'
+import { useRealtime, useRefresh } from './useRealtime'
 
 export interface DashboardInsight {
   id: string
@@ -38,6 +39,7 @@ export const useSmartDashboard = () => {
   const [insights, setInsights] = useState<DashboardInsight[]>([])
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
   // Generate comprehensive insights for Nigerian students
   const generateInsights = useCallback(() => {
@@ -239,7 +241,7 @@ export const useSmartDashboard = () => {
     } finally {
       setLoading(false)
     }
-  }, [generateInsights, calculateMetrics])
+  }, [completionData, timelineData, costData, recommendedPrograms, isProfileOptimal])
 
   // Add timeout fallback to prevent infinite loading
   useEffect(() => {
@@ -267,11 +269,43 @@ export const useSmartDashboard = () => {
     setInsights(prev => prev.filter(insight => insight.id !== insightId))
   }, [])
 
-  const refreshDashboard = useCallback(() => {
-    setLoading(true)
-    // Trigger refresh of all dependent hooks
-    // This would be handled by the individual hooks' refetch functions
+  const refreshDashboard = useCallback(async () => {
+    setRefreshing(true)
+    try {
+      // Force re-render by updating a timestamp
+      setInsights(prev => [...prev])
+      // Add a small delay to show refresh state
+      await new Promise(resolve => setTimeout(resolve, 500))
+    } finally {
+      setRefreshing(false)
+    }
   }, [])
+
+  // Debounced refresh function
+  const { refresh: debouncedRefresh } = useRefresh(refreshDashboard, 1000)
+
+  // Real-time subscriptions for dashboard data
+  useRealtime({
+    table: 'applications',
+    onInsert: () => debouncedRefresh(),
+    onUpdate: () => debouncedRefresh(),
+    onDelete: () => debouncedRefresh(),
+    enabled: true
+  })
+
+  useRealtime({
+    table: 'saved_programs',
+    onInsert: () => debouncedRefresh(),
+    onUpdate: () => debouncedRefresh(),
+    onDelete: () => debouncedRefresh(),
+    enabled: true
+  })
+
+  useRealtime({
+    table: 'user_preferences',
+    onUpdate: () => debouncedRefresh(),
+    enabled: true
+  })
 
   // Get dashboard summary for Nigerian students
   const getDashboardSummary = useCallback(() => {
@@ -366,6 +400,7 @@ export const useSmartDashboard = () => {
     insights,
     metrics,
     loading,
+    refreshing,
     dismissInsight,
     refreshDashboard,
     getDashboardSummary,

@@ -9,6 +9,7 @@ const MAX_RETRIES = 3;
 const testConnection = async (): Promise<boolean> => {
   try {
     const { data, error } = await supabase.from('user_profiles').select('count').limit(1);
+    console.log('Connection test result:', { data, error: error?.message });
     return !error;
   } catch (err) {
     console.error('Supabase connection test failed:', err);
@@ -31,9 +32,9 @@ export const getUserProfile = async (userId: string, retryCount = 0): Promise<Us
       console.log('Supabase connection test passed');
     }
 
-    // Create timeout promise - increased for 3G networks in Nigeria
+    // Create timeout promise - reduced timeout for faster failure
     const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('Profile query timeout')), 10000)
+      setTimeout(() => reject(new Error('Profile query timeout')), 3000)
     );
 
     // First try to get existing profile with timeout
@@ -44,8 +45,24 @@ export const getUserProfile = async (userId: string, retryCount = 0): Promise<Us
       .eq('id', userId)
       .single();
 
-    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
-    console.log('Profile query completed:', { hasData: !!data, error: error?.message });
+    console.log('Starting Promise.race for profile query...');
+    let data, error;
+    try {
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      data = result.data;
+      error = result.error;
+      console.log('Profile query completed:', { hasData: !!data, error: error?.message });
+      
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
+    } catch (queryError) {
+      console.error('Profile query failed:', queryError);
+      // Continue with null data - let the app create a new profile
+      data = null;
+      error = queryError;
+    }
 
     // If profile exists, parse JSON fields and return it
     if (data) {

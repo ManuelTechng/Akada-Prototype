@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import { useRealtime } from '../hooks/useRealtime'
 
 interface SavedProgram {
   id: string
@@ -182,6 +183,25 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
   const refreshSavedPrograms = async () => {
     await fetchSavedPrograms()
   }
+
+  // Real-time subscription for saved programs
+  useRealtime({
+    table: 'saved_programs',
+    filter: userId ? `user_id=eq.${userId}` : undefined,
+    onInsert: (payload) => {
+      console.log('New saved program:', payload)
+      fetchSavedPrograms()
+    },
+    onUpdate: (payload) => {
+      console.log('Saved program updated:', payload)
+      fetchSavedPrograms()
+    },
+    onDelete: (payload) => {
+      console.log('Saved program deleted:', payload)
+      fetchSavedPrograms()
+    },
+    enabled: !!userId
+  })
 
   useEffect(() => {
     if (userId) {

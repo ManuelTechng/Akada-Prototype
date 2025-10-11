@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Heart, MapPin, Clock, Users, GraduationCap, Star, BookOpen } from 'lucide-react';
+import { Heart, MapPin, Clock, Users, GraduationCap, Star, BookOpen, AlertCircle } from 'lucide-react';
 import { formatProgramTuition } from '../../lib/utils';
 import { useIsMobile } from '../../hooks/useResponsive';
 import { useDarkMode } from '../../hooks/useDarkMode';
+import { useProgramTuition } from '../../hooks/useProgramTuition';
 import type { Program } from '../../lib/types';
 
 // Enhanced Program interface for better type safety
@@ -28,10 +29,14 @@ interface ProgramCardProps {
   program: EnhancedProgram;
   onSave?: (id: string) => void;
   onUnsave?: (id: string) => void;
+  onApply?: (id: string) => void;
   isSaved?: boolean;
   isLoading?: boolean;
   onViewDetails?: (id: string) => void;
   className?: string;
+  showMatchScore?: boolean;
+  showRecommendationBadge?: boolean;
+  compact?: boolean;
 }
 
 interface ProgramCardSkeletonProps {
@@ -59,9 +64,17 @@ export const ProgramCardSkeleton: React.FC<ProgramCardSkeletonProps> = ({ classN
       </div>
 
       {/* Price skeleton */}
-      <div className="mb-3">
-        <div className={`h-6 ${baseClasses} mb-1`} style={{ width: '50%' }} />
-        <div className={`h-3 ${baseClasses}`} style={{ width: '30%' }} />
+      <div className="mb-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+        <div className="flex items-baseline justify-between">
+          <div className="flex-1">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className={`h-6 ${baseClasses}`} style={{ width: '60%' }} />
+              <div className={`h-3 w-8 ${baseClasses} rounded-full`} />
+            </div>
+            <div className={`h-3 ${baseClasses}`} style={{ width: '40%' }} />
+          </div>
+          <div className={`h-6 w-16 ${baseClasses} rounded-full`} />
+        </div>
       </div>
 
       {/* Details skeleton */}
@@ -99,18 +112,35 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   program,
   onSave,
   onUnsave,
+  onApply,
   isSaved = false,
   isLoading = false,
   onViewDetails,
-  className = ''
+  className = '',
+  showMatchScore = false,
+  showRecommendationBadge = false,
+  compact = false
 }) => {
   const isMobile = useIsMobile();
   const { isDark } = useDarkMode();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Calculate smart currency display based on program country
+  // Calculate smart currency display based on program country with real-time rates
   const tuitionAmount = program.tuition_fee || 0;
-  const currencyDisplay = formatProgramTuition(tuitionAmount, program.country || '');
+  const tuitionDisplay = useProgramTuition(tuitionAmount, program.country || '', {
+    showConversion: true,
+    enableRealTime: true,
+    cacheTime: 300000 // 5 minutes cache
+  });
+
+  // Fallback to static display if hook is still loading or has issues
+  const currencyDisplay = tuitionDisplay.isLoading 
+    ? formatProgramTuition(tuitionAmount, program.country || '')
+    : {
+        primary: tuitionDisplay.primary,
+        secondary: tuitionDisplay.secondary,
+        isNigerian: tuitionDisplay.isNigerian
+      };
 
   // Handle save/unsave
   const handleSaveToggle = () => {
@@ -213,27 +243,57 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
         </button>
       </div>
 
-      {/* Price Section - Prominent display */}
+      {/* Price Section - Prominent display with real-time indicators */}
       <div className="mb-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
         <div className="flex items-baseline justify-between">
-          <div>
-            <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-              {currencyDisplay.primary}
-              <span className="text-sm font-normal">/year</span>
+          <div className="flex-1">
+            <div className="flex items-center space-x-2">
+              <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                {tuitionDisplay.isLoading ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="animate-pulse bg-indigo-200 dark:bg-indigo-700 h-6 w-24 rounded"></div>
+                    <span className="text-sm font-normal">/year</span>
+                  </div>
+                ) : (
+                  <>
+                    {currencyDisplay.primary}
+                    <span className="text-sm font-normal">/year</span>
+                  </>
+                )}
+              </div>
+              
+              {/* Real-time indicator */}
+              {!tuitionDisplay.isLoading && tuitionDisplay.isRealTime && (
+                <div className="flex items-center text-xs text-green-600 dark:text-green-400" title="Real-time exchange rates">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-1"></div>
+                  Live
+                </div>
+              )}
+              
+              {/* Error indicator */}
+              {tuitionDisplay.hasError && (
+                <div className="flex items-center text-xs text-yellow-600 dark:text-yellow-400" title="Using approximate rates">
+                  <AlertCircle className="w-3 h-3 mr-1" />
+                  Approx
+                </div>
+              )}
             </div>
-            {currencyDisplay.secondary && (
-              <div className="text-xs text-gray-500 dark:text-gray-400">
+            
+            {currencyDisplay.secondary && !tuitionDisplay.isLoading && (
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {currencyDisplay.secondary}
               </div>
             )}
+            
             {currencyDisplay.isNigerian && (
-              <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+              <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">
                 🇳🇬 Local tuition fees
               </div>
             )}
           </div>
+          
           {(program.has_scholarships || program.scholarshipAvailable) && (
-            <div className="text-xs bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 px-2 py-1 rounded-full font-medium">
+            <div className="text-xs bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 px-2 py-1 rounded-full font-medium flex-shrink-0">
               <Star className="h-3 w-3 inline mr-1" />
               Scholarship
             </div>
@@ -313,10 +373,38 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
         </div>
         
         <div className="flex gap-2">
+          {/* Save/Unsave Button */}
+          {(onSave || onUnsave) && (
+            <button
+              onClick={handleSaveToggle}
+              onKeyDown={handleSaveKeyDown}
+              className={`text-xs px-3 py-1.5 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
+                isSaved
+                  ? 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/30 focus:ring-red-500'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-gray-500'
+              }`}
+              aria-label={isSaved ? `Remove ${program.name} from saved programs` : `Save ${program.name}`}
+            >
+              {isSaved ? 'Saved' : 'Save'}
+            </button>
+          )}
+
+          {/* Apply Button */}
+          {onApply && (
+            <button
+              onClick={() => onApply(program.id)}
+              className="text-xs bg-indigo-600 dark:bg-indigo-500 text-white px-3 py-1.5 rounded hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              aria-label={`Apply to ${program.name}`}
+            >
+              Apply
+            </button>
+          )}
+
+          {/* View Details Button */}
           {onViewDetails && (
             <button 
               onClick={() => onViewDetails(program.id)}
-              className="text-xs bg-indigo-600 dark:bg-indigo-500 text-white px-3 py-1.5 rounded hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               aria-label={`View details for ${program.name}`}
             >
               View Details

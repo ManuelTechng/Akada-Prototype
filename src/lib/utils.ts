@@ -48,6 +48,41 @@ export const EXCHANGE_RATES: ExchangeRates = {
     rate: 0.92, // Swiss Franc rate
     symbol: 'CHF',
     format: (amount) => `CHF ${amount.toLocaleString('en-US')}`
+  },
+  SEK: {
+    rate: 11.25, // Swedish Krona rate (1 USD = 11.25 SEK approx)
+    symbol: 'kr',
+    format: (amount) => `${amount.toLocaleString('sv-SE')} kr`
+  },
+  NOK: {
+    rate: 11.85, // Norwegian Krone rate (1 USD = 11.85 NOK approx)
+    symbol: 'kr',
+    format: (amount) => `${amount.toLocaleString('nb-NO')} kr`
+  },
+  DKK: {
+    rate: 7.02, // Danish Krone rate (1 USD = 7.02 DKK approx)
+    symbol: 'kr',
+    format: (amount) => `${amount.toLocaleString('da-DK')} kr`
+  },
+  JPY: {
+    rate: 154.50, // Japanese Yen rate (1 USD = 154.50 JPY approx)
+    symbol: '¥',
+    format: (amount) => `¥${amount.toLocaleString('ja-JP', { maximumFractionDigits: 0 })}`
+  },
+  SGD: {
+    rate: 1.36, // Singapore Dollar rate (1 USD = 1.36 SGD approx)
+    symbol: 'S$',
+    format: (amount) => `S$${amount.toLocaleString('en-SG')}`
+  },
+  NZD: {
+    rate: 1.73, // New Zealand Dollar rate (1 USD = 1.73 NZD approx)
+    symbol: 'NZ$',
+    format: (amount) => `NZ$${amount.toLocaleString('en-NZ')}`
+  },
+  HKD: {
+    rate: 7.78, // Hong Kong Dollar rate (1 USD = 7.78 HKD approx)
+    symbol: 'HK$',
+    format: (amount) => `HK$${amount.toLocaleString('en-HK')}`
   }
 };
 
@@ -77,17 +112,25 @@ export const getCountryCurrency = (country: string): string => {
     'France': 'EUR',
     'Ireland': 'EUR',
     'Netherlands': 'EUR',
-    'Sweden': 'EUR',
+    'Sweden': 'SEK',
     'Switzerland': 'CHF',
+    'Norway': 'NOK',
+    'Denmark': 'DKK',
+    'Japan': 'JPY',
+    'Singapore': 'SGD',
+    'New Zealand': 'NZD',
+    'Hong Kong': 'HKD',
     'Nigeria': 'NGN'
   };
   return currencyMap[country] || 'USD';
 };
 
 /**
- * Smart currency display for program cards
+ * Smart currency display for program cards with real-time rates
  * Nigerian schools: Show only Naira
  * International schools: Show original currency + NGN conversion
+ * 
+ * @deprecated Use formatProgramTuitionAsync for real-time rates
  */
 export const formatProgramTuition = (
   amount: number, 
@@ -104,7 +147,7 @@ export const formatProgramTuition = (
     };
   }
   
-  // For international schools
+  // For international schools - fallback to static rates
   const primaryDisplay = formatCurrency(amount, originalCurrency);
   
   if (showConversion) {
@@ -122,6 +165,62 @@ export const formatProgramTuition = (
     primary: primaryDisplay,
     isNigerian: false
   };
+};
+
+/**
+ * Modern async currency display for program cards with real-time API rates
+ * Uses the new multicurrency system with fallback support
+ */
+export const formatProgramTuitionAsync = async (
+  amount: number, 
+  country: string, 
+  showConversion: boolean = true
+): Promise<{ primary: string; secondary?: string; isNigerian: boolean; isRealTime: boolean }> => {
+  const isNigerian = country === 'Nigeria';
+  const originalCurrency = getCountryCurrency(country);
+  
+  // Import currency utilities dynamically to avoid circular dependencies
+  const { formatCurrencyWithAPI, convertCurrencyWithAPI } = await import('./currency/utils');
+  
+  if (isNigerian) {
+    return {
+      primary: await formatCurrencyWithAPI(amount, 'NGN'),
+      isNigerian: true,
+      isRealTime: true
+    };
+  }
+  
+  try {
+    // For international schools - use real-time rates
+    const primaryDisplay = await formatCurrencyWithAPI(amount, originalCurrency);
+    
+    if (showConversion) {
+      const ngnAmount = await convertCurrencyWithAPI(amount, originalCurrency, 'NGN', false) as number;
+      const secondaryDisplay = `~${await formatCurrencyWithAPI(ngnAmount, 'NGN')}`;
+      
+      return {
+        primary: primaryDisplay,
+        secondary: secondaryDisplay,
+        isNigerian: false,
+        isRealTime: true
+      };
+    }
+    
+    return {
+      primary: primaryDisplay,
+      isNigerian: false,
+      isRealTime: true
+    };
+  } catch (error) {
+    console.warn('Real-time currency conversion failed, falling back to static rates:', error);
+    
+    // Fallback to static rates on error
+    const fallbackResult = formatProgramTuition(amount, country, showConversion);
+    return {
+      ...fallbackResult,
+      isRealTime: false
+    };
+  }
 };
 
 /**

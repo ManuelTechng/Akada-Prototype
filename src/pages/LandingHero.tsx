@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 
 const LandingHero: React.FC = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50 to-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800">
       {/* Background Gradient Blobs */}
-      <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-indigo-100 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute top-1/2 right-0 w-[600px] h-[600px] bg-indigo-200 rounded-full opacity-20 blur-3xl translate-x-1/2"></div>
+      <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-indigo-100 dark:bg-indigo-900/20 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute top-1/2 right-0 w-[600px] h-[600px] bg-indigo-200 dark:bg-indigo-800/20 rounded-full opacity-20 blur-3xl translate-x-1/2"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 pt-24 pb-16 sm:px-6 sm:pt-32 sm:pb-24 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
@@ -26,10 +26,10 @@ const LandingHero: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-            <Link to="/signup" className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 font-medium text-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-600" tabIndex={0} aria-label="Sign up for Akada">
+            <Link to="/signup" className="inline-flex items-center justify-center gap-2 bg-indigo-600 dark:bg-indigo-500 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-all duration-300 font-medium text-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-600" tabIndex={0} aria-label="Sign up for Akada">
               <UserPlus className="h-5 w-5" /> Sign Up
             </Link>
-            <Link to="/login" className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition-all duration-300 border-2 border-indigo-600 font-medium text-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-600" tabIndex={0} aria-label="Log in to Akada">
+            <Link to="/login" className="inline-flex items-center justify-center gap-2 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-8 py-4 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300 border-2 border-indigo-600 dark:border-indigo-500 font-medium text-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-600" tabIndex={0} aria-label="Log in to Akada">
               <LogIn className="h-5 w-5" /> Log In
             </Link>
           </div>
@@ -39,12 +39,12 @@ const LandingHero: React.FC = () => {
               <div className="text-4xl font-bold text-gray-900 mb-1">200+</div>
               <div className="text-gray-600">Students Joined</div>
             </div>
-            <div className="h-12 w-px bg-gray-200"></div>
+            <div className="h-12 w-px bg-gray-200 dark:bg-gray-700"></div>
             <div>
               <div className="text-4xl font-bold text-gray-900 mb-1">12</div>
               <div className="text-gray-600">Countries</div>
             </div>
-            <div className="h-12 w-px bg-gray-200"></div>
+            <div className="h-12 w-px bg-gray-200 dark:bg-gray-700"></div>
             <div>
               <div className="text-4xl font-bold text-gray-900 mb-1">100+</div>
               <div className="text-gray-600">Programs</div>
@@ -55,17 +55,17 @@ const LandingHero: React.FC = () => {
         {/* AI Chat Demo */}
         <div className="mt-20 max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
           <div className="flex items-center gap-3 mb-6">
-            <div className="bg-indigo-100 p-2 rounded-lg">
+            <div className="bg-indigo-100 dark:bg-indigo-900/20 p-2 rounded-lg">
               <Bot className="h-6 w-6 text-indigo-600" />
             </div>
             <h3 className="font-semibold text-lg">AI Assistant</h3>
           </div>
 
           <div className="space-y-4 mb-6">
-            <div className="bg-gray-50 rounded-lg p-4 max-w-[80%]">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 max-w-[80%]">
               <p className="text-gray-700">I'm looking for Computer Science programs in Canada with scholarships.</p>
             </div>
-            <div className="bg-indigo-50 rounded-lg p-4 ml-auto max-w-[80%]">
+            <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 ml-auto max-w-[80%]">
               <p className="text-gray-800">I found 12 CS programs in Canada with scholarships for Nigerian students. The University of Toronto offers a Global Excellence Award covering up to 50% of tuition fees.</p>
             </div>
           </div>
@@ -76,7 +76,7 @@ const LandingHero: React.FC = () => {
               placeholder="Ask about programs, requirements, or applications..."
               className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+            <button className="bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors font-medium">
               Send
             </button>
           </div>

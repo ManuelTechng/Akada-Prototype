@@ -42,13 +42,19 @@ export const registerServiceWorker = (config: ServiceWorkerConfig = {}): void =>
       const swUrl = '/sw.js';
       
       if (isLocalhost()) {
-        // In development, check if SW exists
-        checkValidServiceWorker(swUrl, config);
+        // In development, DISABLE service worker to prevent caching issues
+        console.log('SW: Service worker disabled in development mode');
         
-        // Log additional info for development
-        navigator.serviceWorker.ready.then(() => {
-          console.log('SW: Service worker is ready for development');
+        // Unregister any existing service worker
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((registration) => {
+            registration.unregister().then(() => {
+              console.log('SW: Existing service worker unregistered for development');
+            });
+          });
         });
+        
+        return; // Exit early - don't register SW in development
       } else {
         // In production, register SW
         registerValidServiceWorker(swUrl, config);

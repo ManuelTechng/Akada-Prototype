@@ -138,7 +138,7 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
           </p>
           <button
             onClick={() => navigate('/programs/search')}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
+            className="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
           >
             Search Programs
           </button>

@@ -90,18 +90,37 @@ export interface Program {
   degree_type: string;
   country: string;
   tuition_fee: number;
+  // Multicurrency support
+  tuition_fee_currency?: string;
+  tuition_fee_original?: number;
+  application_fee_currency?: string;
+  application_fee_original?: number;
+  last_currency_update?: string;
+  currency_source?: string;
+  // End multicurrency fields
   has_scholarships?: boolean;
+  scholarship_available?: boolean;
   created_at: string;
   abbreviation?: string;
   location?: string;
+  city?: string;
   description?: string;
   website?: string;
+  program_website?: string;
+  university_website?: string;
   logo?: string;
   faculties?: string[];
   fields?: string[];
+  specialization?: string;
+  duration?: string;
+  study_level?: string;
   deadline?: string;
+  application_deadline?: string;
   term?: string;
   requirements?: string[];
+  entry_requirements?: string;
+  language_requirements?: string;
+  application_fee?: string;
   match?: number;
 }
 

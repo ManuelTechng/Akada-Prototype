@@ -12,6 +12,18 @@ export const CURRENCY_CONFIG = {
   // Currency symbols
   NGN_SYMBOL: '₦',
   USD_SYMBOL: '$',
+  SEK_SYMBOL: 'kr',
+  EUR_SYMBOL: '€',
+  GBP_SYMBOL: '£',
+  CAD_SYMBOL: 'C$',
+  AUD_SYMBOL: 'A$',
+  CHF_SYMBOL: 'CHF',
+  NOK_SYMBOL: 'kr',
+  DKK_SYMBOL: 'kr',
+  JPY_SYMBOL: '¥',
+  SGD_SYMBOL: 'S$',
+  NZD_SYMBOL: 'NZ$',
+  HKD_SYMBOL: 'HK$',
   
   // Formatting options
   NGN_LOCALE: 'en-NG', // Nigerian English locale
@@ -31,7 +43,7 @@ export const CURRENCY_CONFIG = {
 // TYPES AND INTERFACES
 // ======================================
 
-export type CurrencyCode = 'NGN' | 'USD';
+export type CurrencyCode = 'NGN' | 'USD' | 'SEK' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'CHF' | 'NOK' | 'DKK' | 'JPY' | 'SGD' | 'NZD' | 'HKD';
 export type CompactUnit = 'K' | 'M' | 'B' | 'T';
 
 export interface CurrencyFormatOptions {
@@ -295,6 +307,76 @@ export function formatCompactCurrency(
 }
 
 /**
+ * Format any currency amount with proper localization
+ * 
+ * @param amount - Amount to format
+ * @param currency - Currency code
+ * @param options - Formatting options
+ * @returns Formatted currency string
+ */
+export function formatCurrency(
+  amount: number,
+  currency: CurrencyCode = 'USD',
+  options: CurrencyFormatOptions = {}
+): string {
+  // Delegate to specific formatters for NGN and USD for backward compatibility
+  if (currency === 'NGN') {
+    return formatNGN(amount, options);
+  }
+  
+  if (currency === 'USD') {
+    return formatUSD(amount, options);
+  }
+
+  // Generic formatter for other currencies
+  const {
+    includeSymbol = true,
+    decimals = CURRENCY_CONFIG.DEFAULT_DECIMALS,
+    compact = false,
+    showCode = false,
+    locale = 'en-US', // Default locale
+    style = 'currency'
+  } = options;
+
+  if (!isValidNumber(amount)) return formatInvalidAmount(currency, includeSymbol, showCode);
+  
+  if (compact || (amount >= CURRENCY_CONFIG.COMPACT_THRESHOLD && compact !== false)) {
+    return formatCompactCurrency(amount, currency, options);
+  }
+
+  const shouldShowDecimals = decimals > 0 && (
+    amount % 1 !== 0 || 
+    amount < CURRENCY_CONFIG.WHOLE_NUMBER_THRESHOLD
+  );
+
+  const finalDecimals = shouldShowDecimals ? decimals : 0;
+
+  try {
+    // Use Intl.NumberFormat for proper localization
+    const formatter = new Intl.NumberFormat(locale, {
+      style: 'decimal',
+      minimumFractionDigits: finalDecimals,
+      maximumFractionDigits: finalDecimals,
+      useGrouping: true
+    });
+    
+    const formatted = formatter.format(amount);
+    
+    if (includeSymbol) {
+      const symbol = getCurrencySymbol(currency, showCode);
+      return `${symbol}${formatted}`;
+    }
+    
+    return formatted;
+  } catch (error) {
+    console.warn(`Currency formatting failed for ${currency}, using fallback:`, error);
+    const symbol = getCurrencySymbol(currency, showCode);
+    const formatted = amount.toFixed(finalDecimals);
+    return includeSymbol ? `${symbol}${formatted}` : formatted;
+  }
+}
+
+/**
  * Format USD amount with proper US formatting
  * 
  * @param amount - Amount in USD to format
@@ -495,7 +577,25 @@ function getCompactUnit(amount: number): { value: number; unit: CompactUnit | ''
  */
 function getCurrencySymbol(currency: CurrencyCode, showCode: boolean): string {
   if (showCode) return currency;
-  return currency === 'NGN' ? CURRENCY_CONFIG.NGN_SYMBOL : CURRENCY_CONFIG.USD_SYMBOL;
+  
+  const symbolMap: Record<CurrencyCode, string> = {
+    NGN: CURRENCY_CONFIG.NGN_SYMBOL,
+    USD: CURRENCY_CONFIG.USD_SYMBOL,
+    SEK: CURRENCY_CONFIG.SEK_SYMBOL,
+    EUR: CURRENCY_CONFIG.EUR_SYMBOL,
+    GBP: CURRENCY_CONFIG.GBP_SYMBOL,
+    CAD: CURRENCY_CONFIG.CAD_SYMBOL,
+    AUD: CURRENCY_CONFIG.AUD_SYMBOL,
+    CHF: CURRENCY_CONFIG.CHF_SYMBOL,
+    NOK: CURRENCY_CONFIG.NOK_SYMBOL,
+    DKK: CURRENCY_CONFIG.DKK_SYMBOL,
+    JPY: CURRENCY_CONFIG.JPY_SYMBOL,
+    SGD: CURRENCY_CONFIG.SGD_SYMBOL,
+    NZD: CURRENCY_CONFIG.NZD_SYMBOL,
+    HKD: CURRENCY_CONFIG.HKD_SYMBOL
+  };
+  
+  return symbolMap[currency] || currency;
 }
 
 /**

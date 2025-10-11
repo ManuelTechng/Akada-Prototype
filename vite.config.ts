@@ -20,16 +20,23 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000,
-    strictPort: true,
+    port: 8080,
+    strictPort: false,
+    host: '127.0.0.1',
     hmr: {
       timeout: 60000, // Increased timeout
       overlay: true,
-      clientPort: 3000
+      clientPort: 8080
     },
     // Add proper MIME type handling
     fs: {
       strict: true,
+    },
+    // Disable caching in development
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
     }
   },
   build: {
@@ -92,10 +99,6 @@ export default defineConfig({
         // Optimize for 3G networks
         compact: true,
         // Enable tree shaking
-        treeshake: {
-          preset: 'recommended',
-          manualPureFunctions: ['console.log', 'console.warn']
-        }
       }
     },
     // Optimize for production

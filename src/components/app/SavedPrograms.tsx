@@ -21,22 +21,30 @@ import {
 } from 'lucide-react'
 import { useSavedProgramsContext } from '../../contexts/SavedProgramsContext'
 
-// Mock program data for demo - in real app this would come from program lookup
-const createMockProgram = (savedProgram: any) => ({
+// Convert saved program data to Program type for display
+const createProgramFromSaved = (savedProgram: any): Program => ({
   id: savedProgram.program_id,
   name: savedProgram.program_name || 'Unknown Program',
   university: savedProgram.university || 'Unknown University',
   country: savedProgram.country || 'Unknown Country',
-  degree_type: 'Masters' as const,
-  tuition_fee: 35000,
-  duration: '2 years',
-  deadline: '2024-12-15',
-  fields: ['Computer Science']
+  degree_type: savedProgram.degree_type || 'Masters',
+  tuition_fee: savedProgram.tuition_fee || 0,
+  tuition_fee_currency: 'NGN', // Default to NGN for display
+  duration: savedProgram.duration || '2 years',
+  deadline: '2024-12-15', // TODO: Add deadline to programs table
+  specialization: savedProgram.specialization || '',
+  scholarship_available: savedProgram.scholarship_available || false,
+  // Add other required fields with defaults
+  website: '',
+  description: '',
+  requirements: [],
+  location: savedProgram.country || 'Unknown Country'
 })
 import { formatNGN } from '../../utils/currency'
 import { useNavigate } from 'react-router-dom'
 import ProgramCard from './ProgramCard'
 import type { Program } from '../../lib/types'
+import CreateApplicationModal from './CreateApplicationModal'
 
 const SavedPrograms: React.FC = () => {
   const navigate = useNavigate()
@@ -48,6 +56,8 @@ const SavedPrograms: React.FC = () => {
   const [filterCountry, setFilterCountry] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedPrograms, setSelectedPrograms] = useState<string[]>([])
+  const [showApplicationModal, setShowApplicationModal] = useState(false)
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null)
 
   useEffect(() => {
     // Initial load handled by context provider
@@ -76,11 +86,11 @@ const SavedPrograms: React.FC = () => {
           comparison = (a.program_name || '').localeCompare(b.program_name || '')
           break
         case 'cost':
-          // Use mock cost for demo since we don't have real tuition data
-          comparison = 0
+          // Use real tuition fee data
+          comparison = (a.tuition_fee || 0) - (b.tuition_fee || 0)
           break
         case 'deadline':
-          // Use mock deadline for demo
+          // TODO: Add deadline to programs table for proper sorting
           comparison = 0
           break
         case 'date':
@@ -123,6 +133,16 @@ const SavedPrograms: React.FC = () => {
     } else {
       setSelectedPrograms(filteredPrograms.map(sp => sp.program_id))
     }
+  }
+
+  const handleApplyToProgram = (program: Program) => {
+    setSelectedProgram(program)
+    setShowApplicationModal(true)
+  }
+
+  const handleApplicationSuccess = () => {
+    // Optionally show success message or refresh data
+    console.log('Application created successfully')
   }
 
   if (loading) {
@@ -329,7 +349,7 @@ const SavedPrograms: React.FC = () => {
             `}            >
               {filteredPrograms.map((savedProgram) => {
                 const isSelected = selectedPrograms.includes(savedProgram.program_id)
-                const mockProgram = createMockProgram(savedProgram)
+                const program = createProgramFromSaved(savedProgram)
                 
                 return (
                   <div key={savedProgram.program_id} className="relative">
@@ -344,9 +364,10 @@ const SavedPrograms: React.FC = () => {
                     </div>
                     
                     <ProgramCard
-                      program={mockProgram}
+                      program={program}
                       isSaved={true}
                       onUnsave={() => handleRemoveProgram(savedProgram.program_id)}
+                      onApply={handleApplyToProgram}
                       compact={viewMode === 'list'}
                     />
                   </div>
@@ -356,6 +377,19 @@ const SavedPrograms: React.FC = () => {
           )}
         </>
       )}
+
+      {/* Application Modal */}
+      <CreateApplicationModal
+        isOpen={showApplicationModal}
+        onClose={() => {
+          setShowApplicationModal(false)
+          setSelectedProgram(null)
+        }}
+        programId={selectedProgram?.id}
+        programName={selectedProgram?.name}
+        universityName={selectedProgram?.university}
+        onSuccess={handleApplicationSuccess}
+      />
     </div>
   )
 }

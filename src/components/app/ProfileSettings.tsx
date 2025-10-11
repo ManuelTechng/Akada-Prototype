@@ -297,16 +297,27 @@ const ProfileSettings: React.FC = () => {
         },
         study_preferences: {
           countries: formData.study_preferences.countries,
-          max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : '',
+          max_tuition: formData.study_preferences.max_tuition || '',
           program_type: formData.study_preferences.program_type,
           start_date: formData.study_preferences.start_date
         }
       };
 
       // Send the profile data to the database
-      const result = await updateUserProfile(user.id, profileData);
+      console.log('Sending profile data to database:', { userId: user.id, profileData });
+      
+      // Add timeout to prevent hanging
+      const updatePromise = updateUserProfile(user.id, profileData);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile update timed out after 30 seconds')), 30000)
+      );
+      
+      const result = await Promise.race([updatePromise, timeoutPromise]);
       
       console.log('Profile updated successfully:', result);
+      
+      // Refresh the profile data
+      await refreshProfile();
       
       // Show success message and exit edit mode
       setSaveSuccess(true);
@@ -382,7 +393,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.full_name}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Enter your full name"
             />
             <User className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -399,7 +410,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.email}
               onChange={handleInputChange}
               disabled={true}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Enter your email"
             />
             <Mail className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -653,7 +664,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.test_scores.ielts}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Overall score"
             />
           </div>
@@ -668,7 +679,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.test_scores.toefl}
               onChange={handleInputChange}
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Total score"
             />
           </div>
@@ -683,7 +694,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.test_scores.gre.verbal}
               onChange={handleGREInputChange}
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Verbal score"
             />
           </div>
@@ -700,7 +711,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.test_scores.gre.quantitative}
               onChange={handleGREInputChange}
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Quantitative score"
             />
           </div>
@@ -715,7 +726,7 @@ const ProfileSettings: React.FC = () => {
               value={formData.test_scores.gre.analytical}
               onChange={handleGREInputChange}
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Analytical score"
             />
           </div>
@@ -757,7 +768,7 @@ const ProfileSettings: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Maximum Tuition Budget (USD/year)
+            Maximum Tuition Budget (₦ NGN/year)
           </label>
           <select
             name="study_preferences.max_tuition"
@@ -767,13 +778,18 @@ const ProfileSettings: React.FC = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
           >
             <option value="">Select budget range</option>
-            <option value="10000">Under $10,000</option>
-            <option value="20000">$10,000 - $20,000</option>
-            <option value="30000">$20,000 - $30,000</option>
-            <option value="40000">$30,000 - $40,000</option>
-            <option value="50000">$40,000 - $50,000</option>
-            <option value="100000">$50,000+</option>
+            <option value="5000000">Under ₦5,000,000 (~$3,300)</option>
+            <option value="10000000">₦5M - ₦10M (~$3,300 - $6,700)</option>
+            <option value="15000000">₦10M - ₦15M (~$6,700 - $10,000)</option>
+            <option value="25000000">₦15M - ₦25M (~$10,000 - $16,700)</option>
+            <option value="40000000">₦25M - ₦40M (~$16,700 - $26,700)</option>
+            <option value="60000000">₦40M - ₦60M (~$26,700 - $40,000)</option>
+            <option value="75000000">₦60M - ₦75M (~$40,000 - $50,000)</option>
+            <option value="100000000">₦75M+ (~$50,000+)</option>
           </select>
+          <p className="text-xs text-gray-500 mt-1">
+            All amounts are in Nigerian Naira. USD equivalents shown for reference using current rates.
+          </p>
         </div>
         
         <div>
@@ -852,7 +868,7 @@ const ProfileSettings: React.FC = () => {
             <input
               type="password"
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Enter new password"
             />
           </div>
@@ -864,7 +880,7 @@ const ProfileSettings: React.FC = () => {
             <input
               type="password"
               disabled={!isEditing}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               placeholder="Confirm new password"
             />
           </div>

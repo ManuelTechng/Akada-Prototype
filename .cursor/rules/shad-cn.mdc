@@ -1,0 +1,330 @@
+---
+description: UI
+alwaysApply: false
+---
+# Akada shadcn/ui MCP Usage Rule for Cursor
+
+## Context
+This rule governs the use of shadcn/ui components in the Akada education platform, optimized for Nigerian students with mobile-first design and 3G network considerations.
+
+## MCP Server Workflow Rules
+
+### Usage Rule
+**When asked to use shadcn components, use the MCP server.**
+
+### Planning Rule
+**When asked to plan using anything related to shadcn:**
+- Use the MCP server during planning
+- Apply components wherever components are applicable
+- Use whole blocks where possible (e.g., login page, calendar, dashboard layouts)
+
+### Implementation Rule
+**When implementing:**
+1. **First call the demo tool to see how it is used**
+2. **Then implement it so that it is implemented correctly**
+
+```typescript
+// ✅ WORKFLOW: Always start with MCP server demo
+// 1. Call shadcn MCP to see component demo
+// 2. Understand the component structure
+// 3. Adapt for Akada requirements
+// 4. Implement with Nigerian optimizations
+```
+
+## Core Principles
+
+### 1. Component Selection Priority
+```typescript
+// PRIORITY ORDER (High to Low)
+1. Dashboard widgets (Card, Progress, Badge, Alert)
+2. Form components (Input, Select, Textarea, Button)
+3. Navigation (Tabs, Breadcrumb, DropdownMenu)
+4. Data display (Table, Chart components via Recharts)
+5. Feedback (Skeleton, Spinner, Toast)
+```
+
+### 2. Mobile-First Implementation
+```typescript
+// ✅ ALWAYS start with mobile (375px) layout
+<Card className="w-full max-w-md mx-auto sm:max-w-lg md:max-w-2xl">
+  <CardHeader className="pb-3 sm:pb-4">
+    <CardTitle className="text-lg sm:text-xl">Profile Completion</CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-3 sm:space-y-4">
+    {/* Mobile-optimized content */}
+  </CardContent>
+</Card>
+
+// ❌ AVOID desktop-first patterns
+<Card className="w-96 h-64"> {/* Fixed desktop sizes */}
+```
+
+### 3. Nigerian-Specific Customizations
+```typescript
+// ✅ Required customizations for Nigerian context
+const nigerianFormats = {
+  currency: (amount: number) => 
+    amount.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }),
+  date: (date: Date) => 
+    date.toLocaleDateString('en-GB'), // DD/MM/YYYY format
+  time: 'WAT' // West Africa Time zone awareness
+}
+
+// ✅ Use Akada design tokens
+<Button 
+  className="bg-indigo-600 hover:bg-indigo-700 text-white"
+  size="lg" // Minimum 44px touch target
+>
+  Submit Application
+</Button>
+
+// ✅ Include motivational Nigerian context
+<Alert className="border-green-200 bg-green-50">
+  <AlertDescription>
+    "You're on track! 🎯 Keep the momentum going"
+  </AlertDescription>
+</Alert>
+```
+
+### 4. Performance Optimization Rules
+```typescript
+// ✅ Lazy load heavy components
+const CostComparisonChart = lazy(() => import('./CostComparisonChart'))
+
+// ✅ Use skeleton components for 3G loading
+{isLoading ? (
+  <Skeleton className="h-20 w-full rounded-lg" />
+) : (
+  <Card>/* Actual content */</Card>
+)}
+
+// ✅ Optimize bundle size
+import { Button } from "@/components/ui/button" // ✅ Named imports only
+import * as UI from "@/components/ui" // ❌ Avoid namespace imports
+```
+
+### 5. Dashboard Widget Integration
+```typescript
+// ✅ Follow established widget patterns
+interface WidgetProps {
+  title: string
+  data: any
+  loading?: boolean
+  error?: string | null
+  className?: string
+}
+
+const ProfileCompletionWidget = ({ title, data, loading, error }: WidgetProps) => (
+  <Card className="w-full">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      {loading && <Spinner className="h-4 w-4" />}
+    </CardHeader>
+    <CardContent>
+      {error ? (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : (
+        <Progress value={data.percentage} className="w-full" />
+      )}
+    </CardContent>
+  </Card>
+)
+```
+
+### 6. Form Component Standards
+```typescript
+// ✅ Always include proper validation and Nigerian context
+<form className="space-y-6">
+  <div className="space-y-2">
+    <Label htmlFor="budget">Budget Range (NGN)</Label>
+    <Select>
+      <SelectTrigger>
+        <SelectValue placeholder="Select your budget range" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="0-25m">₦0 - ₦25M</SelectItem>
+        <SelectItem value="25m-50m">₦25M - ₦50M</SelectItem>
+        <SelectItem value="50m+">₦50M+</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+  
+  <Button 
+    type="submit" 
+    className="w-full sm:w-auto"
+    size="lg"
+  >
+    Save Preferences
+  </Button>
+</form>
+```
+
+### 7. Accessibility Requirements
+```typescript
+// ✅ Always include ARIA labels and keyboard navigation
+<Button
+  aria-label="Complete your academic background for 25% more matches"
+  className="w-full justify-start text-left"
+  variant="ghost"
+  onClick={navigateToSection}
+>
+  <div className="flex items-center space-x-3">
+    <div className="w-2 h-2 bg-orange-500 rounded-full" />
+    <span>Academic Background</span>
+    <Badge variant="secondary">25%</Badge>
+  </div>
+</Button>
+
+// ✅ Use proper contrast ratios for Nigerian lighting conditions
+<Alert className="bg-white border-2 border-indigo-200"> {/* High contrast */}
+```
+
+### 8. Error Handling Patterns
+```typescript
+// ✅ Graceful degradation for 3G networks
+const ErrorBoundaryWrapper = ({ children, fallback }: Props) => (
+  <ErrorBoundary
+    fallback={
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Something went wrong</AlertTitle>
+        <AlertDescription>
+          Please check your connection and try again.
+        </AlertDescription>
+      </Alert>
+    }
+  >
+    {children}
+  </ErrorBoundary>
+)
+```
+
+### 9. Forbidden Patterns
+```typescript
+// ❌ NEVER use these patterns in Akada
+- Fixed pixel widths for mobile components
+- USD currency formatting without NGN conversion
+- Non-accessible color combinations
+- Components without loading states
+- Forms without proper validation
+- Desktop-only interactions (hover-dependent UX)
+- Heavy animations that impact 3G performance
+- American date formats (MM/DD/YYYY)
+```
+
+### 10. Component Testing Requirements
+```typescript
+// ✅ Required test cases for all shadcn components
+describe('AkadaWidget', () => {
+  test('renders correctly on mobile viewport', () => {
+    render(<Widget />, { viewport: { width: 375, height: 667 } })
+  })
+  
+  test('handles 3G loading states', () => {
+    render(<Widget loading={true} />)
+    expect(screen.getByTestId('skeleton')).toBeInTheDocument()
+  })
+  
+  test('displays NGN currency correctly', () => {
+    render(<Widget cost={5000000} />)
+    expect(screen.getByText('₦5,000,000')).toBeInTheDocument()
+  })
+  
+  test('meets WCAG 2.1 AA accessibility standards', () => {
+    // Accessibility tests
+  })
+})
+```
+
+## MCP Server Integration Workflow
+
+### Step-by-Step Process
+```typescript
+// MANDATORY WORKFLOW for all shadcn implementations
+
+// 1. Planning Phase - Use MCP Server
+"I need to plan a dashboard component with cards and progress indicators"
+→ Call shadcn MCP server for planning
+→ Get component recommendations and structure
+
+// 2. Demo Phase - Call Demo Tool
+"Show me how to use Card, Progress, and Badge components"
+→ Call MCP demo tool for each component
+→ Study the implementation patterns
+
+// 3. Implementation Phase - Adapt for Akada
+→ Take MCP demo code
+→ Apply Nigerian optimizations
+→ Add mobile-first responsive design
+→ Include 3G performance considerations
+```
+
+### MCP Component Planning Examples
+```typescript
+// ✅ Use MCP for whole block planning
+- "Plan a complete login page with shadcn components"
+- "Design a dashboard layout using shadcn cards and navigation"
+- "Create a calendar component for application deadlines"
+- "Build a form wizard for student onboarding"
+
+// ✅ Use MCP for component selection
+- "Which shadcn components for data visualization?"
+- "Best components for mobile-first Nigerian student dashboard?"
+- "Components for application tracking timeline?"
+```
+
+## Quick Reference Commands for Cursor
+
+### MCP Server Commands
+```bash
+# Always start with these MCP calls
+1. Plan: "Plan [feature] using shadcn components"
+2. Demo: "Show demo of [component-name]"
+3. Implement: Apply Akada customizations to demo code
+```
+
+### Auto-import Setup
+```json
+// .vscode/settings.json
+{
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": true
+  }
+}
+```
+
+### Snippet Triggers
+- `akada-card` → Mobile-first Card component
+- `akada-form` → Nigerian-optimized form
+- `akada-widget` → Dashboard widget template
+- `akada-skeleton` → 3G loading skeleton
+- `akada-alert` → Motivational alert component
+
+## Enforcement
+This rule is enforced through:
+1. **MCP Server Integration**: Mandatory use of shadcn MCP for planning and demos
+2. **Workflow Validation**: Ensure demo tool is called before implementation
+3. ESLint custom rules
+4. TypeScript strict mode
+5. Pre-commit hooks
+6. Automated testing requirements
+7. Code review checklist that includes MCP workflow verification
+
+### MCP Workflow Checklist
+- [ ] Used MCP server for component planning
+- [ ] Called demo tool for each new component
+- [ ] Adapted demo code for Akada requirements
+- [ ] Applied Nigerian-specific optimizations
+- [ ] Tested on mobile (375px) viewport
+- [ ] Verified 3G performance targets
+
+## Updates
+This rule should be updated when:
+- New shadcn/ui components are added
+- Nigerian UX requirements change
+- Performance benchmarks are updated
+- Accessibility standards evolve

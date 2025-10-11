@@ -290,7 +290,7 @@ export const ProfileCompletionWidget: React.FC<{ className?: string }> = ({ clas
       )}
 
       {/* Mobile optimizations */}
-      <style jsx>{`
+        <style>{`
         @media (max-width: 375px) {
           .text-2xl {
             font-size: 1.25rem;

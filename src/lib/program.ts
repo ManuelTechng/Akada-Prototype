@@ -46,7 +46,7 @@ export const searchPrograms = async (filters: {
 
     // Apply scholarship filter
     if (filters.scholarshipsOnly) {
-      query = query.eq('has_scholarships', true);
+      query = query.or('has_scholarships.eq.true,scholarship_available.eq.true');
     }
 
     // Apply sorting

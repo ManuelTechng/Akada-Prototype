@@ -1,0 +1,380 @@
+// Currency system error types and handlers for Akada
+export enum CurrencyErrorType {
+  API_UNAVAILABLE = 'API_UNAVAILABLE',
+  INVALID_CURRENCY = 'INVALID_CURRENCY',
+  CONVERSION_FAILED = 'CONVERSION_FAILED',
+  RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED',
+  NETWORK_ERROR = 'NETWORK_ERROR',
+  QUOTA_EXCEEDED = 'QUOTA_EXCEEDED',
+  INVALID_AMOUNT = 'INVALID_AMOUNT',
+  CACHE_ERROR = 'CACHE_ERROR',
+  SERVICE_ERROR = 'SERVICE_ERROR'
+}
+
+export class CurrencyError extends Error {
+  public readonly type: CurrencyErrorType;
+  public readonly code: string;
+  public readonly retryable: boolean;
+  public readonly fallbackAvailable: boolean;
+  public readonly details?: any;
+
+  constructor(
+    type: CurrencyErrorType,
+    message: string,
+    options: {
+      code?: string;
+      retryable?: boolean;
+      fallbackAvailable?: boolean;
+      details?: any;
+      cause?: Error;
+    } = {}
+  ) {
+    super(message);
+    this.name = 'CurrencyError';
+    this.type = type;
+    this.code = options.code || type;
+    this.retryable = options.retryable ?? false;
+    this.fallbackAvailable = options.fallbackAvailable ?? true;
+    this.details = options.details;
+    
+    if (options.cause) {
+      this.cause = options.cause;
+    }
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      type: this.type,
+      code: this.code,
+      message: this.message,
+      retryable: this.retryable,
+      fallbackAvailable: this.fallbackAvailable,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}
+
+/**
+ * Error factory for creating consistent currency errors
+ */
+export class CurrencyErrorFactory {
+  static apiUnavailable(provider: string, cause?: Error): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.API_UNAVAILABLE,
+      `Currency API provider ${provider} is unavailable`,
+      {
+        code: 'API_DOWN',
+        retryable: true,
+        fallbackAvailable: true,
+        details: { provider },
+        cause
+      }
+    );
+  }
+
+  static invalidCurrency(currency: string): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.INVALID_CURRENCY,
+      `Invalid currency code: ${currency}`,
+      {
+        code: 'INVALID_CURRENCY',
+        retryable: false,
+        fallbackAvailable: false,
+        details: { currency }
+      }
+    );
+  }
+
+  static conversionFailed(from: string, to: string, cause?: Error): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.CONVERSION_FAILED,
+      `Failed to convert ${from} to ${to}`,
+      {
+        code: 'CONVERSION_ERROR',
+        retryable: true,
+        fallbackAvailable: true,
+        details: { from, to },
+        cause
+      }
+    );
+  }
+
+  static rateLimitExceeded(resetTime?: Date): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.RATE_LIMIT_EXCEEDED,
+      'API rate limit exceeded',
+      {
+        code: 'RATE_LIMIT',
+        retryable: true,
+        fallbackAvailable: true,
+        details: { resetTime }
+      }
+    );
+  }
+
+  static networkError(cause?: Error): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.NETWORK_ERROR,
+      'Network connection failed',
+      {
+        code: 'NETWORK_ERROR',
+        retryable: true,
+        fallbackAvailable: true,
+        cause
+      }
+    );
+  }
+
+  static quotaExceeded(): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.QUOTA_EXCEEDED,
+      'API quota exceeded for this billing period',
+      {
+        code: 'QUOTA_EXCEEDED',
+        retryable: false,
+        fallbackAvailable: true
+      }
+    );
+  }
+
+  static invalidAmount(amount: number): CurrencyError {
+    return new CurrencyError(
+      CurrencyErrorType.INVALID_AMOUNT,
+      `Invalid amount: ${amount}`,
+      {
+        code: 'INVALID_AMOUNT',
+        retryable: false,
+        fallbackAvailable: false,
+        details: { amount }
+      }
+    );
+  }
+}
+
+/**
+ * Retry configuration for different error types
+ */
+export interface RetryConfig {
+  maxAttempts: number;
+  baseDelay: number;
+  maxDelay: number;
+  backoffMultiplier: number;
+  retryableErrors: CurrencyErrorType[];
+}
+
+export const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  maxAttempts: 3,
+  baseDelay: 1000,
+  maxDelay: 10000,
+  backoffMultiplier: 2,
+  retryableErrors: [
+    CurrencyErrorType.API_UNAVAILABLE,
+    CurrencyErrorType.NETWORK_ERROR,
+    CurrencyErrorType.CONVERSION_FAILED,
+    CurrencyErrorType.RATE_LIMIT_EXCEEDED
+  ]
+};
+
+/**
+ * Retry utility with exponential backoff
+ */
+export class RetryHandler {
+  constructor(private config: RetryConfig = DEFAULT_RETRY_CONFIG) {}
+
+  async execute<T>(
+    operation: () => Promise<T>,
+    context?: string
+  ): Promise<T> {
+    let lastError: Error | null = null;
+    
+    for (let attempt = 1; attempt <= this.config.maxAttempts; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error;
+        
+        // Check if error is retryable
+        if (error instanceof CurrencyError) {
+          if (!error.retryable || !this.config.retryableErrors.includes(error.type)) {
+            throw error;
+          }
+          
+          // Special handling for rate limits
+          if (error.type === CurrencyErrorType.RATE_LIMIT_EXCEEDED && error.details?.resetTime) {
+            const waitTime = error.details.resetTime.getTime() - Date.now();
+            if (waitTime > 0 && waitTime < this.config.maxDelay) {
+              await this.delay(waitTime);
+              continue;
+            }
+          }
+        }
+        
+        // Don't retry on last attempt
+        if (attempt === this.config.maxAttempts) {
+          break;
+        }
+        
+        // Calculate delay with exponential backoff
+        const delay = Math.min(
+          this.config.baseDelay * Math.pow(this.config.backoffMultiplier, attempt - 1),
+          this.config.maxDelay
+        );
+        
+        console.warn(`Currency operation failed (attempt ${attempt}/${this.config.maxAttempts}), retrying in ${delay}ms:`, error);
+        await this.delay(delay);
+      }
+    }
+    
+    throw lastError;
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
+
+/**
+ * Circuit breaker to prevent cascading failures
+ */
+export class CircuitBreaker {
+  private failures = 0;
+  private lastFailureTime = 0;
+  private state: 'CLOSED' | 'OPEN' | 'HALF_OPEN' = 'CLOSED';
+
+  constructor(
+    private readonly failureThreshold = 5,
+    private readonly resetTimeout = 60000 // 1 minute
+  ) {}
+
+  async execute<T>(operation: () => Promise<T>): Promise<T> {
+    if (this.state === 'OPEN') {
+      if (Date.now() - this.lastFailureTime >= this.resetTimeout) {
+        this.state = 'HALF_OPEN';
+      } else {
+        throw new CurrencyError(
+          CurrencyErrorType.SERVICE_ERROR,
+          'Currency service circuit breaker is open',
+          {
+            code: 'CIRCUIT_OPEN',
+            retryable: true,
+            fallbackAvailable: true
+          }
+        );
+      }
+    }
+
+    try {
+      const result = await operation();
+      this.onSuccess();
+      return result;
+    } catch (error) {
+      this.onFailure();
+      throw error;
+    }
+  }
+
+  private onSuccess(): void {
+    this.failures = 0;
+    this.state = 'CLOSED';
+  }
+
+  private onFailure(): void {
+    this.failures++;
+    this.lastFailureTime = Date.now();
+    
+    if (this.failures >= this.failureThreshold) {
+      this.state = 'OPEN';
+    }
+  }
+
+  getState(): string {
+    return this.state;
+  }
+}
+
+/**
+ * Fallback rate provider using static rates
+ */
+export class FallbackRateProvider {
+  private static readonly STATIC_RATES: Record<string, Record<string, number>> = {
+    USD: {
+      NGN: 1500,
+      GHS: 12.5,
+      KES: 130,
+      ZAR: 18.5,
+      EGP: 31
+    },
+    NGN: {
+      USD: 1 / 1500,
+      GHS: 12.5 / 1500,
+      KES: 130 / 1500,
+      ZAR: 18.5 / 1500,
+      EGP: 31 / 1500
+    },
+    EUR: {
+      USD: 1.08,
+      NGN: 1620,
+      GBP: 0.84
+    },
+    GBP: {
+      USD: 1.27,
+      NGN: 1905,
+      EUR: 1.19
+    }
+  };
+
+  static getRate(from: string, to: string): number | null {
+    if (from === to) return 1;
+    
+    const fromRates = this.STATIC_RATES[from];
+    if (fromRates && fromRates[to]) {
+      return fromRates[to];
+    }
+    
+    // Try inverse rate
+    const toRates = this.STATIC_RATES[to];
+    if (toRates && toRates[from]) {
+      return 1 / toRates[from];
+    }
+    
+    // Try USD as intermediary
+    if (from !== 'USD' && to !== 'USD') {
+      const fromToUsd = this.getRate(from, 'USD');
+      const usdToTarget = this.getRate('USD', to);
+      
+      if (fromToUsd && usdToTarget) {
+        return fromToUsd * usdToTarget;
+      }
+    }
+    
+    return null;
+  }
+
+  static hasRate(from: string, to: string): boolean {
+    return this.getRate(from, to) !== null;
+  }
+
+  static getSupportedCurrencies(): string[] {
+    const currencies = new Set<string>();
+    
+    Object.keys(this.STATIC_RATES).forEach(from => {
+      currencies.add(from);
+      Object.keys(this.STATIC_RATES[from]).forEach(to => {
+        currencies.add(to);
+      });
+    });
+    
+    return Array.from(currencies).sort();
+  }
+}
+
+export default {
+  CurrencyError,
+  CurrencyErrorFactory,
+  RetryHandler,
+  CircuitBreaker,
+  FallbackRateProvider,
+  CurrencyErrorType
+};

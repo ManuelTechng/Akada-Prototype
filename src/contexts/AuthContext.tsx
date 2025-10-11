@@ -156,8 +156,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             try {
               console.log('AuthContext: Fetching profile after sign in');
               
-              // Fetch profile with built-in timeout and retry
-              const profile = await getUserProfile(newSession.user.id);
+              // Add a timeout wrapper around profile fetch
+              const profilePromise = getUserProfile(newSession.user.id);
+              const timeoutPromise = new Promise<null>((_, reject) =>
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+              );
+              
+              const profile = await Promise.race([profilePromise, timeoutPromise]);
               console.log('AuthContext: Profile fetch result', profile ? 'success' : 'null');
               if (profile && mounted) setProfile(profile);
             } catch (profileError) {

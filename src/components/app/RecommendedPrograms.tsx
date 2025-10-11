@@ -23,16 +23,15 @@ import { formatNGN } from '../../utils/currency'
 import { useNavigate } from 'react-router-dom'
 import ProgramCard from './ProgramCard'
 import type { Program } from '../../lib/types'
+import { 
+  fetchPersonalizedRecommendations, 
+  refreshRecommendations, 
+  getUserRecommendations,
+  type RecommendationCategory 
+} from '../../lib/recommendations'
+import CreateApplicationModal from './CreateApplicationModal'
 
-interface RecommendationCategory {
-  id: string
-  title: string
-  description: string
-  icon: React.ReactNode
-  programs: Program[]
-  matchPercentage?: number
-  reason?: string
-}
+// RecommendationCategory interface is now imported from recommendations.ts
 
 const RecommendedPrograms: React.FC = () => {
   const navigate = useNavigate()
@@ -44,115 +43,20 @@ const RecommendedPrograms: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
   const [refreshing, setRefreshing] = useState(false)
+  const [showApplicationModal, setShowApplicationModal] = useState(false)
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null)
 
-  // Mock recommendation data - in a real app, this would come from an AI service
-  const mockRecommendations: RecommendationCategory[] = [
-    {
-      id: 'perfect-match',
-      title: 'Perfect Matches',
-      description: 'Programs that align perfectly with your profile and preferences',
-      icon: <Target className="h-5 w-5" />,
-      matchPercentage: 95,
-      reason: 'Based on your Computer Science background and preference for Canada',
-      programs: [
-        {
-          id: '1',
-          name: 'Master of Computer Science',
-          university: 'University of Toronto',
-          country: 'Canada',
-          degree_type: 'Masters',
-          tuition_fee: 45000,
-          duration: '2 years',
-          deadline: '2024-12-15',
-          match: 98,
-          has_scholarships: true,
-          fields: ['Computer Science', 'AI', 'Machine Learning']
-        },
-        {
-          id: '2',
-          name: 'MSc Data Science',
-          university: 'University of British Columbia',
-          country: 'Canada',
-          degree_type: 'Masters',
-          tuition_fee: 42000,
-          duration: '2 years',
-          deadline: '2024-11-30',
-          match: 96,
-          has_scholarships: true,
-          fields: ['Data Science', 'Analytics', 'Machine Learning']
-        }
-      ]
-    },
-    {
-      id: 'budget-friendly',
-      title: 'Budget-Friendly Options',
-      description: 'High-quality programs within your budget range',
-      icon: <DollarSign className="h-5 w-5" />,
-      matchPercentage: 88,
-      reason: 'These programs fit your ₦50M budget while maintaining quality',
-      programs: [
-        {
-          id: '3',
-          name: 'MS Computer Engineering',
-          university: 'Technical University of Munich',
-          country: 'Germany',
-          degree_type: 'Masters',
-          tuition_fee: 0, // Free tuition
-          duration: '2 years',
-          deadline: '2024-07-15',
-          match: 90,
-          has_scholarships: false,
-          fields: ['Computer Engineering', 'Software Engineering']
-        }
-      ]
-    },
-    {
-      id: 'rising-stars',
-      title: 'Rising Star Programs',
-      description: 'Emerging programs with excellent career prospects',
-      icon: <TrendingUp className="h-5 w-5" />,
-      matchPercentage: 85,
-      reason: 'New programs with high industry demand and placement rates',
-      programs: [
-        {
-          id: '4',
-          name: 'MSc Artificial Intelligence',
-          university: 'University of Amsterdam',
-          country: 'Netherlands',
-          degree_type: 'Masters',
-          tuition_fee: 20000,
-          duration: '2 years',
-          deadline: '2024-09-01',
-          match: 87,
-          has_scholarships: true,
-          fields: ['AI', 'Machine Learning', 'Robotics']
-        }
-      ]
-    },
-    {
-      id: 'ai-suggested',
-      title: 'AI Insights',
-      description: 'Programs our AI thinks you might have overlooked',
-      icon: <Brain className="h-5 w-5" />,
-      matchPercentage: 82,
-      reason: 'Based on successful profiles similar to yours',
-      programs: [
-        {
-          id: '5',
-          name: 'Master of Engineering in Software',
-          university: 'University of Melbourne',
-          country: 'Australia',
-          degree_type: 'Masters',
-          tuition_fee: 48000,
-          duration: '2 years',
-          deadline: '2024-10-31',
-          match: 84,
-          has_scholarships: true,
-          fields: ['Software Engineering', 'Systems Design']
-        }
-      ]
+  // Icon mapping for categories
+  const getCategoryIcon = (iconName: string) => {
+    const iconMap = {
+      Target: <Target className="h-5 w-5" />,
+      DollarSign: <DollarSign className="h-5 w-5" />,
+      TrendingUp: <TrendingUp className="h-5 w-5" />,
+      Brain: <Brain className="h-5 w-5" />,
+      Star: <Star className="h-5 w-5" />
     }
-  ]
+    return iconMap[iconName as keyof typeof iconMap] || <Star className="h-5 w-5" />
+  }
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -160,11 +64,17 @@ const RecommendedPrograms: React.FC = () => {
       setError(null)
       
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
+        let recommendationsData: RecommendationCategory[] = []
         
-        // In a real app, this would be an API call to get personalized recommendations
-        setRecommendations(mockRecommendations)
+        if (user && profile) {
+          // Fetch personalized recommendations for authenticated user
+          recommendationsData = await getUserRecommendations(user.id)
+        } else {
+          // Fetch general recommendations for non-authenticated users
+          recommendationsData = await fetchPersonalizedRecommendations({})
+        }
+        
+        setRecommendations(recommendationsData)
         setLastUpdated(new Date())
       } catch (err) {
         setError('Failed to load recommendations. Please try again.')
@@ -175,23 +85,27 @@ const RecommendedPrograms: React.FC = () => {
     }
 
     fetchRecommendations()
-  }, [])
+  }, [user, profile])
 
   const handleRefreshRecommendations = async () => {
     setRefreshing(true)
     
     try {
-      // Simulate refresh
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      let recommendationsData: RecommendationCategory[] = []
       
-      // In a real app, this would trigger a new recommendation generation
-      setRecommendations(mockRecommendations.map(cat => ({
-        ...cat,
-        programs: [...cat.programs].sort(() => Math.random() - 0.5) // Shuffle for demo
-      })))
+      if (user && profile) {
+        // Refresh personalized recommendations for authenticated user
+        recommendationsData = await refreshRecommendations({}, user.id)
+      } else {
+        // Refresh general recommendations for non-authenticated users
+        recommendationsData = await refreshRecommendations({})
+      }
+      
+      setRecommendations(recommendationsData)
       setLastUpdated(new Date())
     } catch (err) {
       setError('Failed to refresh recommendations. Please try again.')
+      console.error('Error refreshing recommendations:', err)
     } finally {
       setRefreshing(false)
     }
@@ -199,6 +113,16 @@ const RecommendedPrograms: React.FC = () => {
 
   const getTotalRecommendations = () => {
     return recommendations.reduce((total, category) => total + category.programs.length, 0)
+  }
+
+  const handleApplyToProgram = (program: Program) => {
+    setSelectedProgram(program)
+    setShowApplicationModal(true)
+  }
+
+  const handleApplicationSuccess = () => {
+    // Optionally refresh recommendations or show success message
+    console.log('Application created successfully')
   }
 
   if (loading) {
@@ -308,7 +232,7 @@ const RecommendedPrograms: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
-                    {category.icon}
+                    {getCategoryIcon(category.icon)}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -365,6 +289,7 @@ const RecommendedPrograms: React.FC = () => {
                       showMatchScore={true}
                       showRecommendationBadge={true}
                       compact={activeCategory !== category.id}
+                      onApply={handleApplyToProgram}
                     />
                   ))}
               </div>
@@ -414,6 +339,19 @@ const RecommendedPrograms: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Application Modal */}
+      <CreateApplicationModal
+        isOpen={showApplicationModal}
+        onClose={() => {
+          setShowApplicationModal(false)
+          setSelectedProgram(null)
+        }}
+        programId={selectedProgram?.id}
+        programName={selectedProgram?.name}
+        universityName={selectedProgram?.university}
+        onSuccess={handleApplicationSuccess}
+      />
     </div>
   )
 }

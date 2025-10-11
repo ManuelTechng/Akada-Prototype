@@ -27,6 +27,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { ProfileCompletionWidget } from '../ProfileCompletionWidget'
 import { ApplicationTimelineWidget } from './ApplicationTimelineWidget'
 import { CostAnalysisWidget } from './CostAnalysisWidget'
+import { ReminderWidget } from './ReminderWidget'
 import SkeletonLoader from '../ui/SkeletonLoader'
 import { akadaTokens } from '../../styles/tokens'
 import { cn } from '../../lib/utils'
@@ -170,6 +171,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
     insights, 
     metrics, 
     loading, 
+    refreshing,
     dismissInsight, 
     refreshDashboard, 
     getDashboardSummary, 
@@ -190,10 +192,12 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
     timeline: true,
     cost: true,
     chart: true,
-    quickActions: true
+    quickActions: true,
+    reminders: true
   })
   const [expandedNotifications, setExpandedNotifications] = useState(true)
   const [showAllInsights, setShowAllInsights] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
 
   // Nigerian-specific time-aware greetings
   const getTimeAwareGreeting = (): string => {
@@ -260,11 +264,11 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
   const transformInsightsToNotifications = (): SmartNotification[] => {
     return insights.map((insight) => {
       const iconMap = {
-        urgent: <AlertCircleIcon className="w-5 h-5 text-red-500" />,
-        opportunity: <SparklesIcon className="w-5 h-5 text-yellow-500" />,
-        success: <CheckCircleIcon className="w-5 h-5 text-green-500" />,
-        warning: <AlertCircleIcon className="w-5 h-5 text-orange-500" />,
-        info: <InfoIcon className="w-5 h-5 text-blue-500" />
+        urgent: <AlertCircleIcon className="w-5 h-5" style={{ color: akadaTokens.colors.status.error }} />,
+        opportunity: <SparklesIcon className="w-5 h-5" style={{ color: akadaTokens.colors.status.warning }} />,
+        success: <CheckCircleIcon className="w-5 h-5" style={{ color: akadaTokens.colors.status.success }} />,
+        warning: <AlertCircleIcon className="w-5 h-5" style={{ color: akadaTokens.colors.status.warning }} />,
+        info: <InfoIcon className="w-5 h-5" style={{ color: akadaTokens.colors.status.info }} />
       }
 
       return {
@@ -366,6 +370,25 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
     return () => document.removeEventListener('touchstart', handlePullToRefresh as any)
   }, [handlePullToRefresh])
 
+  // Keyboard navigation support
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // R key for refresh dashboard
+      if (e.key === 'r' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault()
+        handleRefresh()
+      }
+      // Escape key to close any open modals/dropdowns
+      if (e.key === 'Escape') {
+        setShowAllInsights(false)
+        setShowNotifications(false)
+      }
+    }
+    
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [handleRefresh])
+
   // Check if user is new (no meaningful data)
   const isNewUser = (!profileData?.completionData || 
                    (profileData.completionData.percentage < 10 && 
@@ -407,9 +430,9 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
   const quickActions = generateQuickActions()
 
   return (
-    <div className={cn("space-y-6", className)}>
+    <main className={cn("space-y-6", className)} role="main" aria-label="Dashboard">
       {/* Dashboard Summary Banner */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white relative overflow-hidden">
+      <div className="rounded-lg p-6 text-white relative overflow-hidden" style={{ background: `linear-gradient(to right, ${akadaTokens.colors.primary[500]}, ${akadaTokens.colors.primary[700]})` }}>
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative z-10">
           <div className="flex items-start justify-between mb-4">
@@ -425,11 +448,11 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
             <div className="flex items-center space-x-2">
               <button
                 onClick={handleRefresh}
-                disabled={isRefreshing}
+                disabled={refreshing}
                 className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors disabled:opacity-50"
                 aria-label="Refresh dashboard"
               >
-                <RefreshCwIcon className={cn("w-5 h-5", isRefreshing && "animate-spin")} />
+                <RefreshCwIcon className={cn("w-5 h-5", refreshing && "animate-spin")} />
               </button>
               
               <button
@@ -476,12 +499,13 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
             </div>
             <button
               onClick={dashboardSummary.nextBestAction.action}
-              className={cn(
-                "px-4 py-2 rounded-lg font-medium transition-colors",
-                dashboardSummary.nextBestAction.priority === 'high' 
-                  ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "bg-white/20 hover:bg-white/30 text-white"
-              )}
+              className="px-4 py-2 rounded-lg font-medium transition-colors text-white"
+              style={{
+                backgroundColor: dashboardSummary.nextBestAction.priority === 'high' 
+                  ? akadaTokens.colors.status.error
+                  : 'rgba(255, 255, 255, 0.2)'
+              }}
+              aria-label={`Take action: ${dashboardSummary.nextBestAction.text}`}
             >
               Take Action
             </button>
@@ -491,16 +515,16 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
 
       {/* Priority Notifications */}
       {widgetVisibility.notifications && smartNotifications.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" role="region" aria-live="polite" aria-label="Dashboard notifications">
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <BellIcon className="w-5 h-5 text-indigo-600" />
+                <BellIcon className="w-5 h-5 text-indigo-600" aria-hidden="true" />
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Notifications
                 </h3>
                 {hasUrgentNotifications && (
-                  <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  <span className="bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 text-xs font-medium px-2.5 py-0.5 rounded-full" aria-label={`${urgentCount} urgent notifications`}>
                     {urgentCount} urgent
                   </span>
                 )}
@@ -522,8 +546,9 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
                 <button
                   onClick={() => toggleWidget('notifications')}
                   className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  aria-label="Hide notifications widget"
                 >
-                  <EyeOffIcon className="w-5 h-5" />
+                  <EyeOffIcon className="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -562,7 +587,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
                           {notification.action && (
                             <button
                               onClick={notification.action.onClick}
-                              className="text-xs bg-indigo-600 text-white px-3 py-1 rounded-md hover:bg-indigo-700 transition-colors"
+                              className="text-xs bg-indigo-600 dark:bg-indigo-500 text-white px-3 py-1 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
                             >
                               {notification.action.label}
                             </button>
@@ -607,8 +632,9 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
             <button
               onClick={() => toggleWidget('quickActions')}
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              aria-label="Hide quick actions widget"
             >
-              <EyeOffIcon className="w-5 h-5" />
+              <EyeOffIcon className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
           
@@ -643,8 +669,9 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
               <button
                 onClick={() => toggleWidget('profile')}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                aria-label="Hide profile completion widget"
               >
-                <EyeOffIcon className="w-4 h-4" />
+                <EyeOffIcon className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
             <ProfileCompletionWidget />
@@ -659,8 +686,9 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
               <button
                 onClick={() => toggleWidget('timeline')}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                aria-label="Hide application timeline widget"
               >
-                <EyeOffIcon className="w-4 h-4" />
+                <EyeOffIcon className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
             <ApplicationTimelineWidget />
@@ -675,11 +703,29 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
               <button
                 onClick={() => toggleWidget('cost')}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                aria-label="Hide cost analysis widget"
               >
-                <EyeOffIcon className="w-4 h-4" />
+                <EyeOffIcon className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
             <CostAnalysisWidget />
+          </div>
+        )}
+
+        {/* Reminder Widget */}
+        {widgetVisibility.reminders && (
+          <div className="lg:col-span-1">
+            <div className="flex items-center justify-between mb-2">
+              <div></div>
+              <button
+                onClick={() => toggleWidget('reminders')}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                aria-label="Hide reminders widget"
+              >
+                <EyeOffIcon className="w-4 h-4" aria-hidden="true" />
+              </button>
+            </div>
+            <ReminderWidget />
           </div>
         )}
       </div>
@@ -694,8 +740,9 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
             <button
               onClick={() => toggleWidget('chart')}
               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              aria-label="Hide cost comparison chart widget"
             >
-              <EyeOffIcon className="w-5 h-5" />
+              <EyeOffIcon className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
           
@@ -718,10 +765,11 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
                   key={widget}
                   onClick={() => toggleWidget(widget as keyof typeof widgetVisibility)}
                   className="flex items-center space-x-2 px-3 py-2 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  aria-label={`Show ${widget} widget`}
                 >
-                  <EyeIcon className="w-4 h-4" />
+                  <EyeIcon className="w-4 h-4" aria-hidden="true" />
                   <span className="capitalize">{widget}</span>
-                  <PlusIcon className="w-3 h-3" />
+                  <PlusIcon className="w-3 h-3" aria-hidden="true" />
                 </button>
               )
             )}
@@ -730,7 +778,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
       )}
 
       {/* Mobile optimization styles */}
-      <style jsx>{`
+        <style>{`
         @media (max-width: 768px) {
           .dashboard-grid {
             grid-template-columns: 1fr;
@@ -746,7 +794,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
           }
         }
       `}</style>
-    </div>
+    </main>
   )
 }
 

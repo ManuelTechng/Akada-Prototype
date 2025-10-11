@@ -769,7 +769,7 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
       )}
 
       {/* Mobile optimizations */}
-      <style jsx>{`
+        <style>{`
         @media (max-width: 375px) {
           .space-y-3 > * + * {
             margin-top: 0.5rem;

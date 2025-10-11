@@ -37,6 +37,9 @@ const ApplicationTrackerDemo = lazy(() => import('./pages/ApplicationTrackerDemo
 const ProfileCompletionDemo = lazy(() => import('./pages/ProfileCompletionDemo'));
 const DesignSystemDemo = lazy(() => import('./pages/DesignSystemDemo'));
 
+// Development tools
+const CacheControls = lazy(() => import('./components/dev/CacheControls'));
+
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -84,6 +87,9 @@ function AppWithProviders() {
       <NotificationProvider>
         <AppRoutes />
         <EnvironmentWarning />
+        <Suspense fallback={null}>
+          <CacheControls />
+        </Suspense>
       </NotificationProvider>
     </SavedProgramsProvider>
   );

@@ -351,16 +351,16 @@ const ProgramSearchPage: React.FC = () => {
   };
 
   const getFilterSection = () => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sliders className="h-5 w-5 text-indigo-600" />
-          <h2 className="font-semibold text-gray-900 text-lg">Filters</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">Filters</h2>
         </div>
         {activeFilters.length > 0 && (
           <button
             onClick={clearAllFilters}
-            className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
           >
             Clear all
           </button>
@@ -373,7 +373,7 @@ const ProgramSearchPage: React.FC = () => {
           {activeFilters.map((filter) => (
             <div 
               key={filter} 
-              className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-sm"
+              className="inline-flex items-center gap-1 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-full text-sm"
             >
               <span>{filter}</span>
               <button 
@@ -389,7 +389,7 @@ const ProgramSearchPage: React.FC = () => {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Country
           </label>
           <select
@@ -397,7 +397,7 @@ const ProgramSearchPage: React.FC = () => {
             title="Country"
             value={filters.country}
             onChange={(e) => handleFilterChange('country', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
           >
             <option value="">Any country</option>
             <option value="Nigeria">Nigeria</option>
@@ -413,7 +413,7 @@ const ProgramSearchPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Degree Type
           </label>
           <select
@@ -421,7 +421,7 @@ const ProgramSearchPage: React.FC = () => {
             title="Degree Type"
             value={filters.degreeType}
             onChange={(e) => handleFilterChange('degreeType', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
           >
             <option value="">Any type</option>
             <option value="Masters">Master's</option>
@@ -432,7 +432,7 @@ const ProgramSearchPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Tuition Range
           </label>
           <select
@@ -440,7 +440,7 @@ const ProgramSearchPage: React.FC = () => {
             title="Tuition Range"
             value={filters.maxTuition}
             onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
           >
             <option value="any">Any range</option>
             <option value="5000">Under $5,000/year</option>
@@ -453,7 +453,7 @@ const ProgramSearchPage: React.FC = () => {
         {showAdvancedFilters && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field of Study
               </label>
               <select
@@ -461,7 +461,7 @@ const ProgramSearchPage: React.FC = () => {
                 title="Field of Study"
                 value={filters.field}
                 onChange={(e) => handleFilterChange('field', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
               >
                 <option value="">Any field</option>
                 <option value="Computer Science">Computer Science</option>
@@ -480,9 +480,9 @@ const ProgramSearchPage: React.FC = () => {
                 id="scholarshipsOnly"
                 checked={filters.scholarshipsOnly}
                 onChange={(e) => handleFilterChange('scholarshipsOnly', e.target.checked)}
-                className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                className="w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-400 rounded focus:ring-indigo-500 bg-white dark:bg-white"
               />
-              <label htmlFor="scholarshipsOnly" className="text-sm text-gray-700">
+              <label htmlFor="scholarshipsOnly" className="text-sm text-gray-700 dark:text-gray-300">
                 Only show programs with scholarships
               </label>
             </div>
@@ -534,7 +534,7 @@ const ProgramSearchPage: React.FC = () => {
       {/* Header with breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
             <button 
               aria-label="Back to Dashboard"
               title="Back to Dashboard"
@@ -545,20 +545,20 @@ const ProgramSearchPage: React.FC = () => {
               <span>Back to Dashboard</span>
             </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 font-heading">Find Your Program</h1>
-          <p className="text-gray-500">Discover programs that match your profile and preferences</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-heading">Find Your Program</h1>
+          <p className="text-gray-500 dark:text-gray-400">Discover programs that match your profile and preferences</p>
         </div>
         <div className="flex gap-3">
           <button 
             aria-label="Go to Cost Calculator"
             title="Go to Cost Calculator"
             onClick={() => navigate('/dashboard/calculator')} 
-            className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
+            className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
           >
             <Calculator className="h-5 w-5" />
             <span className="hidden sm:inline">Cost Calculator</span>
           </button>
-          <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
+          <button className="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors inline-flex items-center gap-2"
             aria-label="Show Match Filters"
             title="Show Match Filters"
           >
@@ -576,7 +576,7 @@ const ProgramSearchPage: React.FC = () => {
         <input
           type="text"
           placeholder="Search for programs, universities, or keywords..."
-          className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm"
+          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-400 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white shadow-sm text-gray-900 dark:text-gray-900 placeholder-gray-500 dark:placeholder-gray-400"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -589,7 +589,7 @@ const ProgramSearchPage: React.FC = () => {
           {getFilterSection()}
           
           {/* Tools section */}
-          <div className="bg-indigo-600 rounded-xl shadow-sm p-6 text-white">
+          <div className="bg-indigo-600 dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
             <h2 className="font-semibold mb-4 text-lg">Need Help Finding Programs?</h2>
             <p className="text-indigo-100 mb-4">
               Our AI assistant can help you discover programs that match your profile, preferences, and career goals.
@@ -616,22 +616,22 @@ const ProgramSearchPage: React.FC = () => {
         {/* Results area */}
         <div className="lg:col-span-2 xl:col-span-3 space-y-6">
           {/* Results header */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="font-semibold text-lg text-gray-900">
+                <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <div className="animate-spin h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
-                      <span>Searching...</span>
+                      <span className="text-gray-900 dark:text-gray-100">Searching...</span>
                     </div>
                   ) : error ? (
-                    <span className="text-red-600">{error}</span>
+                    <span className="text-red-600 dark:text-red-400">{error}</span>
                   ) : (
                     `${programs.length} Programs Found`
                   )}
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {programs.length > 0 && !loading && !error 
                     ? `Showing programs matching your criteria`
                     : ''}
@@ -639,11 +639,11 @@ const ProgramSearchPage: React.FC = () => {
               </div>
               
               <div className="flex gap-3 items-center">
-                <span className="text-sm text-gray-500 hidden sm:inline-block">Sort by:</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline-block">Sort by:</span>
                 <select 
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-white text-gray-900 dark:text-gray-900"
                   aria-label="Sort by"
                   title="Sort by"
                 >
@@ -675,17 +675,17 @@ const ProgramSearchPage: React.FC = () => {
 
           {/* Results grid */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+            <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
               <div className="animate-spin h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full mb-4"></div>
-              <p className="text-gray-600">Searching for programs that match your criteria...</p>
+              <p className="text-gray-600 dark:text-gray-400">Searching for programs that match your criteria...</p>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-              <div className="bg-red-100 text-red-600 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+              <div className="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <AlertIcon className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">Error</h3>
-              <p className="text-gray-600 mb-4">{error}</p>
+              <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">Error</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
               <button 
                 onClick={() => window.location.reload()}
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
@@ -694,12 +694,12 @@ const ProgramSearchPage: React.FC = () => {
               </button>
             </div>
           ) : programs.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-              <div className="bg-gray-100 text-gray-500 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+              <div className="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Search className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">No Programs Found</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">No Programs Found</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 Try adjusting your search criteria or removing some filters.
               </p>
               <button 

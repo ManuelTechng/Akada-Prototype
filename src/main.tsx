@@ -6,6 +6,7 @@ import './index.css';
 import { checkEnvironmentVariables } from './utils/envCheck';
 import { SafeStorage } from './utils/safeStorage';
 import { registerServiceWorker } from './utils/serviceWorker';
+import { cacheManager } from './utils/cacheManager';
 
 console.log('Starting Akada application...');
 
