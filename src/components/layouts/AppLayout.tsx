@@ -433,6 +433,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                   onClick: () => navigate('/dashboard/billing')
                 },
                 {
+                  label: '',
                   separator: true
                 },
                 {

@@ -23,7 +23,7 @@ import { useNotifications } from '../contexts/NotificationContext';
 
 const DocumentUpload: React.FC = () => {
   const { user } = useAuth();
-  const { addNotification } = useNotifications();
+  // const { addNotification } = useNotifications();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -46,11 +46,7 @@ const DocumentUpload: React.FC = () => {
     } catch (err) {
       console.error('Failed to load documents:', err);
       setError('Failed to load documents. Please try again.');
-      addNotification({
-        title: 'Error',
-        message: 'Failed to load documents',
-        type: 'error'
-      });
+      console.error('Failed to load documents');
     } finally {
       setLoading(false);
     }
@@ -58,7 +54,7 @@ const DocumentUpload: React.FC = () => {
 
   const handleUpload = async (files: FileList | File[]) => {
     if (!user) {
-      addNotification({
+      console.log({
         title: 'Authentication Required',
         message: 'Please log in to upload documents',
         type: 'error'
@@ -74,7 +70,7 @@ const DocumentUpload: React.FC = () => {
       for (const file of fileArray) {
         // Validate file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
-          addNotification({
+          console.log({
             title: 'File Too Large',
             message: `File ${file.name} is too large. Maximum size is 10MB.`,
             type: 'error'
@@ -91,7 +87,7 @@ const DocumentUpload: React.FC = () => {
         ];
 
         if (!allowedTypes.includes(file.type)) {
-          addNotification({
+          console.log({
             title: 'Unsupported File Type',
             message: `File type not supported for ${file.name}. Please upload PDF, DOC, DOCX, or TXT files.`,
             type: 'error'
@@ -116,14 +112,14 @@ const DocumentUpload: React.FC = () => {
           // Upload document
           const newDoc = await uploadDocument(user.id, file, docType);
           setDocuments(prev => [newDoc, ...prev]);
-          addNotification({
+          console.log({
             title: 'Upload Successful',
             message: `${file.name} uploaded successfully! AI review in progress...`,
             type: 'success'
           });
         } catch (uploadError: any) {
           console.error('Upload failed for', file.name, uploadError);
-          addNotification({
+          console.log({
             title: 'Upload Failed',
             message: `Failed to upload ${file.name}: ${uploadError?.message || 'Unknown error'}`,
             type: 'error'
@@ -132,7 +128,7 @@ const DocumentUpload: React.FC = () => {
       }
     } catch (err) {
       console.error('Upload process failed:', err);
-      addNotification({
+      console.log({
         title: 'Upload Failed',
         message: 'Upload failed. Please try again.',
         type: 'error'
@@ -182,14 +178,14 @@ const DocumentUpload: React.FC = () => {
     try {
       await deleteDocument(user.id, documentId);
       setDocuments(prev => prev.filter(doc => doc.id !== documentId));
-      addNotification({
+      console.log({
         title: 'Success',
         message: 'Document deleted successfully',
         type: 'success'
       });
     } catch (err) {
       console.error('Delete failed:', err);
-      addNotification({
+      console.log({
         title: 'Error',
         message: 'Failed to delete document',
         type: 'error'
@@ -200,10 +196,10 @@ const DocumentUpload: React.FC = () => {
   const handleDownload = async (documentUrl: string, filename: string) => {
     try {
       await downloadDocument(documentUrl, filename);
-      showNotification('Download started', 'success');
+      console.log('Download started');
     } catch (err) {
       console.error('Download failed:', err);
-      showNotification('Failed to download document', 'error');
+      console.error('Failed to download document');
     }
   };
 

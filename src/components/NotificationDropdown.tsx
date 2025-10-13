@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Bell, Info, CheckCircle, AlertTriangle, AlertCircle, X, ChevronRight } from 'lucide-react';
+import { Bell, Info, CheckCircle, AlertTriangle, AlertCircle, ChevronRight } from 'lucide-react';
 import { useNotifications } from '../contexts/NotificationContext';
 import { useNavigate } from 'react-router-dom';
 

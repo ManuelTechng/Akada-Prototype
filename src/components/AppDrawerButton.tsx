@@ -8,7 +8,7 @@ interface AppDrawerButtonProps {
 }
   
 const AppDrawerButton: React.FC<AppDrawerButtonProps> = ({ onAuthClick }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [, ] = useState(false);
   const navigate = useNavigate();
 
   const handleClick = () => {

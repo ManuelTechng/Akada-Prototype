@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { 
-  Search, Home, User, BookOpen, MessageSquare, FileText, Bell, Settings, Menu, X,
+  Search, User, BookOpen, MessageSquare, FileText, Bell, Menu, X,
   LayoutDashboard, Folder, Users, Calendar, BarChart, LogOut, Calculator,
-  Clock, HelpCircle, BookmarkIcon, BellRing, Headphones, ArrowLeft
+  Clock, HelpCircle, BellRing, Headphones, ArrowLeft, Bookmark
 } from 'lucide-react';
 import ProgramSearch from './app/ProgramSearch';
 import Dashboard from './app/Dashboard';
 import ProfileSettings from './app/ProfileSettings';
 import Resources from './app/Resources';
 import ChatAssistant from './app/ChatAssistant';
-import ApplicationTracker from './app/ApplicationTracker';
 import Documents from './app/Documents';
 import Community from './app/Community';
 import { useNotifications } from '../contexts/NotificationContext';
@@ -51,7 +50,7 @@ const AppPrototype: React.FC = () => {
         { id: "profile", label: "Profile Settings", icon: <User className="h-5 w-5" /> },
         { id: "subscription", label: "Subscription", icon: <BarChart className="h-5 w-5" /> },
         { id: "notifications", label: "Notifications", icon: <BellRing className="h-5 w-5" /> },
-        { id: "saved", label: "Saved Programs", icon: <BookmarkIcon className="h-5 w-5" /> },
+        { id: "saved", label: "Saved Programs", icon: <Bookmark className="h-5 w-5" /> },
         { id: "help", label: "Help & Support", icon: <HelpCircle className="h-5 w-5" /> }
       ]
     }
@@ -205,7 +204,10 @@ const AppPrototype: React.FC = () => {
               <ProgramSearch />
             </TabsContent>
             <TabsContent value="applications" className="h-full m-0">
-              <ApplicationTracker />
+              <div className="p-8 text-center">
+                <h2 className="text-xl font-semibold mb-4">Application Tracker</h2>
+                <p className="text-gray-600">Application tracking feature coming soon...</p>
+              </div>
             </TabsContent>
             <TabsContent value="documents" className="h-full m-0">
               <Documents />

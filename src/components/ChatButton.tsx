@@ -75,11 +75,7 @@ What would you like to know about studying abroad?`,
     if (!textToSend || isLoading) return;
 
     if (!user) {
-      addNotification({
-        title: 'Authentication Required',
-        message: 'Please log in to chat with Akada AI',
-        type: 'error'
-      });
+      console.error('Please log in to chat with Akada AI');
       return;
     }
 
@@ -148,11 +144,7 @@ What would you like to know about studying abroad?`,
         }];
       });
 
-      addNotification({
-        title: 'Chat Error',
-        message: 'Chat temporarily unavailable',
-        type: 'error'
-      });
+      console.error('Chat temporarily unavailable');
     } finally {
       setIsLoading(false);
     }

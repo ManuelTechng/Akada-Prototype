@@ -66,7 +66,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ program, onSave, onShare }) =
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" title="Live rates"></div>
                   )}
                   {tuitionDisplay.hasError && (
-                    <AlertCircle className="w-3 h-3 text-yellow-500" title="Using approximate rates" />
+                    <AlertCircle className="w-3 h-3 text-yellow-500" />
                   )}
                 </div>
                 {tuitionDisplay.secondary && (
