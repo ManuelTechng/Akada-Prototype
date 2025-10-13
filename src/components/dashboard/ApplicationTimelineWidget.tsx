@@ -560,7 +560,7 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
   }
 
   const handleBrowsePrograms = () => {
-    navigate('/search')
+    navigate('/dashboard/search')
   }
 
   // Loading state

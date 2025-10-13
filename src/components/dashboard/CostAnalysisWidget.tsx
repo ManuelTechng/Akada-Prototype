@@ -137,7 +137,7 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
             Save some programs and set your budget to see cost analysis
           </p>
           <button
-            onClick={() => navigate('/programs/search')}
+            onClick={() => navigate('/dashboard/search')}
             className="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
           >
             Search Programs
@@ -316,7 +316,7 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
         
         {scholarshipOpportunities.length > 0 && (
           <button
-            onClick={() => navigate('/scholarships')}
+            onClick={() => navigate('/dashboard/search')}
             className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
           >
             <TrophyIcon className="w-4 h-4" />

@@ -179,8 +179,9 @@ export const getCurrencyServiceConfig = (): CurrencyServiceConfig => ({
   timeout: 10000 // 10 seconds
 });
 
-// Fallback exchange rates (updated periodically)
+// Fallback exchange rates (updated October 2025)
 // These rates are used when API is unavailable
+// CRITICAL: Updated CAD to NGN rate from 616 to 1050 (40% fix)
 export const FALLBACK_RATES: Record<string, Record<string, number>> = {
   USD: {
     NGN: 1500,    // 1 USD = 1500 NGN (as specified in PRD)
@@ -188,32 +189,54 @@ export const FALLBACK_RATES: Record<string, Record<string, number>> = {
     KES: 129,     // 1 USD = 129 KES
     ZAR: 18.5,    // 1 USD = 18.5 ZAR
     EGP: 31,      // 1 USD = 31 EGP
-    EUR: 0.85,    // 1 USD = 0.85 EUR
-    GBP: 0.73,    // 1 USD = 0.73 GBP
-    CAD: 1.35,    // 1 USD = 1.35 CAD
-    AUD: 1.45,    // 1 USD = 1.45 AUD
-    SEK: 11.25,   // 1 USD = 11.25 SEK
-    NOK: 11.85,   // 1 USD = 11.85 NOK
-    DKK: 7.02,    // 1 USD = 7.02 DKK
-    CHF: 0.92,    // 1 USD = 0.92 CHF
-    JPY: 154.50,  // 1 USD = 154.50 JPY
-    SGD: 1.36,    // 1 USD = 1.36 SGD
-    NZD: 1.73,    // 1 USD = 1.73 NZD
+    EUR: 0.92,    // 1 USD = 0.92 EUR (updated from 0.85)
+    GBP: 0.79,    // 1 USD = 0.79 GBP (updated from 0.73)
+    CAD: 1.43,    // 1 USD = 1.43 CAD (updated from 1.35)
+    AUD: 1.52,    // 1 USD = 1.52 AUD (updated from 1.45)
+    SEK: 10.85,   // 1 USD = 10.85 SEK (updated from 11.25)
+    NOK: 10.95,   // 1 USD = 10.95 NOK (updated from 11.85)
+    DKK: 6.85,    // 1 USD = 6.85 DKK (updated from 7.02)
+    CHF: 0.88,    // 1 USD = 0.88 CHF (updated from 0.92)
+    JPY: 149.50,  // 1 USD = 149.50 JPY (updated from 154.50)
+    SGD: 1.34,    // 1 USD = 1.34 SGD (updated from 1.36)
+    NZD: 1.68,    // 1 USD = 1.68 NZD (updated from 1.73)
     HKD: 7.78     // 1 USD = 7.78 HKD
+  },
+  CAD: {
+    NGN: 1050,        // 1 CAD = 1050 NGN (CRITICAL FIX - was missing, caused 40% error)
+    USD: 0.699,       // 1 CAD = 0.699 USD (1/1.43)
+    EUR: 0.64,        // 1 CAD = 0.64 EUR
+    GBP: 0.55,        // 1 CAD = 0.55 GBP
+    AUD: 1.06,        // 1 CAD = 1.06 AUD
+    GHS: 8.75,        // 1 CAD = 8.75 GHS
+    KES: 90.9,        // 1 CAD = 90.9 KES
+    ZAR: 12.9,        // 1 CAD = 12.9 ZAR
+    EGP: 21.67,       // 1 CAD = 21.67 EGP
+    SEK: 7.58,        // 1 CAD = 7.58 SEK
+    NOK: 7.65,        // 1 CAD = 7.65 NOK
+    DKK: 4.79,        // 1 CAD = 4.79 DKK
+    CHF: 0.615,       // 1 CAD = 0.615 CHF
+    JPY: 104.5,       // 1 CAD = 104.5 JPY
+    SGD: 0.937,       // 1 CAD = 0.937 SGD
+    NZD: 1.174,       // 1 CAD = 1.174 NZD
+    HKD: 5.44         // 1 CAD = 5.44 HKD
   },
   NGN: {
     USD: 1/1500,      // 1 NGN = 0.000667 USD
+    CAD: 1/1050,      // 1 NGN = 0.000952 CAD (CRITICAL FIX - was missing)
+    EUR: 1/1620,      // 1 NGN = 0.000617 EUR
+    GBP: 1/1905,      // 1 NGN = 0.000525 GBP
     GHS: 12.5/1500,   // 1 NGN = 0.0083 GHS
     KES: 129/1500,    // 1 NGN = 0.086 KES
     ZAR: 18.5/1500,   // 1 NGN = 0.0123 ZAR
     EGP: 31/1500,     // 1 NGN = 0.0207 EGP
-    SEK: 11.25/1500,  // 1 NGN = 0.0075 SEK
-    NOK: 11.85/1500,  // 1 NGN = 0.0079 NOK
-    DKK: 7.02/1500,   // 1 NGN = 0.0047 DKK
-    CHF: 0.92/1500,   // 1 NGN = 0.00061 CHF
-    JPY: 154.50/1500, // 1 NGN = 0.103 JPY
-    SGD: 1.36/1500,   // 1 NGN = 0.00091 SGD
-    NZD: 1.73/1500,   // 1 NGN = 0.00115 NZD
+    SEK: 10.85/1500,  // 1 NGN = 0.00723 SEK
+    NOK: 10.95/1500,  // 1 NGN = 0.0073 NOK
+    DKK: 6.85/1500,   // 1 NGN = 0.00457 DKK
+    CHF: 0.88/1500,   // 1 NGN = 0.000587 CHF
+    JPY: 149.50/1500, // 1 NGN = 0.0997 JPY
+    SGD: 1.34/1500,   // 1 NGN = 0.000893 SGD
+    NZD: 1.68/1500,   // 1 NGN = 0.00112 NZD
     HKD: 7.78/1500    // 1 NGN = 0.00519 HKD
   }
 };

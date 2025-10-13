@@ -62,23 +62,37 @@ const RecommendedPrograms: React.FC = () => {
     const fetchRecommendations = async () => {
       setLoading(true)
       setError(null)
-      
+
       try {
-        let recommendationsData: RecommendationCategory[] = []
-        
+        console.log('⏳ Fetching personalized recommendations...')
+        const startTime = performance.now()
+
+        // Create timeout promise (15 seconds for complex recommendation algorithm)
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Recommendations timeout after 15 seconds. Please try again or update your profile for faster results.')), 15000)
+        )
+
+        let recommendationsPromise: Promise<RecommendationCategory[]>
+
         if (user && profile) {
           // Fetch personalized recommendations for authenticated user
-          recommendationsData = await getUserRecommendations(user.id)
+          recommendationsPromise = getUserRecommendations(user.id)
         } else {
           // Fetch general recommendations for non-authenticated users
-          recommendationsData = await fetchPersonalizedRecommendations({})
+          recommendationsPromise = fetchPersonalizedRecommendations({})
         }
-        
+
+        // Race the fetch against the timeout
+        const recommendationsData = await Promise.race([recommendationsPromise, timeoutPromise])
+
+        const endTime = performance.now()
+        console.log(`✅ Recommendations loaded in ${(endTime - startTime).toFixed(0)}ms`)
+
         setRecommendations(recommendationsData)
         setLastUpdated(new Date())
-      } catch (err) {
-        setError('Failed to load recommendations. Please try again.')
-        console.error('Error fetching recommendations:', err)
+      } catch (err: any) {
+        console.error('❌ Error fetching recommendations:', err)
+        setError(err.message || 'Failed to load recommendations. Please try again.')
       } finally {
         setLoading(false)
       }
@@ -89,23 +103,38 @@ const RecommendedPrograms: React.FC = () => {
 
   const handleRefreshRecommendations = async () => {
     setRefreshing(true)
-    
+
     try {
-      let recommendationsData: RecommendationCategory[] = []
-      
+      console.log('🔄 Refreshing recommendations...')
+      const startTime = performance.now()
+
+      // Create timeout promise
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Refresh timeout after 15 seconds.')), 15000)
+      )
+
+      let refreshPromise: Promise<RecommendationCategory[]>
+
       if (user && profile) {
         // Refresh personalized recommendations for authenticated user
-        recommendationsData = await refreshRecommendations({}, user.id)
+        refreshPromise = refreshRecommendations({}, user.id)
       } else {
         // Refresh general recommendations for non-authenticated users
-        recommendationsData = await refreshRecommendations({})
+        refreshPromise = refreshRecommendations({})
       }
-      
+
+      // Race the refresh against the timeout
+      const recommendationsData = await Promise.race([refreshPromise, timeoutPromise])
+
+      const endTime = performance.now()
+      console.log(`✅ Recommendations refreshed in ${(endTime - startTime).toFixed(0)}ms`)
+
       setRecommendations(recommendationsData)
       setLastUpdated(new Date())
-    } catch (err) {
-      setError('Failed to refresh recommendations. Please try again.')
-      console.error('Error refreshing recommendations:', err)
+      setError(null) // Clear any previous errors
+    } catch (err: any) {
+      console.error('❌ Error refreshing recommendations:', err)
+      setError(err.message || 'Failed to refresh recommendations. Please try again.')
     } finally {
       setRefreshing(false)
     }

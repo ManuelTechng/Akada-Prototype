@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import ProgramSearch from './app/ProgramSearch';
 import Dashboard from './app/Dashboard';
-import Profile from './app/Profile';
+import ProfileSettings from './app/ProfileSettings';
 import Resources from './app/Resources';
 import ChatAssistant from './app/ChatAssistant';
 import ApplicationTracker from './app/ApplicationTracker';
@@ -220,7 +220,7 @@ const AppPrototype: React.FC = () => {
               <ChatAssistant />
             </TabsContent>
             <TabsContent value="profile" className="h-full m-0">
-              <Profile />
+              <ProfileSettings />
             </TabsContent>
           </Tabs>
         </div>

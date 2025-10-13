@@ -296,6 +296,7 @@ export class CircuitBreaker {
 
 /**
  * Fallback rate provider using static rates
+ * Updated: October 2025 - Added CAD and updated rates
  */
 export class FallbackRateProvider {
   private static readonly STATIC_RATES: Record<string, Record<string, number>> = {
@@ -304,24 +305,46 @@ export class FallbackRateProvider {
       GHS: 12.5,
       KES: 130,
       ZAR: 18.5,
-      EGP: 31
+      EGP: 31,
+      CAD: 1.43,
+      GBP: 0.79,
+      EUR: 0.92,
+      AUD: 1.52
+    },
+    CAD: {
+      NGN: 1050,      // CRITICAL FIX: 1 CAD = 1050 NGN (October 2025)
+      USD: 0.699,     // 1 CAD = 0.699 USD (1/1.43)
+      GBP: 0.55,      // 1 CAD = 0.55 GBP
+      EUR: 0.64,      // 1 CAD = 0.64 EUR
+      AUD: 1.06,      // 1 CAD = 1.06 AUD
+      GHS: 8.75,      // 1 CAD = 8.75 GHS
+      KES: 90.9,      // 1 CAD = 90.9 KES
+      ZAR: 12.9       // 1 CAD = 12.9 ZAR
     },
     NGN: {
       USD: 1 / 1500,
+      CAD: 1 / 1050,  // CRITICAL FIX: Added CAD rate
       GHS: 12.5 / 1500,
       KES: 130 / 1500,
       ZAR: 18.5 / 1500,
       EGP: 31 / 1500
     },
     EUR: {
-      USD: 1.08,
+      USD: 1.09,      // Updated from 1.08
       NGN: 1620,
-      GBP: 0.84
+      GBP: 0.86,      // Updated from 0.84
+      CAD: 1.56       // Added CAD rate
     },
     GBP: {
       USD: 1.27,
       NGN: 1905,
-      EUR: 1.19
+      EUR: 1.16,      // Updated from 1.19
+      CAD: 1.82       // Added CAD rate
+    },
+    AUD: {
+      USD: 0.658,     // 1 AUD = 0.658 USD (1/1.52)
+      NGN: 987,       // 1 AUD = 987 NGN
+      CAD: 0.943      // 1 AUD = 0.943 CAD (1/1.06)
     }
   };
 

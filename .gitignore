@@ -35,3 +35,21 @@ node_modules/
 # Task files
 # tasks.json
 # tasks/ 
+
+# Documentation and analysis files
+*_REVIEW.md
+*_ANALYSIS.md
+*_SUMMARY.md
+*_STATUS.md
+*_FIX.md
+*_COMPLETE.md
+*_COMPLETION.md
+PROFILE_*.md
+CRUD_*.md
+TASK_*.md
+*_REPORT.md
+*_IMPLEMENTATION_*.md
+
+# Windows reserved filenames
+nul
+NUL

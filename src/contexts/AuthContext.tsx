@@ -39,16 +39,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [fetchingProfile, setFetchingProfile] = useState(false);
   const refreshProfile = async () => {
-    if (!user) return;
+    if (!user || fetchingProfile) return;
     
     try {
+      setFetchingProfile(true);
       console.log('AuthContext: Refreshing profile for user', user.id);
       const profile = await getUserProfile(user.id);
       console.log('AuthContext: Profile refresh result', profile ? 'success' : 'null');
       if (profile) setProfile(profile);
     } catch (err) {
       console.error('AuthContext: Error refreshing profile:', err);
+    } finally {
+      setFetchingProfile(false);
     }
   };
 
@@ -76,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
         setInitialized(true);
       }
-    }, 15000); // Increased to allow profile fetch to complete
+    }, 3000); // Reduced from 15s to 3s for faster initial load
 
     const initializeAuth = async () => {
       console.log('AuthContext: Initializing auth');
@@ -154,12 +158,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.log('AuthContext: User signed in or token refreshed', newSession.user.id);
             setUser(newSession.user);
             try {
+              if (fetchingProfile) {
+                console.log('AuthContext: Profile fetch already in progress, skipping');
+                return;
+              }
+              
+              setFetchingProfile(true);
               console.log('AuthContext: Fetching profile after sign in');
               
               // Add a timeout wrapper around profile fetch
               const profilePromise = getUserProfile(newSession.user.id);
               const timeoutPromise = new Promise<null>((_, reject) =>
-                setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
               );
               
               const profile = await Promise.race([profilePromise, timeoutPromise]);
@@ -173,6 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               if (mounted) {
                 console.log('AuthContext: Setting loading to false after profile fetch');
                 setLoading(false);
+                setFetchingProfile(false);
               }
             }
           } else {

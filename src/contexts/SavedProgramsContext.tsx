@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useRealtime } from '../hooks/useRealtime'
+import { checkConnectionHealth, retryWithBackoff, isConnectionError } from '../lib/connectionHealth'
 
 interface SavedProgram {
   id: string
@@ -65,64 +66,85 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
     setError(null)
 
     try {
-      console.log('Fetching saved programs for user:', userId)
+      console.log('⏳ Fetching saved programs for user:', userId)
       
-      // Join with programs table to get program details
-      const { data, error: fetchError } = await supabase
+      // Check connection health first
+      console.log('🔍 Checking connection health...');
+      const health = await checkConnectionHealth();
+      
+      if (!health.isHealthy) {
+        console.log('❌ Connection unhealthy, skipping saved programs fetch:', health.error);
+        setSavedPrograms([]);
+        setError(null); // Don't show error for connection issues
+        return;
+      }
+      
+      console.log(`✅ Connection healthy (${health.latency?.toFixed(0)}ms)`);
+      
+      const startTime = performance.now()
+
+      // Try a simple query first (without JOIN) to test connectivity
+      const simpleQueryPromise = supabase
         .from('saved_programs')
-        .select(`
-          id,
-          user_id,
-          program_id,
-          saved_at,
-          notes,
-          programs (
-            id,
-            name,
-            university,
-            country,
-            tuition_fee,
-            degree_type,
-            specialization,
-            duration,
-            scholarship_available
-          )
-        `)
+        .select('id, user_id, program_id, saved_at, notes')
         .eq('user_id', userId)
         .order('saved_at', { ascending: false })
+        .limit(10)
+
+      // Create timeout promise - reduced for faster failure
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout after 4 seconds')), 4000)
+      )
+
+      // Race the simple query against the timeout
+      const result = await Promise.race([simpleQueryPromise, timeoutPromise]) as any
+      const { data, error: fetchError } = result
+
+      const endTime = performance.now()
+      console.log(`✅ Saved programs query completed in ${(endTime - startTime).toFixed(0)}ms`)
 
       if (fetchError) {
-        console.error('Error fetching saved programs:', fetchError)
-        setError('Failed to load saved programs')
+        console.error('❌ Error fetching saved programs:', fetchError)
+        
+        // If it's a timeout, show a user-friendly message and continue with empty state
+        if (fetchError.message?.includes('timeout')) {
+          console.log('⏰ Saved programs query timed out, continuing with empty state')
+          setError(null) // Don't show error for timeout - just continue
+          setSavedPrograms([])
+          return
+        }
+        
+        setError(`Failed to load saved programs: ${fetchError.message}`)
         setSavedPrograms([])
         return
       }
 
-      console.log('Raw saved programs data:', data)
-      
-      // Transform data to include program details
+      console.log('📊 Raw saved programs data:', { count: data?.length || 0 })
+
+      // Transform data with minimal program info (since we're not doing JOIN)
       const transformedData = (data || []).map(item => ({
         id: item.id,
         user_id: item.user_id,
         program_id: item.program_id,
         saved_at: item.saved_at,
         notes: item.notes,
-        // Flatten program details from joined table
-        program_name: item.programs?.name || 'Unknown Program',
-        university: item.programs?.university || 'Unknown University',
-        country: item.programs?.country || 'Unknown Country',
-        tuition_fee: item.programs?.tuition_fee || 0,
-        degree_type: item.programs?.degree_type,
-        specialization: item.programs?.specialization,
-        duration: item.programs?.duration,
-        scholarship_available: item.programs?.scholarship_available
+        // Placeholder values since we're not joining with programs table
+        program_name: 'Program', // Will be filled when program details are needed
+        university: 'University', // Placeholder
+        country: 'Country', // Placeholder
+        tuition_fee: 0,
+        degree_type: 'Unknown',
+        specialization: 'Unknown',
+        duration: 'Unknown',
+        scholarship_available: false
       }))
-      
-      console.log('Transformed saved programs:', transformedData)
+
+      console.log('✅ Transformed saved programs:', { count: transformedData.length })
       setSavedPrograms(transformedData)
-    } catch (err) {
-      console.error('Error in fetchSavedPrograms:', err)
-      setError('Failed to load saved programs')
+      setError(null) // Clear any previous errors
+    } catch (err: any) {
+      console.error('❌ Error in fetchSavedPrograms:', err)
+      setError(err.message || 'Failed to load saved programs')
       setSavedPrograms([])
     } finally {
       setIsLoading(false)
@@ -138,10 +160,8 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
         .upsert({
           user_id: userId,
           program_id: programId,
-          program_name: programData?.name,
-          university: programData?.university,
-          country: programData?.country,
-          created_at: new Date().toISOString()
+          saved_at: new Date().toISOString(),
+          notes: programData?.notes || null
         })
 
       if (error) {

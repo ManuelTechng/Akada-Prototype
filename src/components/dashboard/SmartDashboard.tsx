@@ -254,7 +254,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
       },
       nextBestAction: {
         text: summary?.actionNeeded ? 'Complete urgent tasks' : 'Continue building your profile',
-        action: () => navigate(summary?.actionNeeded ? '/applications' : '/profile'),
+        action: () => navigate(summary?.actionNeeded ? '/dashboard/applications' : '/dashboard/profile'),
         priority: summary?.actionNeeded ? 'high' : 'medium'
       }
     }
@@ -456,7 +456,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
               </button>
               
               <button
-                onClick={() => navigate('/settings')}
+                onClick={() => navigate('/dashboard/settings')}
                 className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
                 aria-label="Dashboard settings"
               >

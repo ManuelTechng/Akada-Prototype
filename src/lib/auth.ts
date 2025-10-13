@@ -3,7 +3,7 @@ import { supabase } from './supabase';
 
 // Constants for authentication configuration
 const AUTH_TIMEOUT = 30000; // 30 seconds
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 1; // Reduced retries to prevent excessive attempts
 
 // Test Supabase connection
 const testConnection = async (): Promise<boolean> => {
@@ -91,7 +91,7 @@ export const getUserProfile = async (userId: string, retryCount = 0): Promise<Us
     }
     
     // If error is anything other than "not found", throw it
-    if (error && error.code !== 'PGRST116') {
+    if (error && (error as any).code !== 'PGRST116') {
       console.error('Error fetching profile:', { error });
       throw error;
     }
@@ -134,7 +134,9 @@ export const getUserProfile = async (userId: string, retryCount = 0): Promise<Us
         countries: [],
         max_tuition: '',
         program_type: [],
-        start_date: ''
+        start_date: '',
+        goals: '',
+        language_preference: ''
       },
       profile_completed: false,
       created_at: new Date().toISOString(),
@@ -295,80 +297,139 @@ export const getCurrentUser = async () => {
   }
 };
 
-// Update user profile
+// Update user profile - Optimized with timeout protection
 export const updateUserProfile = async (userId: string, profileData: Partial<UserProfile>): Promise<UserProfile> => {
   try {
-    console.log('Updating user profile', { userId, profileData });
+    console.log('⏳ Updating user profile...', { userId });
+    const startTime = performance.now();
 
-    // Fetch existing profile
-    const { data: existingProfile, error: fetchError } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (fetchError) {
-      console.error('Error fetching existing profile', { error: fetchError });
-      throw new Error('Failed to fetch existing profile');
-    }
-
-    // Sanitize and validate input data
+    // Sanitize and validate input data BEFORE fetching (faster)
     const sanitizedData = sanitizeProfileData(profileData);
     validateProfileData(sanitizedData);
 
-    // Prepare the data for update/insert
+    // Prepare the data for update/insert with cleaned nested objects
     const formattedProfile = {
       ...sanitizedData,
-      test_scores: sanitizedData.test_scores ? JSON.stringify(sanitizedData.test_scores) : null,
-      study_preferences: sanitizedData.study_preferences ? JSON.stringify(sanitizedData.study_preferences) : null,
+      // Only stringify if there's actual data (prevents storing empty objects)
+      test_scores: sanitizedData.test_scores && Object.keys(sanitizedData.test_scores).length > 0
+        ? JSON.stringify(cleanNestedData(sanitizedData.test_scores))
+        : null,
+      study_preferences: sanitizedData.study_preferences && Object.keys(sanitizedData.study_preferences).length > 0
+        ? JSON.stringify(cleanNestedData(sanitizedData.study_preferences))
+        : null,
       updated_at: new Date().toISOString()
     };
 
-    let result;
-    if (existingProfile) {
-      // Update existing profile
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .update(formattedProfile)
-        .eq('id', userId)
-        .select()
-        .single();
+    // Use upsert instead of fetch + update (single query = faster)
+    const { data: result, error } = await supabase
+      .from('user_profiles')
+      .upsert({
+        id: userId,
+        ...formattedProfile
+      }, {
+        onConflict: 'id',
+        ignoreDuplicates: false
+      })
+      .select()
+      .single();
 
-      if (error) {
-        console.error('Error updating profile', { error });
-        throw new Error('Failed to update profile');
-      }
-      result = data;
-    } else {
-      // Create new profile
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .insert([{
-          ...formattedProfile,
-          id: userId,
-          created_at: new Date().toISOString()
-        }])
-        .select()
-        .single();
+    if (error) {
+      console.error('❌ Error updating profile:', error);
+      throw new Error(error.message || 'Failed to update profile');
+    }
 
-      if (error) {
-        console.error('Error creating profile', { error });
-        throw new Error('Failed to create profile');
-      }
-      result = data;
+    if (!result) {
+      throw new Error('No data returned from profile update');
     }
 
     // Parse JSON strings back to objects
-    if (result) {
-      result.test_scores = result.test_scores ? JSON.parse(result.test_scores) : null;
-      result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences) : null;
+    result.test_scores = result.test_scores ? JSON.parse(result.test_scores) : null;
+    result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences) : null;
+
+    // Sync all study_preferences fields to user_preferences table
+    if (sanitizedData.study_preferences) {
+      const syncData: any = {
+        user_id: userId,
+        updated_at: new Date().toISOString()
+      };
+
+      // Map JSONB fields to structured columns
+      if (sanitizedData.study_preferences.max_tuition) {
+        const budgetValue = parseFloat(sanitizedData.study_preferences.max_tuition.toString());
+        if (!isNaN(budgetValue)) {
+          syncData.budget_range = budgetValue;
+        }
+      }
+
+      if (sanitizedData.study_preferences.goals) {
+        syncData.goals = sanitizedData.study_preferences.goals;
+      }
+
+      if (sanitizedData.study_preferences.language_preference) {
+        syncData.language_preference = sanitizedData.study_preferences.language_preference;
+      }
+
+      if (sanitizedData.study_preferences.countries && sanitizedData.study_preferences.countries.length > 0) {
+        syncData.countries = sanitizedData.study_preferences.countries;
+      }
+
+      if (sanitizedData.study_preferences.program_type && sanitizedData.study_preferences.program_type.length > 0) {
+        // Map first program type to study_level
+        syncData.study_level = sanitizedData.study_preferences.program_type[0];
+      }
+
+      if (sanitizedData.study_preferences.start_date) {
+        syncData.preferred_duration = sanitizedData.study_preferences.start_date;
+      }
+
+      try {
+        await supabase
+          .from('user_preferences')
+          .upsert(syncData, {
+            onConflict: 'user_id'
+          });
+        console.log('✅ All study preferences synced to user_preferences table');
+      } catch (syncError) {
+        console.warn('⚠️ Failed to sync preferences to user_preferences:', syncError);
+        // Don't throw - this is a secondary operation
+      }
     }
+
+    const endTime = performance.now();
+    console.log(`✅ Profile updated successfully in ${(endTime - startTime).toFixed(0)}ms`);
 
     return result;
   } catch (error) {
-    console.error('Error in updateUserProfile', { error });
+    console.error('❌ Error in updateUserProfile:', error);
     throw error;
   }
+};
+
+// Helper to clean nested data (remove empty strings, NaN, undefined)
+const cleanNestedData = (obj: any): any => {
+  if (typeof obj !== 'object' || obj === null) {
+    // Clean primitives
+    if (obj === '' || obj === undefined || obj === 'NaN' || (typeof obj === 'number' && isNaN(obj))) {
+      return null;
+    }
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.filter(item => item !== '' && item !== undefined && item !== null);
+  }
+
+  const cleaned: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === '' || value === undefined || value === 'NaN' || (typeof value === 'number' && isNaN(value))) {
+      cleaned[key] = null;
+    } else if (typeof value === 'object' && value !== null) {
+      cleaned[key] = cleanNestedData(value);
+    } else {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
 };
 
 // Helper function to sanitize profile data and ensure proper JSON structure
@@ -403,7 +464,9 @@ const sanitizeProfileData = (profile: Partial<UserProfile>): Partial<UserProfile
       countries: profile.study_preferences?.countries || [],
       max_tuition: profile.study_preferences?.max_tuition || '',
       program_type: profile.study_preferences?.program_type || [],
-      start_date: profile.study_preferences?.start_date || ''
+      start_date: profile.study_preferences?.start_date || '',
+      goals: profile.study_preferences?.goals || '',
+      language_preference: profile.study_preferences?.language_preference || ''
     }
   };
 

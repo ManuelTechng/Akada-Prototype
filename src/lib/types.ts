@@ -16,6 +16,7 @@ export interface UserProfile {
   country?: string;
   date_of_birth?: string; // ISO date string format
   bio?: string;
+  profile_picture_url?: string;
   // Existing fields
   test_scores?: {
     ielts?: number | string;
@@ -31,6 +32,9 @@ export interface UserProfile {
     max_tuition: number | string;
     program_type: string[];
     start_date: string;
+    goals?: string;
+    language_preference?: string;
+    preferred_cities?: string[];
   };
   profile_completed?: boolean;
   created_at: string;

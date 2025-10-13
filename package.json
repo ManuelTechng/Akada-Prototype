@@ -23,6 +23,7 @@
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.39.8",
+    "@tanstack/react-virtual": "^3.13.12",
     "@types/react-dnd": "^3.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

@@ -37,6 +37,7 @@ export interface StudyPreferencesJSONB {
   preferred_cities?: string[]
   language_preference?: string
   start_date?: string
+  goals?: string
 }
 
 export interface StructuredPreferences {
@@ -74,7 +75,7 @@ export class UnifiedPreferenceService {
     if (!userId) return null
 
     try {
-      // Fetch both preference systems in parallel
+      // Fetch both preference systems in parallel with fresh data
       const [profileData, preferencesData] = await Promise.all([
         supabase
           .from('user_profiles')
@@ -91,6 +92,14 @@ export class UnifiedPreferenceService {
       const profile = profileData.data
       const preferences = preferencesData.data
       const studyPrefs = profile?.study_preferences as StudyPreferencesJSONB
+
+      // Debug logging
+      console.log('🔍 Budget Debug:', {
+        jsonbMaxTuition: studyPrefs?.max_tuition,
+        structuredBudgetRange: preferences?.budget_range,
+        parsedJsonb: parseFloat(studyPrefs?.max_tuition || '0'),
+        parsedStructured: preferences?.budget_range
+      })
 
       // Merge and prioritize structured preferences over JSONB
       const unifiedPreferences: UserPreferences = {
@@ -109,19 +118,19 @@ export class UnifiedPreferenceService {
         preferredCities: preferences?.preferred_cities ||
                         studyPrefs?.preferred_cities || [],
         
-        // Financial preferences
-        budgetRange: preferences?.budget_range ||
-                    parseFloat(studyPrefs?.max_tuition || '0') || undefined,
+        // Financial preferences (prioritize JSONB data for user-selected range)
+        budgetRange: parseFloat(studyPrefs?.max_tuition || '0') || 
+                    preferences?.budget_range || undefined,
         scholarshipNeeded: preferences?.scholarship_needed || false,
         
         // Timeline preferences
         preferredDuration: preferences?.preferred_duration ||
                           studyPrefs?.start_date,
         
-        // Other preferences
+        // Other preferences - IMPORTANT: Try structured first, then JSONB fallback
         languagePreference: preferences?.language_preference ||
                            studyPrefs?.language_preference,
-        goals: preferences?.goals,
+        goals: preferences?.goals || studyPrefs?.goals, // ADD JSONB fallback
         
         // Metadata
         createdAt: preferences?.created_at,
@@ -195,6 +204,60 @@ export class UnifiedPreferenceService {
         return { 
           success: false, 
           error: profileUpdate.error?.message || preferencesUpdate.error?.message 
+        }
+      }
+
+      // Additional sync: If budget was updated in structured data, ensure JSONB is also updated
+      if (updates.budgetRange !== undefined) {
+        try {
+          await supabase
+            .from('user_profiles')
+            .update({
+              study_preferences: {
+                ...jsonbUpdate,
+                max_tuition: updates.budgetRange.toString()
+              },
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', userId);
+          console.log('✅ Budget synced from structured to JSONB');
+        } catch (syncError) {
+          console.warn('⚠️ Failed to sync budget from structured to JSONB:', syncError);
+          // Don't fail the operation - this is a secondary sync
+        }
+      }
+
+      // Sync additional fields from structured to JSONB for consistency
+      if (updates.goals !== undefined || updates.languagePreference !== undefined || updates.preferredDuration !== undefined) {
+        try {
+          const additionalJsonbUpdate: any = {};
+          if (updates.goals !== undefined) additionalJsonbUpdate.goals = updates.goals;
+          if (updates.languagePreference !== undefined) additionalJsonbUpdate.language_preference = updates.languagePreference;
+          if (updates.preferredDuration !== undefined) additionalJsonbUpdate.start_date = updates.preferredDuration;
+          
+          // Get current study_preferences to merge with
+          const { data: currentProfile } = await supabase
+            .from('user_profiles')
+            .select('study_preferences')
+            .eq('id', userId)
+            .single();
+          
+          const currentPrefs = currentProfile?.study_preferences || {};
+          
+          await supabase
+            .from('user_profiles')
+            .update({
+              study_preferences: {
+                ...currentPrefs,
+                ...additionalJsonbUpdate
+              },
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', userId);
+          console.log('✅ Additional fields synced from structured to JSONB');
+        } catch (syncError) {
+          console.warn('⚠️ Failed to sync additional fields from structured to JSONB:', syncError);
+          // Don't fail the operation - this is a secondary sync
         }
       }
 

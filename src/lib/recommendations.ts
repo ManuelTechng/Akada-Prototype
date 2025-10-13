@@ -105,7 +105,10 @@ async function calculateAdvancedMatchScore(
   // Budget preference (15% weight) - Reduced from 20%
   if (preferences.budget_range && program.tuition_fee) {
     factors++
-    const [minBudget, maxBudget] = preferences.budget_range
+    // Handle budget_range as either array or single number
+    const [minBudget, maxBudget] = Array.isArray(preferences.budget_range)
+      ? preferences.budget_range
+      : [0, preferences.budget_range]
     const tuition = program.tuition_fee
     
     if (tuition >= minBudget && tuition <= maxBudget) {

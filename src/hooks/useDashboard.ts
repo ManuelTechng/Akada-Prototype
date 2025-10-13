@@ -37,7 +37,7 @@ export const useProfileCompletion = () => {
         weight: 15
       },
       locationInfo: {
-        complete: prefs.preferredCities.length > 0,
+        complete: prefs.countries.length > 0,
         label: 'Location Preferences',
         weight: 15
       },
@@ -76,7 +76,10 @@ export const useProfileCompletion = () => {
       nextSteps.push('Add preferred cities to find local programs')
     }
     if (!sections.personalInfo.complete) {
-      nextSteps.push('Complete your study goals and language preferences')
+      const missingFields = []
+      if (!prefs.goals) missingFields.push('Study Goals')
+      if (!prefs.languagePreference) missingFields.push('Language Preference')
+      nextSteps.push(`Complete ${missingFields.join(' and ')} in Personal Information`)
     }
 
     // Determine priority based on completion level

@@ -56,7 +56,7 @@ export const useSmartDashboard = () => {
           title: 'Complete Your Profile',
           message: `${completionData.percentage}% complete. ${benefits.message}`,
           action: 'Complete Profile',
-          actionUrl: '/profile/setup',
+          actionUrl: '/dashboard/profile',
           priority: benefits.urgency,
           dismissible: false,
           icon: '👤',
@@ -72,7 +72,7 @@ export const useSmartDashboard = () => {
           title: 'Recommended Next Steps',
           message: completionData.nextSteps[0], // Show most important step
           action: 'View All Steps',
-          actionUrl: '/profile/setup',
+          actionUrl: '/dashboard/profile',
           priority: 'medium',
           dismissible: true,
           icon: '📝',
@@ -92,7 +92,7 @@ export const useSmartDashboard = () => {
                insight.type === 'empty' ? '🎓 Start Your Journey' : '✅ Great Progress',
         message: insight.message,
         action: insight.action,
-        actionUrl: '/applications',
+        actionUrl: '/dashboard/applications',
         priority: insight.priority as any,
         dismissible: insight.type !== 'urgent' && insight.type !== 'overdue',
         timestamp: new Date()
@@ -117,7 +117,7 @@ export const useSmartDashboard = () => {
                insight.type === 'budget_tight' ? '💰 Budget Tight' : '💚 Budget Comfortable',
         message: insight.message,
         action: insight.suggestion,
-        actionUrl: '/cost-calculator',
+        actionUrl: '/dashboard/calculator',
         priority: insight.priority as any,
         dismissible: insight.priority !== 'high',
         timestamp: new Date()
@@ -135,7 +135,7 @@ export const useSmartDashboard = () => {
           title: '🎯 Perfect Matches Found',
           message: `${highQualityMatches.length} programs with 80%+ match scores available`,
           action: 'View Recommendations',
-          actionUrl: '/programs/recommended',
+          actionUrl: '/dashboard/recommended',
           priority: 'medium',
           dismissible: true,
           timestamp: new Date()
@@ -156,7 +156,7 @@ export const useSmartDashboard = () => {
           title: '🆕 New Programs Available',
           message: `${recentPrograms.length} new programs match your preferences`,
           action: 'Explore Programs',
-          actionUrl: '/programs/search',
+          actionUrl: '/dashboard/search',
           priority: 'low',
           dismissible: true,
           timestamp: new Date()
@@ -241,7 +241,7 @@ export const useSmartDashboard = () => {
     } finally {
       setLoading(false)
     }
-  }, [completionData, timelineData, costData, recommendedPrograms, isProfileOptimal])
+  }, [generateInsights, calculateMetrics])
 
   // Add timeout fallback to prevent infinite loading
   useEffect(() => {
@@ -281,31 +281,31 @@ export const useSmartDashboard = () => {
     }
   }, [])
 
-  // Debounced refresh function
-  const { refresh: debouncedRefresh } = useRefresh(refreshDashboard, 1000)
+  // Debounced refresh function - increased from 1s to 5s to reduce network calls
+  const { refresh: debouncedRefresh } = useRefresh(refreshDashboard, 5000)
 
-  // Real-time subscriptions for dashboard data
-  useRealtime({
-    table: 'applications',
-    onInsert: () => debouncedRefresh(),
-    onUpdate: () => debouncedRefresh(),
-    onDelete: () => debouncedRefresh(),
-    enabled: true
-  })
+  // Real-time subscriptions for dashboard data - disabled to prevent refresh loops
+  // useRealtime({
+  //   table: 'applications',
+  //   onInsert: () => debouncedRefresh(),
+  //   onUpdate: () => debouncedRefresh(),
+  //   onDelete: () => debouncedRefresh(),
+  //   enabled: true
+  // })
 
-  useRealtime({
-    table: 'saved_programs',
-    onInsert: () => debouncedRefresh(),
-    onUpdate: () => debouncedRefresh(),
-    onDelete: () => debouncedRefresh(),
-    enabled: true
-  })
+  // useRealtime({
+  //   table: 'saved_programs',
+  //   onInsert: () => debouncedRefresh(),
+  //   onUpdate: () => debouncedRefresh(),
+  //   onDelete: () => debouncedRefresh(),
+  //   enabled: true
+  // })
 
-  useRealtime({
-    table: 'user_preferences',
-    onUpdate: () => debouncedRefresh(),
-    enabled: true
-  })
+  // useRealtime({
+  //   table: 'user_preferences',
+  //   onUpdate: () => debouncedRefresh(),
+  //   enabled: true
+  // })
 
   // Get dashboard summary for Nigerian students
   const getDashboardSummary = useCallback(() => {
@@ -359,7 +359,7 @@ export const useSmartDashboard = () => {
       actions.push({
         id: 'complete-profile',
         label: 'Complete Profile',
-        url: '/profile/setup',
+        url: '/dashboard/profile',
         priority: 'high',
         icon: '👤'
       })

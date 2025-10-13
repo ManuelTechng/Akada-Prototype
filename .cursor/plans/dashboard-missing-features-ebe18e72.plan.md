@@ -1,4 +1,4 @@
-<!-- ebe18e72-fca3-420b-b2e8-ca0ce04fd0d8 5a0ffddb-b174-4fe3-bd56-8c8df93f0fd6 -->
+<!-- ebe18e72-fca3-420b-b2e8-ca0ce04fd0d8 fb27445c-bed8-423d-9533-4b3b63a3fd32 -->
 # Dashboard Functionality Gap Analysis - Complete Report
 
 ## Executive Summary
@@ -697,3 +697,19 @@ The Akada Dashboard has **excellent UI/UX design and architecture**, but suffers
 5. **Testing coverage < 10%**
 
 **Recommendation:** Focus on P0 tasks first (connecting real data), then P1 (AI features + notifications), before tackling polish items. With focused effort, core dashboard functionality could be production-ready in **3-4 months** with a single developer, or **6-8 weeks** with a team.
+
+### To-dos
+
+- [ ] Add ARIA labels, roles, and live regions to dashboard and widgets
+- [ ] Implement keyboard navigation shortcuts and handlers
+- [ ] Fix focus management in modals and interactive components
+- [ ] Fix mobile navigation and add hamburger menu
+- [ ] Update widget layouts for mobile responsiveness
+- [ ] Optimize touch targets to meet 44x44px minimum
+- [ ] Standardize Card component usage across dashboard
+- [ ] Fix color inconsistencies and use design tokens
+- [ ] Create Typography component and standardize text rendering
+- [ ] Add consistent skeleton loaders for async content
+- [ ] Improve empty states with helpful messages and CTAs
+- [ ] Optimize image loading with lazy loading and proper attributes
+- [ ] Fix dark mode color issues and improve contrast

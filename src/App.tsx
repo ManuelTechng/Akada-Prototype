@@ -19,12 +19,12 @@ const Applications = lazy(() => import('./components/app/Applications'));
 const Documents = lazy(() => import('./components/app/Documents'));
 const Resources = lazy(() => import('./components/app/Resources'));
 const Community = lazy(() => import('./components/app/Community'));
-const Profile = lazy(() => import('./components/app/Profile'));
+const ProfileSettings = lazy(() => import('./components/app/ProfileSettings'));
+const Settings = lazy(() => import('./components/app/Settings'));
 const CostCalculator = lazy(() => import('./components/app/CostCalculator'));
 const SavedPrograms = lazy(() => import('./components/app/SavedPrograms'));
 const RecommendedPrograms = lazy(() => import('./components/app/RecommendedPrograms'));
 const AIAssistant = lazy(() => import('./components/app/AIAssistant'));
-const Settings = lazy(() => import('./components/app/Settings'));
 const ProgramSearchPageNew = lazy(() => import('./pages/ProgramSearchPageNew'));
 const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
@@ -179,9 +179,9 @@ function AppRoutes() {
           <Route path="documents" element={<Documents />} />
           <Route path="resources" element={<Resources />} />
           <Route path="community" element={<Community />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<ProfileSettings />} />
           <Route path="calculator" element={<CostCalculator />} />
-          <Route path="settings" element={<Settings />} />
+            <Route path="settings" element={<Settings />} />
         </Route>
         
         {/* Fallback route */}

@@ -240,25 +240,46 @@ export const ProfileCompletionWidget: React.FC<{ className?: string }> = ({ clas
       {/* Next steps - only show if not complete */}
       {completionData.percentage < 100 && completionData.nextSteps.length > 0 && (
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
             <TrendingUpIcon className="w-4 h-4" />
-            Next Steps:
+            Complete These Fields:
           </p>
-          <div className="space-y-2">
-            {completionData.nextSteps.slice(0, 2).map((step, index) => (
+          <div className="space-y-3">
+            {completionData.nextSteps.slice(0, 3).map((step, index) => (
               <div 
                 key={index}
-                className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-400"
+                className="flex items-start space-x-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg"
               >
-                <span className="text-indigo-500 mt-0.5">•</span>
-                <span>{step}</span>
+                <div className="flex-shrink-0 w-6 h-6 bg-yellow-100 dark:bg-yellow-900/40 rounded-full flex items-center justify-center">
+                  <span className="text-yellow-600 dark:text-yellow-400 text-xs font-bold">{index + 1}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">{step}</p>
+                  <button 
+                    onClick={() => {
+                      // Navigate to profile for personal/academic/preferences
+                      // Navigate to settings for security/notifications
+                      const missingSection = completionData?.missingSections.find((section: string) => 
+                        section.includes('Security') || section.includes('Notification')
+                      );
+                      if (missingSection) {
+                        navigate('/dashboard/settings');
+                      } else {
+                        navigate('/dashboard/profile');
+                      }
+                    }}
+                    className="mt-1 text-xs text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 underline"
+                  >
+                    Complete now →
+                  </button>
+                </div>
               </div>
             ))}
           </div>
           
           {/* CTA Button */}
           <button
-            onClick={() => navigate('/preferences')}
+            onClick={() => navigate('/dashboard/profile')}
             className={cn(
               "mt-3 w-full py-2 px-4 rounded-md font-medium text-sm",
               "bg-indigo-600 text-white hover:bg-indigo-700",

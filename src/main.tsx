@@ -7,6 +7,7 @@ import { checkEnvironmentVariables } from './utils/envCheck';
 import { SafeStorage } from './utils/safeStorage';
 import { registerServiceWorker } from './utils/serviceWorker';
 import { cacheManager } from './utils/cacheManager';
+import './lib/currency/clearCache'; // Import currency utilities for console access
 
 console.log('Starting Akada application...');
 

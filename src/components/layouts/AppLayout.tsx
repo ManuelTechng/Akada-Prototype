@@ -4,7 +4,7 @@ import {
   Menu, X, Bell, Search, 
   LayoutDashboard, FileText, Bookmark, BookOpen, 
   Users, MessageSquare, Calculator, 
-  Settings, LogOut, ChevronDown, Home
+  Settings, LogOut, ChevronDown, Home, User, CreditCard
 } from 'lucide-react';
 import { useNotifications } from '../../contexts/NotificationContext';
 import NotificationDropdown from '../NotificationDropdown';
@@ -13,6 +13,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 import ChatButton from '../ChatButton';
 import DarkModeToggle from '../ui/DarkModeToggle';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
+import { useSavedProgramsContext } from '../../contexts/SavedProgramsContext';
+import { DropdownMenu } from '../ui/dropdown-menu';
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -26,6 +28,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
   const { theme } = useTheme();
+  const { savedPrograms } = useSavedProgramsContext();
   // const { colors, spacing, currency } = useDesignTokens();
 
   const toggleSidebar = () => setIsDrawerOpen(!isDrawerOpen);
@@ -53,7 +56,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           label: "Saved", 
           icon: Bookmark, 
           path: "/dashboard/saved",
-          count: 3
+          count: savedPrograms.length
         },
         { 
           id: "recommended", 
@@ -183,6 +186,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     return 'U';
   };
 
+  const getUserAvatar = () => {
+    if (profile?.profile_picture_url) {
+      return profile.profile_picture_url;
+    }
+    return null;
+  };
+
   const getCurrentPageTitle = () => {
     const path = location.pathname;
     if (path === '/dashboard') return 'Dashboard';
@@ -282,7 +292,26 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         {/* User Profile */}
         <div className="border-t border-gray-100 dark:border-gray-800 p-4 pb-8"> {/* Increased bottom padding */}
           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-            <div className="h-8 w-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-medium text-xs">
+            {getUserAvatar() ? (
+              <img
+                src={getUserAvatar()!}
+                alt={getFirstName()}
+                className="h-8 w-8 rounded-full object-cover"
+                onError={(e) => {
+                  // Fallback to initials if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    const fallback = parent.querySelector('.fallback-initials') as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
+                  }
+                }}
+              />
+            ) : null}
+            <div 
+              className={`h-8 w-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-medium text-xs ${getUserAvatar() ? 'hidden fallback-initials' : ''}`}
+            >
               {getUserInitials()}
             </div>
             <div className="flex-1 overflow-hidden">
@@ -355,16 +384,82 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               )}
             </div>
 
-            {/* User Avatar */}
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-medium text-xs">
-                {getUserInitials()}
-              </div>
-              <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300">
-                {getFirstName()}
-              </span>
-              <ChevronDown className="h-4 w-4 text-gray-400 dark:text-gray-500 hidden sm:block" />
-            </div>
+            {/* User Dropdown Menu */}
+            <DropdownMenu
+              align="right"
+              trigger={
+                <div className="flex items-center gap-2">
+                  {getUserAvatar() ? (
+                    <img
+                      src={getUserAvatar()!}
+                      alt={getFirstName()}
+                      className="h-8 w-8 rounded-full object-cover"
+                      onError={(e) => {
+                        // Fallback to initials if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          const fallback = parent.querySelector('.fallback-initials') as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className={`h-8 w-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-medium text-xs ${getUserAvatar() ? 'hidden fallback-initials' : ''}`}
+                  >
+                    {getUserInitials()}
+                  </div>
+                  <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {getFirstName()}
+                  </span>
+                </div>
+              }
+              items={[
+                {
+                  label: 'View Profile',
+                  icon: User,
+                  onClick: () => navigate('/dashboard/profile')
+                },
+                {
+                  label: 'Account Settings',
+                  icon: Settings,
+                  onClick: () => navigate('/dashboard/settings')
+                },
+                {
+                  label: 'Billing & Subscription',
+                  icon: CreditCard,
+                  onClick: () => navigate('/dashboard/billing')
+                },
+                {
+                  separator: true
+                },
+                {
+                  label: 'Sign Out',
+                  icon: LogOut,
+                  onClick: async () => {
+                    setLoading(true);
+                    try {
+                      console.log('Logout button clicked, calling signOut...');
+                      if (!signOut) {
+                        console.error('signOut function is undefined!');
+                        return;
+                      }
+                      await signOut();
+                      console.log('SignOut successful, navigating to login...');
+                      navigate('/login');
+                    } catch (error) {
+                      console.error('Error signing out:', error);
+                      navigate('/login');
+                    } finally {
+                      setLoading(false);
+                    }
+                  },
+                  danger: true
+                }
+              ]}
+            />
 
             {/* Home Button */}
             <button

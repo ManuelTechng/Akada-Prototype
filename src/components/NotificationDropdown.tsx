@@ -10,6 +10,11 @@ interface NotificationDropdownProps {
 
 const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onClose }) => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  
+  // Safety check to prevent undefined errors
+  if (!notifications) {
+    return null;
+  }
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -85,7 +90,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
           )}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {unreadCount === 0 ? 'No new notifications' : `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`}
+          {(unreadCount || 0) === 0 ? 'No new notifications' : `${unreadCount || 0} unread notification${(unreadCount || 0) === 1 ? '' : 's'}`}
         </p>
       </div>
 

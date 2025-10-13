@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Filter, 
-  MapPin, 
-  GraduationCap, 
-  DollarSign, 
-  Calendar, 
-  Star, 
-  Share2, 
-  X, 
-  ChevronDown, 
+import React, { useState, useEffect, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import {
+  Search,
+  Filter,
+  MapPin,
+  GraduationCap,
+  DollarSign,
+  Calendar,
+  Star,
+  Share2,
+  X,
+  ChevronDown,
   ChevronUp,
   ChevronRight,
   ArrowLeft,
@@ -18,17 +19,17 @@ import {
   Calculator,
   ExternalLink,
   Info,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { convertCurrency, formatCurrency, getCountryCurrency } from '../lib/utils';
-import { checkConnectionHealth, retryWithBackoff, isConnectionError } from '../lib/connectionHealth';
 import { useNavigate } from 'react-router-dom';
-import ProgramCard from '../components/app/ProgramCard';
+import ProgramCard, { ProgramCardSkeleton } from '../components/app/ProgramCard';
 import { useSavedProgramsContext } from '../contexts/SavedProgramsContext';
+import { useBatchProgramTuition } from '../hooks/useBatchProgramTuition';
 import type { Program } from '../lib/types';
 
-const ProgramSearchPageFixed: React.FC = () => {
+const ProgramSearchPageOptimized: React.FC = () => {
   const navigate = useNavigate();
   const { savedPrograms, saveProgram, removeSavedProgram } = useSavedProgramsContext();
   const [searchQuery, setSearchQuery] = useState('');
@@ -46,36 +47,44 @@ const ProgramSearchPageFixed: React.FC = () => {
   const [sortBy, setSortBy] = useState('match');
   const [error, setError] = useState<string | null>(null);
 
+  // Virtual scrolling setup
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  // Get batch tuition data for all programs
+  const { tuitionData, loading: tuitionLoading, getTuitionDisplay } = useBatchProgramTuition(
+    programs,
+    {
+      showConversion: true,
+      enableRealTime: true,
+      cacheTime: 300000
+    }
+  );
+
+  // Virtual scrolling for program list
+  const rowVirtualizer = useVirtualizer({
+    count: programs.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 280, // Estimated height of a program card
+    overscan: 5, // Render 5 extra items above and below viewport
+  });
+
   // Search programs with simplified query
   const searchPrograms = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      console.log('⏳ Starting search with filters:', filters);
-      
-      // Check connection health first
-      console.log('🔍 Checking connection health...');
-      const health = await checkConnectionHealth();
-      
-      if (!health.isHealthy) {
-        console.log('❌ Connection unhealthy:', health.error);
-        throw new Error(`Connection issue: ${health.error}. Please check your internet connection.`);
-      }
-      
-      console.log(`✅ Connection healthy (${health.latency?.toFixed(0)}ms)`);
-      
-      const startTime = performance.now();
+      console.log('🔍 Starting optimized search with filters:', filters);
+      const searchStartTime = performance.now();
 
-      // Start with optimized query - only fetch needed fields
+      // Start with a basic query - only fetch needed fields for performance
       let query = supabase
         .from('programs')
-        .select('id, name, university, country, location, tuition_fee, degree_type, created_at, scholarship_available, has_scholarships, specialization, application_deadline, deadline, description, website, duration, application_fee, requirements, city, university_website, program_website, entry_requirements, language_requirements, study_level, tuition_fee_currency, tuition_fee_original, application_fee_currency')
-        .limit(50); // Limit results to prevent timeout
+        .select('id, name, university, country, location, tuition_fee, degree_type, has_scholarships, scholarship_available, specialization, deadline, created_at, duration, description')
+        .limit(100); // Increased limit for better results
 
-      // Apply filters one by one
+      // Apply filters
       if (searchQuery.trim()) {
-        // Use ilike for case-insensitive search
         query = query.or(`name.ilike.%${searchQuery}%,university.ilike.%${searchQuery}%,country.ilike.%${searchQuery}%`);
       }
 
@@ -89,7 +98,6 @@ const ProgramSearchPageFixed: React.FC = () => {
 
       if (filters.maxTuition !== 'any') {
         const maxTuition = parseInt(filters.maxTuition);
-        // Convert USD to NGN (1 USD = 1500 NGN approximation)
         const maxTuitionNGN = maxTuition * 1500;
         query = query.lte('tuition_fee', maxTuitionNGN);
       }
@@ -99,7 +107,6 @@ const ProgramSearchPageFixed: React.FC = () => {
       }
 
       if (filters.scholarshipsOnly) {
-        // Check both possible scholarship fields
         query = query.or('scholarship_available.eq.true,has_scholarships.eq.true');
       }
 
@@ -112,57 +119,25 @@ const ProgramSearchPageFixed: React.FC = () => {
           query = query.order('tuition_fee', { ascending: false });
           break;
         case 'deadline':
-          // Use application_deadline if available, otherwise created_at
           query = query.order('application_deadline', { ascending: true, nullsFirst: false });
           break;
         default:
-          // Default sort by created_at (newest first)
           query = query.order('created_at', { ascending: false });
       }
 
-      console.log('🔄 Executing query with retry logic...');
-
-      // Wrap query execution with retry logic for connection issues
-      const executeQuery = async () => {
-        // Add timeout wrapper to prevent indefinite hanging
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Query timeout after 6 seconds. Please check your internet connection or try again later.')), 6000)
-        );
-
-        // Race the query against the timeout
-        const { data, error: queryError } = await Promise.race([
-          query,
-          timeoutPromise
-        ]) as any;
-
-        if (queryError) {
-          throw queryError;
-        }
-
-        return { data, error: null };
-      };
-
-      // Execute with retry logic for connection errors
-      const { data, error: queryError } = await retryWithBackoff(executeQuery, 2, 1000);
-
-      const endTime = performance.now();
-      console.log(`✅ Query completed in ${(endTime - startTime).toFixed(0)}ms`);
+      const { data, error: queryError } = await query;
 
       if (queryError) {
-        console.error('❌ Supabase query error:', queryError);
+        console.error('Supabase query error:', queryError);
         throw new Error(`Database error: ${queryError.message}`);
       }
 
-      console.log('📊 Query successful, got data:', { count: data?.length || 0 });
-
-      if (!data || data.length === 0) {
-        console.log('ℹ️ No programs found with current filters');
+      if (!data) {
         setPrograms([]);
-        setError(null); // Clear error if query succeeded but no results
         return;
       }
 
-      // Map database fields to frontend Program interface
+      // Map database fields efficiently
       const mappedPrograms = data.map((program: any) => ({
         id: program.id,
         name: program.name || 'Unnamed Program',
@@ -175,164 +150,33 @@ const ProgramSearchPageFixed: React.FC = () => {
         created_at: program.created_at,
         has_scholarships: program.scholarship_available || program.has_scholarships || false,
         scholarship_available: program.scholarship_available || program.has_scholarships || false,
-        match: program.match || Math.floor(Math.random() * 20) + 80, // Random match 80-100
-        requirements: program.requirements || ['Check university website for requirements'],
-        fields: program.specialization ? [program.specialization] : [],
+        match: Math.floor(Math.random() * 20) + 80,
         specialization: program.specialization || 'General',
-        deadline: program.application_deadline || program.deadline || 'Rolling admissions',
-        term: 'Fall 2025', // Default term since column doesn't exist
-        description: program.description || `${program.degree_type || 'Program'} in ${program.specialization || program.name} at ${program.university}`,
-        website: program.website || '#',
-        logo: 'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=200', // Default logo since column doesn't exist
-        faculties: ['Faculty of Science'], // Default faculties since column doesn't exist
-        duration: program.duration || '2 years',
-        application_fee: program.application_fee || 0
+        deadline: program.deadline || 'Rolling admissions',
+        description: program.description || `${program.degree_type || 'Program'} in ${program.specialization || program.name}`,
+        duration: program.duration || '2 years'
       }));
 
       setPrograms(mappedPrograms);
       setError(null);
+
+      const searchEndTime = performance.now();
+      console.log(`✅ Search completed in ${(searchEndTime - searchStartTime).toFixed(0)}ms - Found ${mappedPrograms.length} programs`);
+
     } catch (err: any) {
       console.error('Error searching programs:', err);
-      
-      // Check if it's a connection-related error
-      if (isConnectionError(err)) {
-        console.log('🔌 Connection error detected, showing fallback data');
-        setError('Connection issue detected. Showing sample programs while we resolve this.');
-        
-        // Show some sample programs so the user isn't stuck with an empty page
-        const fallbackPrograms = [
-          {
-            id: 'fallback-1',
-            name: 'Computer Science',
-            university: 'Sample University',
-            country: 'United States',
-            degree_type: 'Bachelor',
-            specialization: 'Computer Science',
-            tuition_fee: 25000,
-            duration: '4 years',
-            scholarship_available: true,
-            application_deadline: '2024-12-31',
-            entry_requirements: 'High school diploma',
-            language_requirements: 'TOEFL 80',
-            program_website: '#',
-            university_website: '#',
-            application_fee: 100
-          },
-          {
-            id: 'fallback-2', 
-            name: 'Business Administration',
-            university: 'Sample Business School',
-            country: 'Canada',
-            degree_type: 'Master',
-            specialization: 'Business',
-            tuition_fee: 30000,
-            duration: '2 years',
-            scholarship_available: false,
-            application_deadline: '2024-11-30',
-            entry_requirements: 'Bachelor degree',
-            language_requirements: 'IELTS 6.5',
-            program_website: '#',
-            university_website: '#',
-            application_fee: 150
-          }
-        ];
-        
-        const mappedFallbackPrograms = fallbackPrograms.map(program => ({
-          id: program.id,
-          name: program.name,
-          university: program.university,
-          country: program.country,
-          degree_type: program.degree_type,
-          specialization: program.specialization,
-          tuition_fee: program.tuition_fee,
-          duration: program.duration,
-          scholarship_available: program.scholarship_available,
-          application_deadline: program.application_deadline,
-          entry_requirements: program.entry_requirements,
-          language_requirements: program.language_requirements,
-          program_website: program.program_website,
-          university_website: program.university_website,
-          application_fee: program.application_fee.toString(),
-          created_at: new Date().toISOString()
-        }));
-        
-        setPrograms(mappedFallbackPrograms);
-      } else if (err.message?.includes('timeout')) {
-        console.log('⏰ Program search query timed out, showing fallback data');
-        setError('Search is taking longer than expected. Showing sample programs.');
-        
-        // Show some sample programs so the user isn't stuck with an empty page
-        const fallbackPrograms = [
-          {
-            id: 'fallback-1',
-            name: 'Computer Science',
-            university: 'Sample University',
-            country: 'United States',
-            degree_type: 'Bachelor',
-            specialization: 'Computer Science',
-            tuition_fee: 25000,
-            duration: '4 years',
-            scholarship_available: true,
-            application_deadline: '2024-12-31',
-            entry_requirements: 'High school diploma',
-            language_requirements: 'TOEFL 80',
-            program_website: '#',
-            university_website: '#',
-            application_fee: 100
-          },
-          {
-            id: 'fallback-2', 
-            name: 'Business Administration',
-            university: 'Sample Business School',
-            country: 'Canada',
-            degree_type: 'Master',
-            specialization: 'Business',
-            tuition_fee: 30000,
-            duration: '2 years',
-            scholarship_available: false,
-            application_deadline: '2024-11-30',
-            entry_requirements: 'Bachelor degree',
-            language_requirements: 'IELTS 6.5',
-            program_website: '#',
-            university_website: '#',
-            application_fee: 150
-          }
-        ];
-        
-        const mappedFallbackPrograms = fallbackPrograms.map(program => ({
-          id: program.id,
-          name: program.name,
-          university: program.university,
-          country: program.country,
-          degree_type: program.degree_type,
-          specialization: program.specialization,
-          tuition_fee: program.tuition_fee,
-          duration: program.duration,
-          scholarship_available: program.scholarship_available,
-          application_deadline: program.application_deadline,
-          entry_requirements: program.entry_requirements,
-          language_requirements: program.language_requirements,
-          program_website: program.program_website,
-          university_website: program.university_website,
-          application_fee: program.application_fee.toString(),
-          created_at: new Date().toISOString()
-        }));
-        
-        setPrograms(mappedFallbackPrograms);
-      } else {
-        setError(err.message || 'Failed to fetch programs. Please try again.');
-        setPrograms([]);
-      }
+      setError(err.message || 'Failed to fetch programs. Please try again.');
+      setPrograms([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle filter changes with debouncing (includes initial load)
+  // Handle filter changes with debouncing
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       searchPrograms();
-    }, 300); // Debounce by 300ms
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, filters, sortBy]);
@@ -354,7 +198,7 @@ const ProgramSearchPageFixed: React.FC = () => {
 
   const handleRemoveFilter = (filter: string) => {
     const filterPrefix = filter.split(':')[0].trim();
-    
+
     switch (filterPrefix) {
       case 'Country':
         handleFilterChange('country', '');
@@ -387,7 +231,7 @@ const ProgramSearchPageFixed: React.FC = () => {
 
   const toggleSaveProgram = async (programId: string, programData?: any) => {
     const isSaved = savedPrograms.some(sp => sp.program_id === programId);
-    
+
     try {
       if (isSaved) {
         await removeSavedProgram(programId);
@@ -400,7 +244,7 @@ const ProgramSearchPageFixed: React.FC = () => {
   };
 
   const getFilterSection = () => (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6 sticky top-0">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sliders className="h-5 w-5 text-indigo-600" />
@@ -420,12 +264,12 @@ const ProgramSearchPageFixed: React.FC = () => {
       {activeFilters.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-5">
           {activeFilters.map((filter) => (
-            <div 
-              key={filter} 
+            <div
+              key={filter}
               className="inline-flex items-center gap-1 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-full text-sm"
             >
               <span>{filter}</span>
-              <button 
+              <button
                 onClick={() => handleRemoveFilter(filter)}
                 className="text-indigo-600 hover:text-indigo-800"
               >
@@ -550,31 +394,13 @@ const ProgramSearchPageFixed: React.FC = () => {
     </div>
   );
 
-  const renderProgram = (program: any) => {
-    const isSaved = savedPrograms.some(sp => sp.program_id === program.id);
-    
-    return (
-      <ProgramCard
-        key={program.id}
-        program={program}
-        isSaved={isSaved}
-        onSave={() => toggleSaveProgram(program.id, {
-          name: program.name,
-          university: program.university,
-          country: program.country
-        })}
-        onUnsave={() => toggleSaveProgram(program.id)}
-      />
-    );
-  };
-
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Header with breadcrumb */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-            <button 
+            <button
               onClick={() => navigate('/dashboard')}
               className="inline-flex items-center gap-1 hover:text-indigo-600 transition-colors"
             >
@@ -582,12 +408,15 @@ const ProgramSearchPageFixed: React.FC = () => {
               <span>Back to Dashboard</span>
             </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Find Your Program</h1>
-          <p className="text-gray-500">Discover programs that match your profile and preferences</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Find Your Program</h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Discover programs that match your profile and preferences
+            {programs.length > 0 && ` · ${programs.length} programs found`}
+          </p>
         </div>
         <div className="flex gap-3">
-          <button 
-            onClick={() => navigate('/dashboard/calculator')} 
+          <button
+            onClick={() => navigate('/dashboard/calculator')}
             className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
           >
             <Calculator className="h-5 w-5" />
@@ -615,31 +444,24 @@ const ProgramSearchPageFixed: React.FC = () => {
         {/* Left sidebar with filters */}
         <div className="lg:col-span-1">
           {getFilterSection()}
-          
+
           {/* Tools section */}
           <div className="bg-indigo-600 dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
             <h2 className="font-semibold mb-4 text-lg">Need Help Finding Programs?</h2>
             <p className="text-indigo-100 mb-4">
               Our AI assistant can help you discover programs that match your profile, preferences, and career goals.
             </p>
-            <button 
+            <button
               onClick={() => navigate('/dashboard/assistant')}
               className="w-full bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 mb-4"
             >
               <Search className="h-5 w-5" />
               Get Personalized Suggestions
             </button>
-            <button 
-              onClick={() => navigate('/dashboard/calculator')}
-              className="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-            >
-              <Calculator className="h-5 w-5" />
-              Calculate Education Costs
-            </button>
           </div>
         </div>
 
-        {/* Results area */}
+        {/* Results area with virtual scrolling */}
         <div className="lg:col-span-2 xl:col-span-3 space-y-6">
           {/* Results header */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
@@ -648,7 +470,7 @@ const ProgramSearchPageFixed: React.FC = () => {
                 <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
                   {loading ? (
                     <div className="flex items-center gap-2">
-                      <div className="animate-spin h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
+                      <Loader2 className="animate-spin h-5 w-5 text-indigo-600" />
                       <span className="text-gray-900 dark:text-gray-100">Searching...</span>
                     </div>
                   ) : error ? (
@@ -658,16 +480,17 @@ const ProgramSearchPageFixed: React.FC = () => {
                   )}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {programs.length > 0 && !loading && !error 
-                    ? `Showing programs matching your criteria`
-                    : ''}
+                  {tuitionLoading && '🔄 Loading prices...'}
+                  {!tuitionLoading && programs.length > 0 && !loading && !error &&
+                    `Showing programs matching your criteria`
+                  }
                 </p>
               </div>
-              
+
               <div className="flex gap-3 items-center">
                 <span className="text-sm text-gray-500 hidden sm:inline-block">Sort by:</span>
-                <select 
-                  value={sortBy} 
+                <select
+                  value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-white text-gray-900 dark:text-gray-900"
                 >
@@ -680,11 +503,12 @@ const ProgramSearchPageFixed: React.FC = () => {
             </div>
           </div>
 
-          {/* Results grid */}
+          {/* Virtual scrolling results */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
-              <div className="animate-spin h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Searching for programs that match your criteria...</p>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {Array(6).fill(0).map((_, i) => (
+                <ProgramCardSkeleton key={i} />
+              ))}
             </div>
           ) : error ? (
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
@@ -693,15 +517,7 @@ const ProgramSearchPageFixed: React.FC = () => {
               </div>
               <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">Unable to Load Programs</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-500 dark:text-gray-400">This might be due to:</p>
-                <ul className="text-sm text-gray-500 dark:text-gray-400 text-left inline-block">
-                  <li>• Network connectivity issues</li>
-                  <li>• Database connection timeout</li>
-                  <li>• Server maintenance</li>
-                </ul>
-              </div>
-              <button 
+              <button
                 onClick={searchPrograms}
                 className="mt-4 bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
               >
@@ -713,11 +529,11 @@ const ProgramSearchPageFixed: React.FC = () => {
               <div className="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Search className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">No Programs Found</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No Programs Found</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 Try adjusting your search criteria or removing some filters.
               </p>
-              <button 
+              <button
                 onClick={clearAllFilters}
                 className="bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
               >
@@ -725,8 +541,51 @@ const ProgramSearchPageFixed: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-              {programs.map(program => renderProgram(program))}
+            <div
+              ref={parentRef}
+              className="h-[calc(100vh-400px)] overflow-auto"
+              style={{ contain: 'strict' }}
+            >
+              <div
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  width: '100%',
+                  position: 'relative',
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const program = programs[virtualRow.index];
+                  const isSaved = savedPrograms.some(sp => sp.program_id === program.id);
+                  const tuitionDisplay = getTuitionDisplay(program.id);
+
+                  return (
+                    <div
+                      key={virtualRow.key}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: `${virtualRow.size}px`,
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      <div className="px-2 pb-4">
+                        <ProgramCard
+                          program={program}
+                          isSaved={isSaved}
+                          onSave={() => toggleSaveProgram(program.id, {
+                            name: program.name,
+                            university: program.university,
+                            country: program.country
+                          })}
+                          onUnsave={() => toggleSaveProgram(program.id)}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -735,4 +594,4 @@ const ProgramSearchPageFixed: React.FC = () => {
   );
 };
 
-export default ProgramSearchPageFixed;
+export default ProgramSearchPageOptimized;
