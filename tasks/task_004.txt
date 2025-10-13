@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: Implement User Authentication
+# Status: done
+# Dependencies: 2
+# Priority: high
+# Description: Enable users to sign up/login with email/password or Google OAuth. Store user data in Supabase users table. Provide logout.
+# Details:
+Use Supabase Auth for email/password and Google OAuth. Store user data in users table. Implement logout button. Example: `supabase.auth.signInWithPassword({ email, password })`.
+
+# Test Strategy:
+Test sign up, login, and logout flows. Verify user data is stored in Supabase users table.

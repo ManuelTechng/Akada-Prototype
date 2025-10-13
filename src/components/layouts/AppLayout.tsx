@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { 
-  Menu, X, Bell, Calendar, User, Search, 
-  LayoutDashboard, FileText, Folder, BookOpen, 
-  Users, MessageSquare, Calculator, Clock, 
-  Award, Settings, LogOut, HelpCircle, Home
+  Menu, X, Bell, Search, 
+  LayoutDashboard, FileText, Bookmark, BookOpen, 
+  Users, MessageSquare, Calculator, 
+  Settings, LogOut, ChevronDown, Home, User, CreditCard
 } from 'lucide-react';
 import { useNotifications } from '../../contexts/NotificationContext';
 import NotificationDropdown from '../NotificationDropdown';
 import { useAuth } from '../../contexts/AuthContext';
-import { signOut as signOutFn } from '../../lib/auth';
+import { useTheme } from '../../contexts/ThemeContext';
+import ChatButton from '../ChatButton';
+import DarkModeToggle from '../ui/DarkModeToggle';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
+import { useSavedProgramsContext } from '../../contexts/SavedProgramsContext';
+import { DropdownMenu } from '../ui/dropdown-menu';
 
 interface AppLayoutProps {
   children?: React.ReactNode;
@@ -18,85 +23,191 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const { unreadCount } = useNotifications();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const location = useLocation();
+  const { user, profile, signOut } = useAuth();
+  const { theme } = useTheme();
+  const { savedPrograms } = useSavedProgramsContext();
+  // const { colors, spacing, currency } = useDesignTokens();
 
   const toggleSidebar = () => setIsDrawerOpen(!isDrawerOpen);
 
-  const menuItems = [
+  const menuSections = [
     {
-      title: "Main Navigation",
+      title: "OVERVIEW",
       items: [
-        { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-        { id: "search", label: "Program Search", icon: Search },
-        { id: "applications", label: "Applications", icon: FileText },
-        { id: "documents", label: "Documents", icon: Folder },
-        { id: "resources", label: "Resources", icon: BookOpen },
-        { id: "community", label: "Community", icon: Users }
+        { 
+          id: "dashboard", 
+          label: "Dashboard", 
+          icon: LayoutDashboard, 
+          path: "/dashboard",
+          count: null
+        },
+        { 
+          id: "programs", 
+          label: "Programs", 
+          icon: Search, 
+          path: "/dashboard/search",
+          count: null
+        },
+        { 
+          id: "saved", 
+          label: "Saved", 
+          icon: Bookmark, 
+          path: "/dashboard/saved",
+          count: savedPrograms.length
+        },
+        { 
+          id: "recommended", 
+          label: "Recommended", 
+          icon: BookOpen, 
+          path: "/dashboard/recommended",
+          count: null
+        },
+        { 
+          id: "applications", 
+          label: "Applications", 
+          icon: FileText, 
+          path: "/dashboard/applications",
+          count: null
+        },
+        { 
+          id: "resources", 
+          label: "Resources", 
+          icon: BookOpen, 
+          path: "/dashboard/resources",
+          count: null
+        },
+        { 
+          id: "community", 
+          label: "Community", 
+          icon: Users, 
+          path: "/dashboard/community",
+          count: null
+        }
       ]
     },
     {
-      title: "Tools",
+      title: "TOOLS",
       items: [
-        { id: "chat", label: "AI Assistant", icon: MessageSquare },
-        { id: "calculator", label: "Cost Calculator", icon: Calculator },
-        { id: "timeline", label: "Timeline Builder", icon: Clock }
+        { 
+          id: "calculator", 
+          label: "Cost Calculator", 
+          icon: Calculator, 
+          path: "/dashboard/calculator",
+          count: null
+        },
+        { 
+          id: "documents", 
+          label: "AI Document Review", 
+          icon: FileText, 
+          path: "/dashboard/documents",
+          count: null
+        },
+        { 
+          id: "assistant", 
+          label: "AI Assistant (Advisor)", 
+          icon: MessageSquare, 
+          path: "/dashboard/assistant",
+          count: null
+        }
       ]
     },
     {
-      title: "Account",
+      title: "ACCOUNT",
       items: [
-        { id: "profile", label: "Profile Settings", icon: User },
-        { id: "subscription", label: "Subscription", icon: Award },
-        { id: "help", label: "Help & Support", icon: HelpCircle },
-        { id: "signout", label: "Sign Out", icon: LogOut }
+        { 
+          id: "settings", 
+          label: "Settings", 
+          icon: Settings, 
+          path: "/dashboard/settings",
+          count: null
+        },
+        { 
+          id: "logout", 
+          label: "Log out", 
+          icon: LogOut, 
+          path: null,
+          count: null
+        }
       ]
     }
   ];
 
-  const handleNavigation = async (id: string) => {
+  const handleNavigation = async (item: any) => {
     setIsDrawerOpen(false);
-    switch (id) {
-      case 'dashboard':
-        navigate('/dashboard');
-        break;
-      case 'search':
-        navigate('/dashboard/search');
-        break;
-      case 'applications':
-        navigate('/dashboard/applications');
-        break;
-      case 'documents':
-        navigate('/dashboard/documents');
-        break;
-      case 'resources':
-        navigate('/dashboard/resources');
-        break;
-      case 'community':
-        navigate('/dashboard/community');
-        break;
-      case 'profile':
-        navigate('/dashboard/profile');
-        break;
-      case 'signout':
-        await signOutFn();
+    
+    if (item.id === 'logout') {
+      setLoading(true);
+      try {
+        console.log('Logout button clicked, calling signOut...');
+        if (!signOut) {
+          console.error('signOut function is undefined!');
+          return;
+        }
+        await signOut();
+        console.log('SignOut successful, navigating to login...');
         navigate('/login');
-        break;
-      default:
-        navigate(`/dashboard/${id}`);
+      } catch (error) {
+        console.error('Error signing out:', error);
+        navigate('/login');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    
+    if (item.path) {
+      navigate(item.path);
     }
   };
 
-  // Helper to get first name
+  const isActiveRoute = (path: string | null) => {
+    if (!path) return false;
+    if (path === "/dashboard" && location.pathname === "/dashboard") return true;
+    if (path !== "/dashboard" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
+
   const getFirstName = () => {
     if (profile?.full_name) return profile.full_name.split(' ')[0];
     if (user?.email) return user.email.split('@')[0];
     return 'User';
   };
 
+  const getUserInitials = () => {
+    if (profile?.full_name) {
+      return profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.substring(0, 2).toUpperCase();
+    }
+    return 'U';
+  };
+
+  const getUserAvatar = () => {
+    if (profile?.profile_picture_url) {
+      return profile.profile_picture_url;
+    }
+    return null;
+  };
+
+  const getCurrentPageTitle = () => {
+    const path = location.pathname;
+    if (path === '/dashboard') return 'Dashboard';
+    if (path.includes('/search')) return 'Programs';
+    if (path.includes('/applications')) return 'Applications';
+    if (path.includes('/documents')) return 'Documents';
+    if (path.includes('/calculator')) return 'Cost Calculator';
+    if (path.includes('/resources')) return 'Resources';
+    if (path.includes('/community')) return 'Community';
+    if (path.includes('/settings')) return 'Settings';
+    return 'Dashboard';
+  };
+
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Mobile Sidebar Overlay */}
       {isDrawerOpen && (
         <div 
@@ -106,102 +217,163 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white shadow-md transform transition-transform duration-300 ease-in-out lg:transform-none ${
+      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-64 sm:w-72 lg:w-64 bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-700 transform transition-transform duration-300 ease-in-out lg:transform-none ${
         isDrawerOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
         {/* Logo Section */}
-        <div className="h-20 flex items-center px-6 border-b border-gray-100">
+        <div className="h-20 flex items-center px-6 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold text-xl">
+            <div className="h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold text-lg">
               A
             </div>
-            <span className="font-heading font-bold text-xl text-gray-900">Akada</span>
+            <div>
+              <span className="font-bold text-lg text-gray-900 dark:text-gray-100">Akada</span>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Study Abroad Platform</p>
+            </div>
           </div>
           <button 
-            className="lg:hidden p-2 ml-auto rounded-md hover:bg-gray-100 text-gray-500"
+            className="lg:hidden p-2 ml-auto rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
             onClick={toggleSidebar}
+            title="Close sidebar"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
+        {/* Theme Toggle */}
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+          <DarkModeToggle />
+        </div>
+
         {/* Navigation Menu */}
-        <div className="p-6 space-y-8 overflow-y-auto h-[calc(100%-5rem-5rem)]">
-          {menuItems.map((section, idx) => (
-            <div key={idx} className="space-y-2">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2 font-heading">
-                {section.title}
-              </p>
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleNavigation(item.id)}
-                    className="flex items-center gap-3 w-full p-3 rounded-xl text-left text-gray-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  >
-                    <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-white shadow-sm">
-                      <Icon className="h-5 w-5 text-gray-600" />
-                    </div>
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
+        <div className="py-4 pb-2">
+          {menuSections.map((section, sectionIdx) => (
+            <div key={sectionIdx} className="mb-6">
+              <div className="px-6 mb-3">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  {section.title}
+                </p>
+              </div>
+              <div className="space-y-1">
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = isActiveRoute(item.path);
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        console.log('Button clicked:', item.id, item.label);
+                        handleNavigation(item);
+                      }}
+                      className={`flex items-center justify-between w-full px-6 py-2.5 text-left transition-colors ${
+                        isActive
+                          ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 border-r-2 border-indigo-600'
+                          : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                      }`}
+                      disabled={loading}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className={`h-5 w-5 ${isActive ? 'text-indigo-600' : 'text-gray-400 dark:text-gray-500'}`} />
+                        <span className="font-medium text-sm">{item.label}</span>
+                      </div>
+                      {item.count && (
+                        <span className="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 text-xs font-medium px-2 py-1 rounded-full">
+                          {item.count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
 
-        {/* User Profile Section */}
-        <div className="absolute bottom-0 left-0 w-full p-6 bg-white">
-          <div className="pt-4 border-t border-gray-100 w-full">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-indigo-100 border-2 border-white shadow-sm flex items-center justify-center text-indigo-600 font-medium">
-                OA
-              </div>
-              <div className="overflow-hidden">
-                <button
-                  onClick={() => navigate('/')}
-                  className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2"
-                >
-                  <Home className="h-5 w-5" />
-                  <span>Back to Landing Page</span>
-                </button>
-              </div>
+        {/* User Profile */}
+        <div className="border-t border-gray-100 dark:border-gray-800 p-4 pb-8"> {/* Increased bottom padding */}
+          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+            {getUserAvatar() ? (
+              <img
+                src={getUserAvatar()!}
+                alt={getFirstName()}
+                className="h-8 w-8 rounded-full object-cover"
+                onError={(e) => {
+                  // Fallback to initials if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    const fallback = parent.querySelector('.fallback-initials') as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
+                  }
+                }}
+              />
+            ) : null}
+            <div 
+              className={`h-8 w-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-medium text-xs ${getUserAvatar() ? 'hidden fallback-initials' : ''}`}
+            >
+              {getUserInitials()}
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="font-medium text-gray-900 dark:text-gray-100 text-xs truncate">
+                {getFirstName()}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                {profile?.full_name ? user?.email : ''}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <header className="h-20 bg-white shadow-sm px-6 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+        <header className="h-20 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 px-4 sm:px-6 flex items-center justify-between">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
             <button 
-              className="lg:hidden p-2 rounded-md hover:bg-gray-100 text-gray-500"
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
               onClick={toggleSidebar}
+              title="Open sidebar"
             >
               <Menu className="h-5 w-5" />
             </button>
             
-            <div>
-              <h1 className="text-xl font-semibold text-gray-900 font-heading">Dashboard</h1>
-              <p className="text-sm text-gray-500 hidden sm:block">Welcome back, {getFirstName()}</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">{getCurrentPageTitle()}</h1>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">
+                {getCurrentPageTitle() === 'Dashboard' ? formatDate() : `Welcome back, ${getFirstName()}`}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Search Bar */}
+            <div className="hidden lg:flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg px-3 py-2 w-48 xl:w-64">
+              <Search className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-2" />
+              <input 
+                type="text" 
+                placeholder="Search programs..."
+                className="bg-transparent text-sm text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 outline-none flex-1"
+              />
+            </div>
+
+            {/* Mobile Search Button */}
+            <button className="lg:hidden p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              title="Open search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+
+            {/* Notifications */}
             <div className="relative">
               <button 
-                className="p-2 text-gray-500 hover:text-indigo-600 rounded-full hover:bg-indigo-50"
+                className="p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                title="Open notifications"
               >
-                <Bell className="h-6 w-6" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 h-5 w-5 flex items-center justify-center bg-red-500 text-white text-xs rounded-full -mt-1 -mr-1">
-                    {unreadCount}
-                  </span>
-                )}
+                <Bell className="h-5 w-5" />
+                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
               </button>
 
               {isNotificationsOpen && (
@@ -211,61 +383,131 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 />
               )}
             </div>
-            
-            <button className="p-2 text-gray-500 hover:text-indigo-600 rounded-full hover:bg-indigo-50">
-              <Calendar className="h-6 w-6" />
-            </button>
-            
-            <div className="h-8 w-px bg-gray-200 mx-2 hidden sm:block"></div>
-            
-            <button 
-              className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-xl"
-              onClick={() => navigate('/dashboard/profile')}
+
+            {/* User Dropdown Menu */}
+            <DropdownMenu
+              align="right"
+              trigger={
+                <div className="flex items-center gap-2">
+                  {getUserAvatar() ? (
+                    <img
+                      src={getUserAvatar()!}
+                      alt={getFirstName()}
+                      className="h-8 w-8 rounded-full object-cover"
+                      onError={(e) => {
+                        // Fallback to initials if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          const fallback = parent.querySelector('.fallback-initials') as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className={`h-8 w-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-medium text-xs ${getUserAvatar() ? 'hidden fallback-initials' : ''}`}
+                  >
+                    {getUserInitials()}
+                  </div>
+                  <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {getFirstName()}
+                  </span>
+                </div>
+              }
+              items={[
+                {
+                  label: 'View Profile',
+                  icon: User,
+                  onClick: () => navigate('/dashboard/profile')
+                },
+                {
+                  label: 'Account Settings',
+                  icon: Settings,
+                  onClick: () => navigate('/dashboard/settings')
+                },
+                {
+                  label: 'Billing & Subscription',
+                  icon: CreditCard,
+                  onClick: () => navigate('/dashboard/billing')
+                },
+                {
+                  separator: true
+                },
+                {
+                  label: 'Sign Out',
+                  icon: LogOut,
+                  onClick: async () => {
+                    setLoading(true);
+                    try {
+                      console.log('Logout button clicked, calling signOut...');
+                      if (!signOut) {
+                        console.error('signOut function is undefined!');
+                        return;
+                      }
+                      await signOut();
+                      console.log('SignOut successful, navigating to login...');
+                      navigate('/login');
+                    } catch (error) {
+                      console.error('Error signing out:', error);
+                      navigate('/login');
+                    } finally {
+                      setLoading(false);
+                    }
+                  },
+                  danger: true
+                }
+              ]}
+            />
+
+            {/* Home Button */}
+            <button
+              onClick={() => navigate('/')}
+              className="hidden sm:flex p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              title="Go to Home"
             >
-              <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium">
-                {profile?.full_name ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'OA'}
-              </div>
-              <span className="font-medium text-gray-700 hidden md:inline">{profile?.full_name ? profile.full_name : user?.email}</span>
-              <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+              <Home className="h-5 w-5" />
             </button>
           </div>
         </header>
 
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto pb-28">
-          <div className="p-6">
-            {/* Use the Outlet component to render child routes */}
+        {/* Main Content Area - Single scrollable container */}
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="p-4 sm:p-4 pb-4 min-h-full">
             <Outlet />
-            {/* Support for passing children directly (for backwards compatibility) */}
             {children}
           </div>
+
+          {/* Footer */}
+          <footer className="mt-8 py-4 px-4 sm:px-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
+              <p className="text-sm text-gray-500 dark:text-gray-400">© {new Date().getFullYear()} Akada - All Rights Reserved</p>
+              <div className="flex items-center gap-3">
+                <span className="text-xs bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 px-2 py-1 rounded-full border border-green-200 dark:border-green-800">
+                  Connected to Supabase
+                </span>
+              </div>
+            </div>
+          </footer>
         </main>
       </div>
 
-      {/* Floating Chat Button */}
-      <button className="fixed bottom-8 right-8 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors z-40">
-        <MessageSquare className="h-6 w-6" />
-      </button>
+      {/* Chat Button */}
+      <ChatButton />
     </div>
   );
 };
 
-// Custom ChevronDown Icon
-const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="6 9 12 15 18 9"></polyline>
-  </svg>
-);
+// Helper function to format date
+const formatDate = () => {
+  const now = new Date();
+  return now.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
 export default AppLayout;

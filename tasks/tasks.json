@@ -1,0 +1,480 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository and Initial Configuration",
+        "description": "Initialize the project repository with React, TypeScript, Tailwind CSS, and Vite or Create React App. Configure basic project structure and dependencies.",
+        "details": "Create a new project using `npm create vite@latest akada --template react-ts` or `npx create-react-app akada --template typescript`. Install Tailwind CSS and Lucide React icons. Set up initial folder structure (src, public, docs). Add .gitignore and README.md.",
+        "testStrategy": "Verify project builds and runs locally with `npm run dev` or `npm start`. Check Tailwind and icons render in a sample component.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Configure Supabase and Database Tables",
+        "description": "Set up Supabase project and define required tables as per PRD schema.",
+        "details": "Create Supabase project. Define tables: users (id, email, name, created_at), user_preferences (user_id, goals, budget_range, countries), programs (id, name, university, country, tuition, duration, specialization), chat_logs (id, user_id, message, response, timestamp), documents (id, user_id, filename, url, status, feedback), applications (id, user_id, program_id, status, deadline, notes). Use Supabase SQL editor or UI to create tables.",
+        "testStrategy": "Verify tables exist and schema matches PRD. Insert test data and query via Supabase dashboard.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Seed Programs Table with Real Data",
+        "description": "Populate the programs table with 50+ real international programs.",
+        "details": "Develop a Node.js web scraper or manually input data. Ensure fields: name, university, country, tuition (NGN), duration, specialization. Use Supabase API or dashboard to insert data. Schedule weekly updates.",
+        "testStrategy": "Query programs table and verify at least 50 entries with correct fields. Check for data consistency and completeness.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement User Authentication",
+        "description": "Enable users to sign up/login with email/password or Google OAuth. Store user data in Supabase users table. Provide logout.",
+        "details": "Use Supabase Auth for email/password and Google OAuth. Store user data in users table. Implement logout button. Example: `supabase.auth.signInWithPassword({ email, password })`.",
+        "testStrategy": "Test sign up, login, and logout flows. Verify user data is stored in Supabase users table.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Build Onboarding Multi-Step Form",
+        "description": "Create a guided onboarding form to capture study goals, budget range, and preferred countries. Save to user_preferences table.",
+        "details": "Design multi-step form in React. Collect: goals (text), budget_range (numeric), countries (array). On submit, save to user_preferences table via Supabase API. Display personalized recommendations based on input.",
+        "testStrategy": "Test form submission and verify data in user_preferences table. Check recommendations display logic.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          4
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Develop Program Search Feature",
+        "description": "Implement searchable database of international programs with filters (country, cost, duration, specialization). Display results with key details.",
+        "details": "Build search UI with filters. Query Supabase programs table. Display: name, university, country, tuition (NGN), duration, specialization. Use Supabase client: `supabase.from('programs').select().eq('country', country).gte('tuition', min).lte('tuition', max)`.",
+        "testStrategy": "Test search with various filters. Verify results match query and display correctly.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Integrate AI Chat Assistance",
+        "description": "Add real-time chat support using Grok 3 via xAI API. Store chat history in chat_logs table.",
+        "details": "Implement chat UI. Call xAI Grok 3 API for responses. Save messages and responses to chat_logs table. Anonymize user data as needed.",
+        "testStrategy": "Test chat sends/receives messages. Verify chat history is stored in Supabase.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          4
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Document Upload and AI Review",
+        "description": "Integrate the existing DocumentUpload component with Supabase Storage for real file uploads. Implement AI-powered feedback using OpenAI API. Store uploaded files in Supabase Storage and document metadata in the documents table. Provide real-time AI feedback to users on uploaded documents.",
+        "status": "done",
+        "dependencies": [
+          2,
+          4
+        ],
+        "priority": "medium",
+        "details": "Replace mock data in DocumentUpload with real Supabase Storage integration. Create a documents.ts library for Supabase operations, including file upload and metadata storage. Implement file upload to a designated Supabase bucket (e.g., 'documents'). After upload, call the OpenAI API to review the document for grammar, structure, and completeness. Store metadata (filename, url, status, feedback) in the documents table. Display real-time AI feedback to users as soon as it is available. Use case: Nigerian students upload transcripts, SOPs, and CVs to receive actionable AI feedback before university submission.",
+        "testStrategy": "Test uploading various document types (transcripts, SOPs, CVs) through the UI. Verify files are stored in the correct Supabase bucket and accessible via generated URLs. Confirm metadata is correctly saved in the documents table. Ensure AI feedback is generated and displayed in real time after upload. Test error handling for failed uploads and API errors.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create documents.ts library for Supabase operations",
+            "description": "Develop a TypeScript library (documents.ts) to encapsulate Supabase Storage file upload and metadata operations for documents.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-07-06T23:35:25.596Z>\nCreated a comprehensive documents.ts library fully integrated with Supabase, enabling file uploads with validation, document metadata storage, and AI review using essay.ts functions. Features include real-time status updates, robust error handling and cleanup, support for SOP, CV, transcript, and recommendation documents, file size and type validation, as well as download and delete capabilities. The implementation supports real-world use cases such as allowing Nigerian students to upload academic documents and receive AI feedback on grammar, structure, and completeness.\n</info added on 2025-07-06T23:35:25.596Z>",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement file upload to Supabase Storage",
+            "description": "Replace mock upload logic in DocumentUpload with real file upload to Supabase Storage using the documents.ts library. Ensure files are uploaded to the correct bucket and path.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-07-06T23:35:37.323Z>\nReplaced mock upload logic in the DocumentUpload component with full Supabase integration using the uploadDocument() function from the documents.ts library. Implemented drag and drop file upload with visual feedback, file validation for size (up to 10MB) and supported types (PDF, DOC, DOCX, TXT), and automatic document type detection based on filename. Added real-time upload progress and status updates, comprehensive error handling with user-friendly notifications, and a document list displaying real-time status (uploading, pending, reviewed, error). Included download and delete functionality for uploaded documents. The UI is responsive and optimized for Nigerian students on mobile devices. Students can now upload multiple documents simultaneously and monitor real-time AI review progress.\n</info added on 2025-07-06T23:35:37.323Z>",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Connect to OpenAI API for document review",
+            "description": "After successful upload, send the document to the OpenAI API for review. Retrieve feedback on grammar, structure, and completeness.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-07-06T23:41:33.442Z>\nConnected the document review system to the Gemini API, replacing OpenAI, by developing a dedicated gemini.ts library with prompts tailored for Nigerian students. Implemented the reviewDocumentWithGemini() function to apply document type-specific prompts, and added getGeminiResponse() and getStudyAbroadAdvice() functions for enhanced feedback. Updated documents.ts to utilize Gemini for AI-powered reviews, and introduced downloadDocumentContent() to extract text from uploaded files. Configured fallback responses for API errors and optimized all prompts to address the unique needs of Nigerian students, including visa, scholarship, and essay guidance. This enables culturally-aware, context-specific AI feedback for Nigerian students applying internationally.\n</info added on 2025-07-06T23:41:33.442Z>",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Store document metadata in documents table",
+            "description": "Save document metadata (filename, storage URL, upload status, AI feedback) in the Supabase documents table after upload and review.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-07-06T23:41:43.900Z>\nCompleted implementation of document metadata storage in the documents table post-upload and review. The migration includes a comprehensive schema supporting fields for filename, URL, type, status, feedback, file_size, mime_type, created_at, and updated_at, with automatic timestamp triggers. RLS policies ensure user data security, and indexes have been added for optimal query performance. Status tracking covers uploading, pending, reviewed, and error states. The table supports document types including SOP, CV, transcript, recommendation, and other. Error handling and rollback mechanisms are in place to maintain data integrity. The system now fully tracks the document lifecycle from upload through AI review completion.\n</info added on 2025-07-06T23:41:43.900Z>",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Add real-time feedback functionality",
+            "description": "Update the UI to display AI feedback as soon as it is available, providing users with immediate insights after document upload.",
+            "status": "done",
+            "dependencies": [],
+            "details": "<info added on 2025-07-06T23:41:55.737Z>\nAdded real-time feedback functionality to the DocumentUpload component, providing users with immediate status updates throughout the upload and AI review process. Features include live document lists with color-coded status indicators (uploading, pending, reviewed, error), automatic UI updates upon AI review completion, loading animations, progress indicators, and instant feedback display. Enhanced error handling delivers user-friendly messages, while real-time document type detection and labeling improve clarity. The interface is optimized for mobile use by Nigerian students, with automatic scrolling and focus management to ensure a seamless and engaging user experience from upload through AI review completion.\n</info added on 2025-07-06T23:41:55.737Z>",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Build Application Tracking Dashboard",
+        "description": "Create dashboard to monitor application status (Submitted, In Review, Accepted). Store application details in applications table.",
+        "details": "Design dashboard UI. Allow users to add/update applications. Store in applications table. Display status, deadline, notes.",
+        "testStrategy": "Test adding/updating applications. Verify dashboard displays correct status and details.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          4,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Cost Calculator",
+        "description": "Calculate total costs (tuition, living, visa) in NGN using real data from Supabase.",
+        "details": "Build calculator UI. Fetch tuition, living, visa costs from Supabase. Sum and display in NGN using `toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })`.",
+        "testStrategy": "Test calculator with various inputs. Verify totals match expected values and display in NGN.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          6
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Develop Timeline Builder",
+        "description": "Generate application timelines with milestones (e.g., “Submit by Jan 2026, ₦75,000”).",
+        "details": "Design timeline UI. Allow users to add milestones with dates and costs. Display as interactive timeline.",
+        "testStrategy": "Test adding milestones. Verify timeline displays correctly and updates on changes.",
+        "priority": "low",
+        "dependencies": [
+          2,
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement Offline Mode",
+        "description": "Cache critical data (programs, user preferences) for offline access using service workers.",
+        "details": "Set up service worker (public/service-worker.js). Cache API responses and UI assets. Sync data on reconnect.",
+        "testStrategy": "Test app in offline mode. Verify cached data is available and UI functions without network.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          2,
+          3,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Integrate Payment Gateways",
+        "description": "Support Paystack/Flutterwave for premium features (document review, application tracking).",
+        "details": "Integrate Paystack/Flutterwave SDKs. Handle payment flows for subscription tiers. Update user access based on payment status.",
+        "testStrategy": "Test payment flow with test cards. Verify user access updates on successful payment.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          4,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Set Up Email Reminders",
+        "description": "Send email reminders for application deadlines via SendGrid.",
+        "details": "Integrate SendGrid API. Schedule reminders based on application deadlines. Send emails to user's registered address.",
+        "testStrategy": "Test email delivery for upcoming deadlines. Verify reminders are sent and received.",
+        "priority": "low",
+        "dependencies": [
+          2,
+          4,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Optimize for 3G and Mobile",
+        "description": "Minify assets, lazy-load images, ensure <3s load time on 375px screens.",
+        "details": "Use Vite/Tailwind for minification. Lazy-load images with React. Test on 3G throttling in Chrome DevTools. Use Tailwind classes: max-w-md, sm:mx-auto.",
+        "testStrategy": "Test load time on 375px, 3G. Use Lighthouse and Chrome DevTools. Ensure <3s load.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Implement NGN Localization",
+        "description": "Display all costs in NGN using toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }).",
+        "details": "Format all monetary values in UI using toLocaleString. Ensure consistent NGN display across app.",
+        "testStrategy": "Verify all cost displays use NGN format. Test with various values.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Ensure Accessibility (WCAG 2.1 AA)",
+        "description": "Implement ARIA labels, keyboard navigation, 4.5:1 contrast ratio.",
+        "details": "Add ARIA attributes to interactive elements. Ensure keyboard navigation. Use Tailwind for contrast. Test with Lighthouse.",
+        "testStrategy": "Run Lighthouse accessibility audit. Verify score >90 and no critical issues.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Write User and Developer Documentation",
+        "description": "Create user guide (docs/user-guide.md), developer guide (docs/dev-guide.md), and test plan (docs/test-plan.md).",
+        "details": "Write Markdown files with setup instructions, API endpoints, Supabase schema, and test results.",
+        "testStrategy": "Review documentation for completeness and accuracy. Test setup steps from user guide.",
+        "priority": "low",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Conduct Usability Testing",
+        "description": "Test with 20 Nigerian students. Gather feedback on onboarding, search, and core features.",
+        "details": "Recruit testers. Conduct moderated sessions. Collect feedback on usability, performance, and accessibility.",
+        "testStrategy": "Analyze feedback. Track completion rates and time to complete onboarding/search.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Deploy to Netlify and Promote",
+        "description": "Deploy app to Netlify with environment variables. Promote via X, Instagram, WhatsApp.",
+        "details": "Set up Netlify project. Add env vars (SUPABASE_URL, SUPABASE_KEY, API keys). Deploy with `npm run build`. Promote on social media.",
+        "testStrategy": "Verify app is live and functional. Monitor user signups and engagement.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Create Akada Design System Tokens (Nigeria-first, 3G-optimized, Accessible)",
+        "description": "Define and export Akada design system tokens in TypeScript, including color palettes, surface colors, spacing, and currency formatting for NGN, optimized for accessibility and low-bandwidth environments.",
+        "details": "Implement a TypeScript module at src/styles/tokens.ts that exports an akadaTokens object. Define primary and secondary color palettes (indigo, gray, white, success, warning, error) with accessible contrast ratios. Include surface/background color tokens for both dark and light modes. Add spacing tokens for both touch-friendly and compact layouts, using clear naming conventions (e.g., spacingTouchMd, spacingCompactSm). Implement a currency formatting utility for NGN using locale 'en-NG', currency 'NGN', and a static exchangeRate of 1500. Ensure all tokens are fully typed for IntelliSense support and maintainability. Optimize the structure for 3G performance by minimizing object size and avoiding unnecessary dependencies. Do not use any database or external runtime dependencies. Reference best practices for TypeScript design tokens, such as using enums or typed objects for color and spacing tokens, and ensure the export is a single akadaTokens object suitable for import by the Cursor agent. Document token structure with inline comments for clarity and future maintenance.",
+        "testStrategy": "1. Verify that src/styles/tokens.ts exports a fully typed akadaTokens object with all required token categories (colors, surfaces, spacing, currency formatting). 2. Check that color tokens match the specified palette and provide sufficient contrast for accessibility. 3. Confirm that both dark and light surface color tokens are present and correctly named. 4. Ensure spacing tokens are available for both touch and compact layouts, with clear naming and values. 5. Test the currency formatting utility with various NGN values to confirm correct locale and exchange rate handling. 6. Validate that the module has no database or external runtime dependencies. 7. Confirm that all tokens are accessible via TypeScript IntelliSense and are documented with inline comments.",
+        "status": "pending",
+        "dependencies": [
+          3
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Build 3G-Optimized Skeleton Loaders for Akada UI",
+        "description": "Implement lightweight skeleton loaders for program cards, dashboard widgets, and cost charts using only Tailwind CSS classes to ensure a total bundle size under 2KB.",
+        "details": "Create a new React component file at src/components/ui/SkeletonLoader.tsx that includes skeleton loaders for three UI elements: program cards (used in search results), dashboard widgets, and cost charts. Each skeleton loader should visually mimic the layout of its respective component using only Tailwind CSS utility classes—no custom CSS or external stylesheets are allowed. The loaders must be optimized for 3G network conditions, ensuring minimal bundle size (less than 2KB total). Use Tailwind's animation utilities to create subtle loading shimmer effects. Structure the component to allow conditional rendering of skeletons versus actual content, facilitating easy integration with data fetching logic. Consider accessibility by including appropriate ARIA attributes to indicate loading states. Test the component for responsiveness and visual consistency across different screen sizes and ensure it matches the design specifications for Akada UI.",
+        "testStrategy": "Verify that the SkeletonLoader component renders the correct skeleton variants for program cards, dashboard widgets, and cost charts when data is loading. Confirm that no custom CSS is used by inspecting the compiled styles and that only Tailwind classes are present. Measure the bundle size impact to ensure it remains under 2KB. Test the loaders on simulated 3G network conditions to confirm fast load and smooth animations. Check responsiveness on various devices and screen sizes. Use accessibility tools to verify ARIA attributes correctly communicate loading states. Finally, integrate the skeleton loaders into the Cursor agent UI and validate seamless transition from skeleton to actual content.",
+        "status": "pending",
+        "dependencies": [
+          5
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Implement Mobile-First Responsive Utility Hooks for Akada",
+        "description": "Develop a set of mobile-first responsive utility hooks in src/hooks/useResponsive.ts, including useIsMobile, useIsOnline (3G detection), and useReducedData, all designed to work offline for the Cursor agent.",
+        "details": "Create the following custom React hooks in src/hooks/useResponsive.ts:\n\n- useIsMobile(): Returns true if the viewport width is 375px or less. Use window.innerWidth and a resize event listener, with debouncing for performance. Ensure the hook cleans up listeners on unmount and works with server-side rendering (SSR) by checking window existence.\n- useIsOnline(): Detects if the user is online and, if possible, whether the connection is 3G or slower. Use the Network Information API (navigator.connection.effectiveType) where available, falling back to navigator.onLine. Ensure the hook gracefully degrades if APIs are unavailable and works offline by caching the last known state.\n- useReducedData(): Determines if the user prefers reduced data usage (e.g., disables heavy animations). Use the Network Information API's saveData property if available, and/or the prefers-reduced-data media query. Provide a fallback for unsupported browsers.\n\nAll hooks must:\n- Be mobile-first and optimized for offline use (cache last known values, avoid network requests, and handle absence of browser APIs).\n- Be thoroughly documented with JSDoc comments.\n- Include unit tests (in a separate file) for all major code paths, including offline scenarios and API fallbacks.\n\nExample for useIsMobile():\n```ts\nimport { useState, useEffect } from 'react';\nexport function useIsMobile() {\n  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 375 : false);\n  useEffect(() => {\n    if (typeof window === 'undefined') return;\n    const handleResize = () => setIsMobile(window.innerWidth <= 375);\n    window.addEventListener('resize', handleResize);\n    return () => window.removeEventListener('resize', handleResize);\n  }, []);\n  return isMobile;\n}\n```\nFollow similar patterns for the other hooks, ensuring robust offline and fallback support.",
+        "testStrategy": "1. Write unit tests for each hook using a React testing library and Jest. \n2. For useIsMobile, simulate window resizing and verify correct values at and around the 375px breakpoint.\n3. For useIsOnline, mock navigator.connection and navigator.onLine to test 3G detection, offline, and fallback scenarios.\n4. For useReducedData, mock navigator.connection.saveData and the prefers-reduced-data media query, verifying correct detection and fallback behavior.\n5. Test all hooks in offline mode (simulate absence of APIs and network) to ensure they return sensible defaults and do not throw errors.\n6. Review JSDoc comments and ensure all exported hooks are documented.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          17
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Implement NGN Currency Formatting Utilities for Akada",
+        "description": "Develop utility functions in src/utils/currency.ts to format and convert NGN currency values according to PRD specifications, including mobile-friendly compact formatting and proper Nigerian thousands separators.",
+        "details": "Implement the following functions in src/utils/currency.ts:\n\n- formatNGN(amount): Formats a numeric value as Nigerian Naira (₦), using proper thousands separators and decimal precision as per PRD. Use Intl.NumberFormat with 'en-NG' locale and 'NGN' currency for accurate formatting. Example: ₦1,234,567.89.\n- convertUSDToNGN(usdAmount): Converts a USD amount to NGN using a configurable exchange rate (fetch from config or environment variable). Ensure the function is easily testable and can be updated for real-time rates in the future.\n- formatCompactCurrency(largeAmount): Formats large NGN amounts in a compact, mobile-friendly style (e.g., ₦1.2M, ₦950K), following PRD guidelines. Use Intl.NumberFormat with 'compact' notation and ensure the output is clear for mobile users.\n\nAll functions must handle edge cases (e.g., invalid input, zero, negative values) gracefully. Include JSDoc comments for each function. Ensure the utilities are suitable for use by the Cursor agent and can be imported elsewhere in the codebase.",
+        "testStrategy": "1. Write unit tests for each function using representative and edge-case values (e.g., 0, negative, large numbers, decimals).\n2. For formatNGN, verify output matches expected NGN formatting (₦ symbol, thousands separators, decimals).\n3. For convertUSDToNGN, mock the exchange rate and check conversion accuracy.\n4. For formatCompactCurrency, test outputs for values in thousands, millions, and billions, ensuring compact notation is correct and readable.\n5. Test all functions for invalid inputs (null, undefined, non-numeric) and confirm graceful handling or error reporting.\n6. Review outputs on both desktop and mobile contexts for visual correctness.",
+        "status": "pending",
+        "dependencies": [
+          2,
+          3
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Dark Mode Infrastructure for Akada",
+        "description": "Develop a robust dark mode system for Akada, including system preference detection, localStorage persistence, Tailwind dark: class integration, and optimized styles for data visualization.",
+        "details": "1. Create the `src/hooks/useDarkMode.ts` hook to manage theme state, detecting system preferences using `window.matchMedia('(prefers-color-scheme: dark)')` and persisting user choice in localStorage. The hook should initialize the theme based on localStorage or system preference, and provide a setter to toggle between 'light' and 'dark'.\n2. Configure Tailwind CSS for dark mode using the 'class' strategy, ensuring the `dark:` variants are available throughout the app. Update the root element (e.g., `<html>` or a top-level `<div>`) with the appropriate class based on the current theme.\n3. Implement `src/styles/dark-theme.css` with custom CSS variables and overrides to enhance contrast and readability, especially for data visualization components (charts, graphs, etc.). Use color palettes that improve accessibility and visual clarity in dark mode.\n4. Ensure all theme logic and assets work offline by avoiding external dependencies and bundling all required styles and scripts.\n5. Provide a toggle UI component (or hook API) for switching themes, and ensure the theme persists across reloads and sessions.\n6. Document the hook and CSS usage for integration by the Cursor agent and other developers.",
+        "testStrategy": "- Verify that the theme initializes to the user's system preference on first load and persists user selection in localStorage.\n- Confirm that toggling the theme updates the UI immediately and persists across reloads.\n- Inspect Tailwind dark: classes to ensure they apply correctly when dark mode is active.\n- Review data visualization components in both themes to ensure adequate contrast and accessibility.\n- Test the application offline to ensure all dark mode features and styles function without network access.\n- Check documentation for clarity and completeness regarding usage and integration.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          12
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Develop 3G-Optimized Core UI Components for Akada (ProgramCard, SearchFilters, CostCalculator)",
+        "description": "Implement three mobile-first, performant React components—ProgramCard, SearchFilters, and CostCalculator—optimized for 3G networks, accessibility, and offline support for the Akada platform.",
+        "details": "Build each component as a focused, reusable functional component using React best practices. For ProgramCard.tsx, implement skeleton loading states, NGN currency formatting, save/unsave toggling with accessible ARIA attributes, and full keyboard navigation. For SearchFilters.tsx, create a country multi-select with flag icons, a budget slider (NGN), a specialization dropdown, and ensure the filter panel is collapsible on mobile and works offline (using local storage or service workers as appropriate). For CostCalculator.tsx, visually break down tuition, living, and visa costs, format all values in NGN, design a mobile-friendly layout, and include an export button (placeholder for future functionality). Prioritize small, maintainable components, consistent naming, and separation of concerns. Ensure all components are optimized for low-bandwidth (3G) environments by minimizing asset size and reducing unnecessary re-renders. Follow accessibility standards throughout, including ARIA roles and keyboard support.",
+        "testStrategy": "1. Unit test each component for rendering, props handling, and state changes (e.g., save/unsave, filter selection, cost breakdown). 2. Verify skeleton loading and NGN formatting visually and via automated tests. 3. Test ARIA attributes and keyboard navigation using accessibility tools. 4. Simulate 3G network conditions and confirm acceptable load times and offline functionality (for SearchFilters). 5. Check mobile responsiveness with device emulators. 6. Confirm export button is present and visually correct in CostCalculator. 7. Conduct code review for adherence to React best practices and maintainability.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          7
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "Implement Performance Optimization Pipeline for Akada (Cursor Agent)",
+        "description": "Develop and integrate a comprehensive performance optimization pipeline for Akada, focusing on image optimization, bundle splitting, offline caching, lazy loading, and network-aware compression for the Cursor agent.",
+        "details": "Design and implement an image optimization pipeline that processes and compresses program images and university logos at build time, ensuring optimal formats (e.g., WebP, AVIF) and responsive sizing. Configure bundle splitting in the build system (e.g., Webpack, Vite) to separate vendor, UI, and feature-specific code for faster initial loads. Integrate a service worker using Workbox or a similar library to enable offline caching of static assets and critical API responses. Implement lazy loading for all program images and university logos using native 'loading=\"lazy\"' attributes or Intersection Observer for custom logic. Add network-aware compression by detecting 3G or slow network conditions (using the Network Information API) and serving further compressed or lower-resolution assets as needed. Ensure all optimizations are compatible with the Cursor agent's architecture and deployment pipeline.",
+        "testStrategy": "1. Verify that optimized images are generated and served in appropriate formats and sizes for all supported devices. 2. Confirm that bundle splitting results in smaller initial payloads and that code is loaded on demand. 3. Test offline functionality by disabling the network and ensuring the service worker serves cached assets and data. 4. Use browser dev tools to confirm that images and logos are lazy-loaded as they enter the viewport. 5. Simulate 3G network conditions and verify that compressed assets are served and the application remains usable. 6. Run Lighthouse and WebPageTest audits to measure improvements in load time, interactivity, and overall performance.",
+        "status": "pending",
+        "dependencies": [
+          3,
+          12,
+          18
+        ],
+        "priority": "medium",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-06T21:00:13.706Z",
+      "updated": "2025-07-07T18:19:59.558Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# Task ID: 27
+# Title: Implement Performance Optimization Pipeline for Akada (Cursor Agent)
+# Status: pending
+# Dependencies: 3, 12, 18
+# Priority: medium
+# Description: Develop and integrate a comprehensive performance optimization pipeline for Akada, focusing on image optimization, bundle splitting, offline caching, lazy loading, and network-aware compression for the Cursor agent.
+# Details:
+Design and implement an image optimization pipeline that processes and compresses program images and university logos at build time, ensuring optimal formats (e.g., WebP, AVIF) and responsive sizing. Configure bundle splitting in the build system (e.g., Webpack, Vite) to separate vendor, UI, and feature-specific code for faster initial loads. Integrate a service worker using Workbox or a similar library to enable offline caching of static assets and critical API responses. Implement lazy loading for all program images and university logos using native 'loading="lazy"' attributes or Intersection Observer for custom logic. Add network-aware compression by detecting 3G or slow network conditions (using the Network Information API) and serving further compressed or lower-resolution assets as needed. Ensure all optimizations are compatible with the Cursor agent's architecture and deployment pipeline.
+
+# Test Strategy:
+1. Verify that optimized images are generated and served in appropriate formats and sizes for all supported devices. 2. Confirm that bundle splitting results in smaller initial payloads and that code is loaded on demand. 3. Test offline functionality by disabling the network and ensuring the service worker serves cached assets and data. 4. Use browser dev tools to confirm that images and logos are lazy-loaded as they enter the viewport. 5. Simulate 3G network conditions and verify that compressed assets are served and the application remains usable. 6. Run Lighthouse and WebPageTest audits to measure improvements in load time, interactivity, and overall performance.

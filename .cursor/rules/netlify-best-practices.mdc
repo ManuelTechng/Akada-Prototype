@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+description: Best practices for deploying applications on Netlify
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+
+- Use environment variables for sensitive data and API keys.
+- Set up redirects and rewrites for clean URLs.
+- Implement continuous deployment from your Git repository.
+
+- Monitor site performance and errors using Netlify analytics.

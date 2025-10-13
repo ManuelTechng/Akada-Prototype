@@ -1,0 +1,11 @@
+# Task ID: 2
+# Title: Configure Supabase and Database Tables
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Set up Supabase project and define required tables as per PRD schema.
+# Details:
+Create Supabase project. Define tables: users (id, email, name, created_at), user_preferences (user_id, goals, budget_range, countries), programs (id, name, university, country, tuition, duration, specialization), chat_logs (id, user_id, message, response, timestamp), documents (id, user_id, filename, url, status, feedback), applications (id, user_id, program_id, status, deadline, notes). Use Supabase SQL editor or UI to create tables.
+
+# Test Strategy:
+Verify tables exist and schema matches PRD. Insert test data and query via Supabase dashboard.

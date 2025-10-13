@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Seed Programs Table with Real Data
+# Status: done
+# Dependencies: 2
+# Priority: medium
+# Description: Populate the programs table with 50+ real international programs.
+# Details:
+Develop a Node.js web scraper or manually input data. Ensure fields: name, university, country, tuition (NGN), duration, specialization. Use Supabase API or dashboard to insert data. Schedule weekly updates.
+
+# Test Strategy:
+Query programs table and verify at least 50 entries with correct fields. Check for data consistency and completeness.

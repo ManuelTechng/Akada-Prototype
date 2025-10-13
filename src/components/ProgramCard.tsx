@@ -1,7 +1,8 @@
 import React from 'react';
-import { MapPin, DollarSign, Calendar, Star, Share2, GraduationCap } from 'lucide-react';
+import { MapPin, DollarSign, Calendar, Star, Share2, GraduationCap, AlertCircle } from 'lucide-react';
 import type { Program } from '../lib/types';
 import { convertCurrency, formatCurrency, getCountryCurrency } from '../lib/utils';
+import { useProgramTuition } from '../hooks/useProgramTuition';
 
 interface ProgramCardProps {
   program: Program;
@@ -10,9 +11,18 @@ interface ProgramCardProps {
 }
 
 const ProgramCard: React.FC<ProgramCardProps> = ({ program, onSave, onShare }) => {
-  const countryCurrency = getCountryCurrency(program.country);
   const localAmount = program.tuition_fee;
-  const ngnAmount = convertCurrency(localAmount, countryCurrency, 'NGN');
+  
+  // Use real-time currency conversion
+  const tuitionDisplay = useProgramTuition(localAmount, program.country, {
+    showConversion: true,
+    enableRealTime: true,
+    cacheTime: 300000 // 5 minutes cache
+  });
+
+  // Fallback to static conversion for older browsers or errors
+  const countryCurrency = getCountryCurrency(program.country);
+  const fallbackNgnAmount = convertCurrency(localAmount, countryCurrency, 'NGN');
 
   return (
     <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 group">
@@ -41,8 +51,36 @@ const ProgramCard: React.FC<ProgramCardProps> = ({ program, onSave, onShare }) =
         <div className="flex items-center gap-2 text-sm">
           <DollarSign className="h-4 w-4 text-gray-400" />
           <div className="flex flex-col">
-            <span className="text-indigo-600 font-medium">{formatCurrency(localAmount, countryCurrency)}/year</span>
-            <span className="text-xs text-gray-500 mt-0.5">≈ {formatCurrency(ngnAmount, 'NGN')}/year</span>
+            {tuitionDisplay.isLoading ? (
+              <div className="flex flex-col space-y-1">
+                <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
+                <div className="animate-pulse bg-gray-200 h-3 w-20 rounded"></div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center space-x-2">
+                  <span className="text-indigo-600 font-medium">
+                    {tuitionDisplay.primary || formatCurrency(localAmount, countryCurrency)}/year
+                  </span>
+                  {tuitionDisplay.isRealTime && (
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" title="Live rates"></div>
+                  )}
+                  {tuitionDisplay.hasError && (
+                    <AlertCircle className="w-3 h-3 text-yellow-500" title="Using approximate rates" />
+                  )}
+                </div>
+                {tuitionDisplay.secondary && (
+                  <span className="text-xs text-gray-500 mt-0.5">
+                    ≈ {tuitionDisplay.secondary}/year
+                  </span>
+                )}
+                {!tuitionDisplay.secondary && !tuitionDisplay.isNigerian && (
+                  <span className="text-xs text-gray-500 mt-0.5">
+                    ≈ {formatCurrency(fallbackNgnAmount, 'NGN')}/year
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">

@@ -1,0 +1,11 @@
+# Task ID: 17
+# Title: Ensure Accessibility (WCAG 2.1 AA)
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Implement ARIA labels, keyboard navigation, 4.5:1 contrast ratio.
+# Details:
+Add ARIA attributes to interactive elements. Ensure keyboard navigation. Use Tailwind for contrast. Test with Lighthouse.
+
+# Test Strategy:
+Run Lighthouse accessibility audit. Verify score >90 and no critical issues.

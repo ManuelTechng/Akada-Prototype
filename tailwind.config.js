@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
       colors: {
@@ -48,6 +49,30 @@ export default {
           700: '#374151',
           800: '#1f2937', // Primary text
           900: '#111827',
+        },
+        // Dark mode optimized colors
+        'dark-bg': {
+          primary: '#111827',   // Main background
+          secondary: '#1f2937', // Card/elevated backgrounds
+          tertiary: '#374151',  // Hover states
+        },
+        'dark-text': {
+          primary: '#f9fafb',   // Primary text
+          secondary: '#d1d5db', // Secondary text
+          tertiary: '#9ca3af',  // Muted text
+        },
+        'dark-border': {
+          primary: '#374151',   // Default borders
+          secondary: '#4b5563', // Emphasis borders
+        },
+        // Data visualization colors (dark optimized)
+        'chart-dark': {
+          primary: '#60a5fa',   // Blue
+          secondary: '#a78bfa', // Purple
+          tertiary: '#34d399',  // Green
+          quaternary: '#fbbf24', // Amber
+          quinary: '#f87171',   // Red
+          senary: '#22d3ee',    // Cyan
         },
         indigo: {
           50: '#eef2ff',

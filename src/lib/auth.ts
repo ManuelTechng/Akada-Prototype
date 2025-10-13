@@ -1,49 +1,109 @@
-import { useLogger } from '../hooks/useLogger';
 import type { UserProfile, SignUpData, AuthResponse } from './types';
 import { supabase } from './supabase';
 
-const logger = useLogger();
-
 // Constants for authentication configuration
 const AUTH_TIMEOUT = 30000; // 30 seconds
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 1; // Reduced retries to prevent excessive attempts
 
-// Helper function to get user profile
-export const getUserProfile = async (userId: string): Promise<UserProfile | null> => {
+// Test Supabase connection
+const testConnection = async (): Promise<boolean> => {
   try {
-    logger.info('Getting profile for user:', { userId });
-    
-    // First try to get existing profile
-    const { data, error } = await supabase
+    const { data, error } = await supabase.from('user_profiles').select('count').limit(1);
+    console.log('Connection test result:', { data, error: error?.message });
+    return !error;
+  } catch (err) {
+    console.error('Supabase connection test failed:', err);
+    return false;
+  }
+};
+
+// Helper function to get user profile with timeout and retry
+export const getUserProfile = async (userId: string, retryCount = 0): Promise<UserProfile | null> => {
+  try {
+    console.log('Getting profile for user:', { userId, attempt: retryCount + 1 });
+
+    // Test connection first on initial attempt
+    if (retryCount === 0) {
+      console.log('Testing Supabase connection...');
+      const connectionOk = await testConnection();
+      if (!connectionOk) {
+        throw new Error('Supabase connection failed');
+      }
+      console.log('Supabase connection test passed');
+    }
+
+    // Create timeout promise - reduced timeout for faster failure
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Profile query timeout')), 3000)
+    );
+
+    // First try to get existing profile with timeout
+    console.log('Executing profile query...');
+    const queryPromise = supabase
       .from('user_profiles')
       .select('*')
       .eq('id', userId)
       .single();
 
+    console.log('Starting Promise.race for profile query...');
+    let data, error;
+    try {
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      data = result.data;
+      error = result.error;
+      console.log('Profile query completed:', { hasData: !!data, error: error?.message });
+      
+      if (error) {
+        console.error('Supabase query error:', error);
+        throw error;
+      }
+    } catch (queryError) {
+      console.error('Profile query failed:', queryError);
+      // Continue with null data - let the app create a new profile
+      data = null;
+      error = queryError;
+    }
+
     // If profile exists, parse JSON fields and return it
     if (data) {
-      logger.info('Found existing profile:', { userId });
+      console.log('Found existing profile:', { userId });
+      
+      // Safely parse JSON fields - they might already be objects
+      const parseJsonField = (field: any) => {
+        if (!field) return null;
+        if (typeof field === 'object') return field;
+        if (typeof field === 'string') {
+          try {
+            return JSON.parse(field);
+          } catch (e) {
+            console.warn('Failed to parse JSON field:', field);
+            return null;
+          }
+        }
+        return field;
+      };
+      
       return {
         ...data,
-        test_scores: data.test_scores ? JSON.parse(data.test_scores) : null,
-        study_preferences: data.study_preferences ? JSON.parse(data.study_preferences) : null
+        test_scores: parseJsonField(data.test_scores),
+        study_preferences: parseJsonField(data.study_preferences)
       };
     }
     
     // If error is anything other than "not found", throw it
-    if (error && error.code !== 'PGRST116') {
-      logger.error('Error fetching profile:', { error });
+    if (error && (error as any).code !== 'PGRST116') {
+      console.error('Error fetching profile:', { error });
       throw error;
     }
     
     // No profile found, we need to create one from the user's metadata
-    logger.info('No profile found, creating new profile from user metadata');
+    console.log('No profile found, creating new profile from user metadata');
     
     // Get user data from auth
     const { data: userData, error: userError } = await supabase.auth.getUser();
     
     if (userError || !userData?.user) {
-      logger.error('Error getting user data for profile creation:', { error: userError });
+      console.error('Error getting user data for profile creation:', { error: userError });
       throw new Error('Could not retrieve user information');
     }
     
@@ -74,14 +134,17 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
         countries: [],
         max_tuition: '',
         program_type: [],
-        start_date: ''
+        start_date: '',
+        goals: '',
+        language_preference: ''
       },
+      profile_completed: false,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
     
     // Insert the new profile into the database
-    logger.info('Creating new profile with data:', { profile: newProfile });
+    console.log('Creating new profile with data:', { profile: newProfile });
     
     const { data: insertedData, error: insertError } = await supabase
       .from('user_profiles')
@@ -90,15 +153,28 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
       .single();
     
     if (insertError) {
-      logger.error('Error creating initial profile:', { error: insertError });
+      console.error('Error creating initial profile:', { error: insertError });
       throw insertError;
     }
     
-    logger.info('Initial profile created successfully:', { userId });
+    console.log('Initial profile created successfully:', { userId });
     return insertedData || newProfile;
     
   } catch (error) {
-    logger.error('Error getting/creating user profile:', { error });
+    console.error('Error getting/creating user profile:', { error, attempt: retryCount + 1 });
+    
+    // Retry logic for network/timeout errors
+    if (retryCount < MAX_RETRIES && 
+        (error instanceof Error && 
+         (error.message.includes('timeout') || 
+          error.message.includes('network') ||
+          error.message.includes('fetch')))) {
+      
+      console.log(`Retrying profile fetch in ${(retryCount + 1) * 1000}ms...`);
+      await new Promise(resolve => setTimeout(resolve, (retryCount + 1) * 1000));
+      return getUserProfile(userId, retryCount + 1);
+    }
+    
     return null;
   }
 };
@@ -221,80 +297,139 @@ export const getCurrentUser = async () => {
   }
 };
 
-// Update user profile
+// Update user profile - Optimized with timeout protection
 export const updateUserProfile = async (userId: string, profileData: Partial<UserProfile>): Promise<UserProfile> => {
   try {
-    logger.info('Updating user profile', { userId, profileData });
+    console.log('⏳ Updating user profile...', { userId });
+    const startTime = performance.now();
 
-    // Fetch existing profile
-    const { data: existingProfile, error: fetchError } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (fetchError) {
-      logger.error('Error fetching existing profile', { error: fetchError });
-      throw new Error('Failed to fetch existing profile');
-    }
-
-    // Sanitize and validate input data
+    // Sanitize and validate input data BEFORE fetching (faster)
     const sanitizedData = sanitizeProfileData(profileData);
     validateProfileData(sanitizedData);
 
-    // Prepare the data for update/insert
+    // Prepare the data for update/insert with cleaned nested objects
     const formattedProfile = {
       ...sanitizedData,
-      test_scores: sanitizedData.test_scores ? JSON.stringify(sanitizedData.test_scores) : null,
-      study_preferences: sanitizedData.study_preferences ? JSON.stringify(sanitizedData.study_preferences) : null,
+      // Only stringify if there's actual data (prevents storing empty objects)
+      test_scores: sanitizedData.test_scores && Object.keys(sanitizedData.test_scores).length > 0
+        ? JSON.stringify(cleanNestedData(sanitizedData.test_scores))
+        : null,
+      study_preferences: sanitizedData.study_preferences && Object.keys(sanitizedData.study_preferences).length > 0
+        ? JSON.stringify(cleanNestedData(sanitizedData.study_preferences))
+        : null,
       updated_at: new Date().toISOString()
     };
 
-    let result;
-    if (existingProfile) {
-      // Update existing profile
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .update(formattedProfile)
-        .eq('id', userId)
-        .select()
-        .single();
+    // Use upsert instead of fetch + update (single query = faster)
+    const { data: result, error } = await supabase
+      .from('user_profiles')
+      .upsert({
+        id: userId,
+        ...formattedProfile
+      }, {
+        onConflict: 'id',
+        ignoreDuplicates: false
+      })
+      .select()
+      .single();
 
-      if (error) {
-        logger.error('Error updating profile', { error });
-        throw new Error('Failed to update profile');
-      }
-      result = data;
-    } else {
-      // Create new profile
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .insert([{
-          ...formattedProfile,
-          id: userId,
-          created_at: new Date().toISOString()
-        }])
-        .select()
-        .single();
+    if (error) {
+      console.error('❌ Error updating profile:', error);
+      throw new Error(error.message || 'Failed to update profile');
+    }
 
-      if (error) {
-        logger.error('Error creating profile', { error });
-        throw new Error('Failed to create profile');
-      }
-      result = data;
+    if (!result) {
+      throw new Error('No data returned from profile update');
     }
 
     // Parse JSON strings back to objects
-    if (result) {
-      result.test_scores = result.test_scores ? JSON.parse(result.test_scores) : null;
-      result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences) : null;
+    result.test_scores = result.test_scores ? JSON.parse(result.test_scores) : null;
+    result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences) : null;
+
+    // Sync all study_preferences fields to user_preferences table
+    if (sanitizedData.study_preferences) {
+      const syncData: any = {
+        user_id: userId,
+        updated_at: new Date().toISOString()
+      };
+
+      // Map JSONB fields to structured columns
+      if (sanitizedData.study_preferences.max_tuition) {
+        const budgetValue = parseFloat(sanitizedData.study_preferences.max_tuition.toString());
+        if (!isNaN(budgetValue)) {
+          syncData.budget_range = budgetValue;
+        }
+      }
+
+      if (sanitizedData.study_preferences.goals) {
+        syncData.goals = sanitizedData.study_preferences.goals;
+      }
+
+      if (sanitizedData.study_preferences.language_preference) {
+        syncData.language_preference = sanitizedData.study_preferences.language_preference;
+      }
+
+      if (sanitizedData.study_preferences.countries && sanitizedData.study_preferences.countries.length > 0) {
+        syncData.countries = sanitizedData.study_preferences.countries;
+      }
+
+      if (sanitizedData.study_preferences.program_type && sanitizedData.study_preferences.program_type.length > 0) {
+        // Map first program type to study_level
+        syncData.study_level = sanitizedData.study_preferences.program_type[0];
+      }
+
+      if (sanitizedData.study_preferences.start_date) {
+        syncData.preferred_duration = sanitizedData.study_preferences.start_date;
+      }
+
+      try {
+        await supabase
+          .from('user_preferences')
+          .upsert(syncData, {
+            onConflict: 'user_id'
+          });
+        console.log('✅ All study preferences synced to user_preferences table');
+      } catch (syncError) {
+        console.warn('⚠️ Failed to sync preferences to user_preferences:', syncError);
+        // Don't throw - this is a secondary operation
+      }
     }
+
+    const endTime = performance.now();
+    console.log(`✅ Profile updated successfully in ${(endTime - startTime).toFixed(0)}ms`);
 
     return result;
   } catch (error) {
-    logger.error('Error in updateUserProfile', { error });
+    console.error('❌ Error in updateUserProfile:', error);
     throw error;
   }
+};
+
+// Helper to clean nested data (remove empty strings, NaN, undefined)
+const cleanNestedData = (obj: any): any => {
+  if (typeof obj !== 'object' || obj === null) {
+    // Clean primitives
+    if (obj === '' || obj === undefined || obj === 'NaN' || (typeof obj === 'number' && isNaN(obj))) {
+      return null;
+    }
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.filter(item => item !== '' && item !== undefined && item !== null);
+  }
+
+  const cleaned: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === '' || value === undefined || value === 'NaN' || (typeof value === 'number' && isNaN(value))) {
+      cleaned[key] = null;
+    } else if (typeof value === 'object' && value !== null) {
+      cleaned[key] = cleanNestedData(value);
+    } else {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
 };
 
 // Helper function to sanitize profile data and ensure proper JSON structure
@@ -329,7 +464,9 @@ const sanitizeProfileData = (profile: Partial<UserProfile>): Partial<UserProfile
       countries: profile.study_preferences?.countries || [],
       max_tuition: profile.study_preferences?.max_tuition || '',
       program_type: profile.study_preferences?.program_type || [],
-      start_date: profile.study_preferences?.start_date || ''
+      start_date: profile.study_preferences?.start_date || '',
+      goals: profile.study_preferences?.goals || '',
+      language_preference: profile.study_preferences?.language_preference || ''
     }
   };
 

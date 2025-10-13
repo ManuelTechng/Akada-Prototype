@@ -10,6 +10,11 @@ interface NotificationDropdownProps {
 
 const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onClose }) => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  
+  // Safety check to prevent undefined errors
+  if (!notifications) {
+    return null;
+  }
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -70,28 +75,28 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
   return (
     <div
       ref={dropdownRef}
-      className="absolute right-4 mt-2 max-w-[calc(100vw-32px)] sm:w-96 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50"
+      className="absolute right-4 mt-2 max-w-[calc(100vw-32px)] sm:w-96 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
     >
-      <div className="p-4 border-b border-gray-100">
+      <div className="p-4 border-b border-gray-100 dark:border-gray-700">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold text-gray-900">Notifications</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium"
             >
               Mark all as read
             </button>
           )}
         </div>
-        <p className="text-sm text-gray-500">
-          {unreadCount === 0 ? 'No new notifications' : `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`}
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {(unreadCount || 0) === 0 ? 'No new notifications' : `${unreadCount || 0} unread notification${(unreadCount || 0) === 1 ? '' : 's'}`}
         </p>
       </div>
 
       <div className="max-h-[400px] overflow-y-auto">
         {notifications.length === 0 ? (
-          <div className="p-4 text-center text-gray-500">
+          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
             No notifications yet
           </div>
         ) : (
@@ -99,8 +104,8 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
             <div
               key={notification.id}
               onClick={() => handleNotificationClick(notification)}
-              className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${
-                !notification.read ? 'bg-indigo-50/50' : ''
+              className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${
+                !notification.read ? 'bg-indigo-50/50 dark:bg-indigo-900/20' : ''
               }`}
             >
               <div className="flex items-start gap-3">
@@ -109,14 +114,14 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="font-medium text-gray-900 break-words">{notification.title}</p>
-                    <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
+                    <p className="font-medium text-gray-900 dark:text-gray-100 break-words">{notification.title}</p>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0">
                       {formatTime(notification.timestamp)}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1 break-words">{notification.message}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 break-words">{notification.message}</p>
                   {notification.actionRequired && (
-                    <div className="flex items-center gap-1 mt-2 text-sm text-indigo-600 font-medium">
+                    <div className="flex items-center gap-1 mt-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
                       Take action
                       <ChevronRight className="h-4 w-4" />
                     </div>

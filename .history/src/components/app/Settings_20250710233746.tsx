@@ -1,8 +1,8 @@
 import React from 'react';
 import ProfileSettings from './ProfileSettings';
 
-const Profile: React.FC = () => {
+const Settings: React.FC = () => {
   return <ProfileSettings />;
 };
 
-export default Profile;
+export default Settings; 

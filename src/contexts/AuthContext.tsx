@@ -3,7 +3,6 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { UserProfile } from '../lib/types';
 import { getUserProfile, updateUserProfile } from '../lib/auth';
-import { useProfileFetcher } from '../hooks/useProfileFetcher';
 
 interface AuthContextType {
   user: User | null;
@@ -40,21 +39,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [initialized, setInitialized] = useState(false);
-  const [initAttempts, setInitAttempts] = useState(0);
-  const MAX_INIT_ATTEMPTS = 3;
-
-  const fetchProfile = useProfileFetcher();
-
+  const [fetchingProfile, setFetchingProfile] = useState(false);
   const refreshProfile = async () => {
-    if (!user) return;
+    if (!user || fetchingProfile) return;
     
     try {
+      setFetchingProfile(true);
       console.log('AuthContext: Refreshing profile for user', user.id);
-      const profile = await fetchProfile(user.id);
+      const profile = await getUserProfile(user.id);
       console.log('AuthContext: Profile refresh result', profile ? 'success' : 'null');
       if (profile) setProfile(profile);
     } catch (err) {
       console.error('AuthContext: Error refreshing profile:', err);
+    } finally {
+      setFetchingProfile(false);
     }
   };
 
@@ -75,8 +73,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('AuthContext: Starting auth initialization...');
     let mounted = true;
 
+    // Timeout for auth initialization - allows time for profile fetch
+    const initTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.log('AuthContext: Initialization timeout, forcing completion');
+        setLoading(false);
+        setInitialized(true);
+      }
+    }, 3000); // Reduced from 15s to 3s for faster initial load
+
     const initializeAuth = async () => {
-      console.log('AuthContext: Initializing auth, attempt', initAttempts + 1);
+      console.log('AuthContext: Initializing auth');
       try {
         // Get initial session
         console.log('AuthContext: Getting session from Supabase');
@@ -84,21 +91,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (sessionError) {
           console.error('AuthContext: Session error:', sessionError);
-          if (initAttempts < MAX_INIT_ATTEMPTS) {
-            setTimeout(() => {
-              if (mounted) {
-                setInitAttempts(prev => prev + 1);
-                initializeAuth();
-              }
-            }, 2000);
-          } else {
-            console.error('AuthContext: Max init attempts reached');
-            if (mounted) {
-              setLoading(false);
-              setInitialized(true);
-            }
+          if (mounted) {
+            setLoading(false);
+            setInitialized(true);
+            setError(sessionError instanceof Error ? sessionError : new Error('Failed to get session'));
           }
-          throw sessionError;
+          return;
         }
         
         console.log('AuthContext: Session result:', initialSession ? 'has session' : 'no session');
@@ -112,11 +110,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           try {
             console.log('AuthContext: Fetching user profile');
-            const profile = await fetchProfile(initialSession.user.id);
+            
+            // Use getUserProfile with built-in timeout and retry logic
+            const profile = await getUserProfile(initialSession.user.id);
             console.log('AuthContext: Profile result', profile ? 'success' : 'null');
             if (profile && mounted) setProfile(profile);
           } catch (profileError) {
             console.error('AuthContext: Error fetching user profile:', profileError);
+            // Continue anyway - user can complete profile later
           }
         } else {
           console.log('AuthContext: No user in session');
@@ -146,7 +147,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('AuthContext: Auth state changed:', event);
         if (mounted) {
           setSession(newSession);
-          setLoading(true); // Set loading true during state change
+          // Only set loading true for actual sign in events, not initial session events
+          if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            setLoading(true);
+          }
         }
         
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
@@ -154,12 +158,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.log('AuthContext: User signed in or token refreshed', newSession.user.id);
             setUser(newSession.user);
             try {
+              if (fetchingProfile) {
+                console.log('AuthContext: Profile fetch already in progress, skipping');
+                return;
+              }
+              
+              setFetchingProfile(true);
               console.log('AuthContext: Fetching profile after sign in');
-              const profile = await fetchProfile(newSession.user.id);
+              
+              // Add a timeout wrapper around profile fetch
+              const profilePromise = getUserProfile(newSession.user.id);
+              const timeoutPromise = new Promise<null>((_, reject) =>
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
+              );
+              
+              const profile = await Promise.race([profilePromise, timeoutPromise]);
               console.log('AuthContext: Profile fetch result', profile ? 'success' : 'null');
               if (profile && mounted) setProfile(profile);
             } catch (profileError) {
               console.error('AuthContext: Error fetching user profile after sign in:', profileError);
+              // Continue anyway - user can complete profile later
+            } finally {
+              // Always set loading to false after profile fetch attempt
+              if (mounted) {
+                console.log('AuthContext: Setting loading to false after profile fetch');
+                setLoading(false);
+                setFetchingProfile(false);
+              }
+            }
+          } else {
+            // No user in session, set loading to false
+            if (mounted) {
+              console.log('AuthContext: No user in session, setting loading to false');
+              setLoading(false);
             }
           }
         } else if (event === 'SIGNED_OUT') {
@@ -167,13 +198,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (mounted) {
             setUser(null);
             setProfile(null);
+            setLoading(false);
           }
-        }
-        
-        // Always update loading state
-        if (mounted) {
-          console.log('AuthContext: Setting loading to false after auth state change');
-          setLoading(false);
+        } else {
+          // For any other event (like INITIAL_SESSION), ensure loading is false
+          if (mounted) {
+            console.log('AuthContext: Setting loading to false for event:', event);
+            setLoading(false);
+          }
         }
       }
     );
@@ -181,9 +213,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       console.log('AuthContext: Cleaning up auth context');
       mounted = false;
+      clearTimeout(initTimeout);
       subscription.unsubscribe();
     };
-  }, [initAttempts, fetchProfile]);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -224,7 +257,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading, 
     initialized, 
     hasError: !!error,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    hasProfile: !!profile
   });
 
   return (

@@ -1,0 +1,21 @@
+# Task ID: 25
+# Title: Implement Dark Mode Infrastructure for Akada
+# Status: pending
+# Dependencies: 3, 12
+# Priority: medium
+# Description: Develop a robust dark mode system for Akada, including system preference detection, localStorage persistence, Tailwind dark: class integration, and optimized styles for data visualization.
+# Details:
+1. Create the `src/hooks/useDarkMode.ts` hook to manage theme state, detecting system preferences using `window.matchMedia('(prefers-color-scheme: dark)')` and persisting user choice in localStorage. The hook should initialize the theme based on localStorage or system preference, and provide a setter to toggle between 'light' and 'dark'.
+2. Configure Tailwind CSS for dark mode using the 'class' strategy, ensuring the `dark:` variants are available throughout the app. Update the root element (e.g., `<html>` or a top-level `<div>`) with the appropriate class based on the current theme.
+3. Implement `src/styles/dark-theme.css` with custom CSS variables and overrides to enhance contrast and readability, especially for data visualization components (charts, graphs, etc.). Use color palettes that improve accessibility and visual clarity in dark mode.
+4. Ensure all theme logic and assets work offline by avoiding external dependencies and bundling all required styles and scripts.
+5. Provide a toggle UI component (or hook API) for switching themes, and ensure the theme persists across reloads and sessions.
+6. Document the hook and CSS usage for integration by the Cursor agent and other developers.
+
+# Test Strategy:
+- Verify that the theme initializes to the user's system preference on first load and persists user selection in localStorage.
+- Confirm that toggling the theme updates the UI immediately and persists across reloads.
+- Inspect Tailwind dark: classes to ensure they apply correctly when dark mode is active.
+- Review data visualization components in both themes to ensure adequate contrast and accessibility.
+- Test the application offline to ensure all dark mode features and styles function without network access.
+- Check documentation for clarity and completeness regarding usage and integration.

@@ -1,0 +1,22 @@
+# Task ID: 24
+# Title: Implement NGN Currency Formatting Utilities for Akada
+# Status: pending
+# Dependencies: 2, 3
+# Priority: medium
+# Description: Develop utility functions in src/utils/currency.ts to format and convert NGN currency values according to PRD specifications, including mobile-friendly compact formatting and proper Nigerian thousands separators.
+# Details:
+Implement the following functions in src/utils/currency.ts:
+
+- formatNGN(amount): Formats a numeric value as Nigerian Naira (₦), using proper thousands separators and decimal precision as per PRD. Use Intl.NumberFormat with 'en-NG' locale and 'NGN' currency for accurate formatting. Example: ₦1,234,567.89.
+- convertUSDToNGN(usdAmount): Converts a USD amount to NGN using a configurable exchange rate (fetch from config or environment variable). Ensure the function is easily testable and can be updated for real-time rates in the future.
+- formatCompactCurrency(largeAmount): Formats large NGN amounts in a compact, mobile-friendly style (e.g., ₦1.2M, ₦950K), following PRD guidelines. Use Intl.NumberFormat with 'compact' notation and ensure the output is clear for mobile users.
+
+All functions must handle edge cases (e.g., invalid input, zero, negative values) gracefully. Include JSDoc comments for each function. Ensure the utilities are suitable for use by the Cursor agent and can be imported elsewhere in the codebase.
+
+# Test Strategy:
+1. Write unit tests for each function using representative and edge-case values (e.g., 0, negative, large numbers, decimals).
+2. For formatNGN, verify output matches expected NGN formatting (₦ symbol, thousands separators, decimals).
+3. For convertUSDToNGN, mock the exchange rate and check conversion accuracy.
+4. For formatCompactCurrency, test outputs for values in thousands, millions, and billions, ensuring compact notation is correct and readable.
+5. Test all functions for invalid inputs (null, undefined, non-numeric) and confirm graceful handling or error reporting.
+6. Review outputs on both desktop and mobile contexts for visual correctness.

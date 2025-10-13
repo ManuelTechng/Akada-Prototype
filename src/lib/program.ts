@@ -46,7 +46,7 @@ export const searchPrograms = async (filters: {
 
     // Apply scholarship filter
     if (filters.scholarshipsOnly) {
-      query = query.eq('has_scholarships', true);
+      query = query.or('has_scholarships.eq.true,scholarship_available.eq.true');
     }
 
     // Apply sorting
@@ -71,7 +71,24 @@ export const searchPrograms = async (filters: {
 
     if (error) throw error;
     
-    return data as Program[];
+    // Map database fields to frontend Program interface
+    return (data || []).map(program => ({
+      ...program,
+      // Map specialization to fields array (for compatibility)
+      fields: program.specialization ? [program.specialization] : [],
+      // Ensure required fields have fallbacks
+      location: program.location || `${program.country}`,
+      deadline: program.deadline || 'TBD',
+      requirements: program.requirements || [],
+      // Add default values for optional fields
+      abbreviation: program.abbreviation || program.university.split(' ').map(w => w[0]).join(''),
+      description: program.description || `${program.degree_type} program in ${program.specialization || program.name} at ${program.university}`,
+      website: program.website || '#',
+      logo: program.logo || 'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      faculties: program.faculties || ['Faculty of Science'],
+      term: program.term || 'Fall 2025',
+      match: program.match || 85 // Default match score
+    })) as Program[];
   } catch (error) {
     console.error('Error searching programs:', error);
     throw error;

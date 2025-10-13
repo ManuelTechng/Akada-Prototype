@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: Build Application Tracking Dashboard
+# Status: pending
+# Dependencies: 2, 4, 6
+# Priority: medium
+# Description: Create dashboard to monitor application status (Submitted, In Review, Accepted). Store application details in applications table.
+# Details:
+Design dashboard UI. Allow users to add/update applications. Store in applications table. Display status, deadline, notes.
+
+# Test Strategy:
+Test adding/updating applications. Verify dashboard displays correct status and details.

@@ -1,0 +1,11 @@
+# Task ID: 10
+# Title: Nigeria-Specific Testing and Performance Validation
+# Status: pending
+# Dependencies: 6, 7, 8, 9
+# Priority: high
+# Description: Conduct 3G network simulation, real device testing, user testing, and load testing.
+# Details:
+Simulate 3G network conditions using Chrome DevTools. Test on popular Nigerian smartphones. Conduct user testing with 20 Nigerian students. Perform load testing for 500 concurrent users.
+
+# Test Strategy:
+Measure load times and responsiveness under 3G. Collect user feedback. Monitor system performance and stability during load tests.

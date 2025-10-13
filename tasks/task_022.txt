@@ -1,0 +1,11 @@
+# Task ID: 22
+# Title: Build 3G-Optimized Skeleton Loaders for Akada UI
+# Status: pending
+# Dependencies: 5
+# Priority: medium
+# Description: Implement lightweight skeleton loaders for program cards, dashboard widgets, and cost charts using only Tailwind CSS classes to ensure a total bundle size under 2KB.
+# Details:
+Create a new React component file at src/components/ui/SkeletonLoader.tsx that includes skeleton loaders for three UI elements: program cards (used in search results), dashboard widgets, and cost charts. Each skeleton loader should visually mimic the layout of its respective component using only Tailwind CSS utility classes—no custom CSS or external stylesheets are allowed. The loaders must be optimized for 3G network conditions, ensuring minimal bundle size (less than 2KB total). Use Tailwind's animation utilities to create subtle loading shimmer effects. Structure the component to allow conditional rendering of skeletons versus actual content, facilitating easy integration with data fetching logic. Consider accessibility by including appropriate ARIA attributes to indicate loading states. Test the component for responsiveness and visual consistency across different screen sizes and ensure it matches the design specifications for Akada UI.
+
+# Test Strategy:
+Verify that the SkeletonLoader component renders the correct skeleton variants for program cards, dashboard widgets, and cost charts when data is loading. Confirm that no custom CSS is used by inspecting the compiled styles and that only Tailwind classes are present. Measure the bundle size impact to ensure it remains under 2KB. Test the loaders on simulated 3G network conditions to confirm fast load and smooth animations. Check responsiveness on various devices and screen sizes. Use accessibility tools to verify ARIA attributes correctly communicate loading states. Finally, integrate the skeleton loaders into the Cursor agent UI and validate seamless transition from skeleton to actual content.

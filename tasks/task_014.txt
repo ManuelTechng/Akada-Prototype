@@ -1,0 +1,11 @@
+# Task ID: 14
+# Title: Set Up Email Reminders
+# Status: pending
+# Dependencies: 2, 4, 9
+# Priority: low
+# Description: Send email reminders for application deadlines via SendGrid.
+# Details:
+Integrate SendGrid API. Schedule reminders based on application deadlines. Send emails to user's registered address.
+
+# Test Strategy:
+Test email delivery for upcoming deadlines. Verify reminders are sent and received.

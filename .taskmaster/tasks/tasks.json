@@ -1,0 +1,279 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Project Setup and Repository Initialization",
+        "description": "Initialize project repository with React + TypeScript, Tailwind CSS, Lucide React icons, and Vite as per tech stack requirements.",
+        "details": "Create a new repository. Initialize with Vite React TypeScript template. Install Tailwind CSS and Lucide React icons. Set up basic folder structure for components, services, and utilities. Configure Vite for optimal bundling and development experience.",
+        "testStrategy": "Verify repository setup by running development server and checking for successful build and hot reload. Ensure all dependencies are correctly installed and configured.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Database Schema Standardization and Indexing",
+        "description": "Standardize scholarship fields, convert budget storage to numeric NGN, add performance indexes, and clean up dual preference system conflicts.",
+        "details": "Update Supabase schema: consolidate has_scholarships and scholarship_available into a single field. Convert budget fields to numeric NGN. Add indexes for frequently queried fields. Resolve data conflicts between user_preferences and user_profiles.study_preferences.",
+        "testStrategy": "Test schema changes with sample data. Verify query performance improvements. Ensure data consistency and integrity after migration.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Unified Preference Service Implementation",
+        "description": "Build a service to merge user_preferences and user_profiles.study_preferences, and implement intelligent recommendation engine.",
+        "details": "Create a backend service (e.g., Supabase function or custom API) to merge and manage user preferences. Implement recommendation logic using actual user data. Add behavioral tracking for program interactions.",
+        "testStrategy": "Test service with mock and real user data. Verify correct merging of preferences and accurate recommendations. Check behavioral tracking integration.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Nigeria-First Design System and Component Library",
+        "description": "Create Akada design tokens, responsive utilities, dark mode, and 3G-optimized component library.",
+        "details": "Define design tokens for typography, colors, and spacing with NGN formatting. Build responsive utilities for 375px mobile optimization. Implement dark mode infrastructure. Create a library of 3G-optimized UI components.",
+        "testStrategy": "Test components on mobile devices and 3G network simulations. Verify responsive behavior and dark mode toggling. Check component library integration.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement NGN Currency Formatting System",
+            "description": "Develop a robust utility for formatting and displaying Nigerian Naira (NGN) values across all UI components, ensuring consistency and localization.",
+            "dependencies": [],
+            "details": "Create a currency formatting module that handles NGN-specific symbols, decimal precision, and localization rules. Integrate this utility into the design system so all components referencing currency use this standardized approach.",
+            "status": "done",
+            "testStrategy": "Write unit tests for various NGN formatting scenarios, including edge cases (large numbers, decimals, negative values). Verify correct rendering in sample components."
+          },
+          {
+            "id": 2,
+            "title": "Define Akada Design System Tokens",
+            "description": "Establish a comprehensive set of design tokens for typography, color palette (including dark mode variants), and spacing, tailored for Nigerian digital products.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a token file (JSON, SCSS, or JS) specifying font families, font sizes, weights, color variables (primary, secondary, accent, background, etc.), and spacing scales. Ensure tokens are easily consumable by both CSS and JS. Include NGN-specific typographic considerations.",
+            "status": "done",
+            "testStrategy": "Validate token usage by applying them to sample UI elements and checking for consistency. Run visual regression tests to ensure tokens propagate correctly."
+          },
+          {
+            "id": 3,
+            "title": "Develop Mobile-First Responsive Program Card Components",
+            "description": "Build reusable, mobile-optimized program card components using the defined design tokens, focusing on 375px width and touch-friendly interactions.",
+            "dependencies": [
+              2
+            ],
+            "details": "Design and implement card components that prioritize content, use intuitive navigation patterns, and are optimized for touch input. Ensure cards are responsive, visually clear at 375px, and leverage Akada tokens for styling. Include support for NGN currency display.",
+            "status": "done",
+            "testStrategy": "Test cards on real devices and emulators at 375px and other breakpoints. Conduct usability tests for touch interactions and visual clarity."
+          },
+          {
+            "id": 4,
+            "title": "Set Up Dark Mode Infrastructure",
+            "description": "Implement a dark mode system that allows seamless switching between light and dark themes, leveraging the design tokens for color adaptation.",
+            "dependencies": [
+              2
+            ],
+            "details": "Configure CSS variables or a theme provider to toggle between light and dark color tokens. Ensure all components and utilities respond to theme changes. Provide a mechanism for user/system preference detection.",
+            "status": "done",
+            "testStrategy": "Manually and automatically test theme switching across components. Verify color contrast and accessibility in both modes."
+          },
+          {
+            "id": 5,
+            "title": "Create Performance Optimization Utilities",
+            "description": "Develop utilities and guidelines to ensure all components and assets are optimized for 3G network conditions, focusing on speed and minimal payload.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "Implement lazy loading for images, use SVGs for icons, and optimize asset sizes. Provide helper functions for responsive images and code splitting. Document best practices for 3G optimization within the library.",
+            "status": "done",
+            "testStrategy": "Simulate 3G network conditions and measure load times. Use performance profiling tools to verify improvements and adherence to guidelines."
+          },
+          {
+            "id": 6,
+            "title": "Set Up 3G-Optimized Component Library Infrastructure",
+            "description": "Establish the foundational structure for the Akada component library, ensuring all components are modular, tree-shakable, and optimized for low-bandwidth usage.",
+            "dependencies": [
+              5
+            ],
+            "details": "Configure the library build system (e.g., using Rollup or Vite) for modular exports and minimal bundle size. Set up documentation and storybook/demo environment. Integrate performance utilities and ensure all components use Akada tokens and NGN formatting.",
+            "status": "done",
+            "testStrategy": "Build and analyze the final bundle size. Test component imports for tree-shaking. Review documentation and demo for completeness and performance."
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Core UI Components Development",
+        "description": "Build mobile-first program cards, search filters with offline capability, cost calculator, and application timeline.",
+        "details": "Develop mobile-first program cards with skeleton loading. Create search filters that work offline. Implement cost calculator with NGN breakdown. Add application timeline with real deadline tracking.",
+        "testStrategy": "Test UI components on mobile devices. Verify offline search functionality. Check cost calculator accuracy and timeline updates.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Performance Optimization and Offline Support",
+        "description": "Setup service worker for offline caching, lazy loading, bundle splitting, and compression pipeline.",
+        "details": "Implement service worker for caching program data. Add lazy loading for images and heavy components. Configure bundle splitting for 3G optimization. Create compression pipeline for Nigerian internet conditions.",
+        "testStrategy": "Test offline access and caching. Measure load times on 3G network simulations. Verify bundle size reduction and compression effectiveness.",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Two-Tier Onboarding System Implementation",
+        "description": "Develop quick start and detailed profile builder onboarding with progressive disclosure and personalized recommendations.",
+        "details": "Build quick start onboarding (90 seconds) for immediate value. Create detailed profile builder for comprehensive preferences. Implement progressive disclosure with completion tracking. Deliver personalized recommendations from first interaction.",
+        "testStrategy": "Test onboarding flow with real users. Verify completion tracking and recommendation accuracy. Check progressive disclosure logic.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Smart Dashboard Widgets and Data Visualization",
+        "description": "Implement profile completion tracker, application timeline, smart recommendations, and cost comparison charts. Integrate comprehensive data layer hooks and services for real-time, personalized insights.",
+        "status": "in-progress",
+        "dependencies": [
+          3,
+          5
+        ],
+        "priority": "medium",
+        "details": "Leverage the completed dashboard data layer with smart hooks and services: useProfileCompletion (tracks 5-section completion with Nigerian-specific next steps), useApplicationTimeline (deadline tracking with urgency detection), useCostAnalysis (budget analysis with NGN calculations), useSmartDashboard (aggregates all insights with priority ranking), and useCostVisualization (chart data prep for cost breakdowns and country comparisons). All hooks utilize the unified preference service and optimized database. Prepare for UI integration once Cursor delivers components.",
+        "testStrategy": "Test all dashboard hooks and services with mock and real user data. Verify that profile completion, timeline urgency, cost analysis, and recommendations are accurate and update in real time. Ensure chart data is correct for NGN and country comparisons. Confirm readiness for seamless UI integration.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Integrate useProfileCompletion hook",
+            "description": "Connect the useProfileCompletion hook to the dashboard, ensuring it tracks all 5 profile sections and provides Nigerian-specific next steps.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Integrate useApplicationTimeline hook",
+            "description": "Add the useApplicationTimeline hook for deadline tracking and urgency detection in the application timeline widget.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Integrate useCostAnalysis and useCostVisualization hooks",
+            "description": "Implement useCostAnalysis for budget analysis with NGN calculations and useCostVisualization for preparing chart data for cost breakdowns and country comparisons.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integrate useSmartDashboard hook",
+            "description": "Aggregate all dashboard insights and recommendations using the useSmartDashboard hook, ensuring priority ranking is reflected.",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Validate unified preference service and database optimization",
+            "description": "Ensure all hooks leverage the unified preference service and optimized database for accurate, real-time data.",
+            "status": "in-progress",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Prepare for UI integration",
+            "description": "Coordinate with Cursor team to integrate hooks and services into the dashboard UI components once available.",
+            "status": "in-progress",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "AI-Powered Personalization and Accessibility",
+        "description": "Implement adaptive search, smart notifications, contextual help, and WCAG 2.1 AA compliance.",
+        "details": "Develop adaptive search results based on user behavior. Add smart notifications for scholarships and deadlines. Implement contextual help suggestions. Ensure WCAG 2.1 AA compliance, screen reader compatibility, and keyboard navigation.",
+        "testStrategy": "Test adaptive search and notifications. Verify accessibility compliance using automated and manual tools. Check contextual help integration.",
+        "priority": "medium",
+        "dependencies": [
+          3,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Nigeria-Specific Testing and Performance Validation",
+        "description": "Conduct 3G network simulation, real device testing, user testing, and load testing.",
+        "details": "Simulate 3G network conditions using Chrome DevTools. Test on popular Nigerian smartphones. Conduct user testing with 20 Nigerian students. Perform load testing for 500 concurrent users.",
+        "testStrategy": "Measure load times and responsiveness under 3G. Collect user feedback. Monitor system performance and stability during load tests.",
+        "priority": "high",
+        "dependencies": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Enterprise-Grade Multicurrency System Implementation",
+        "description": "Implement a robust multicurrency system for Akada to support accurate university pricing and conversions across CAD, GBP, EUR, AUD, and other currencies, with real-time NGN comparisons for Nigerian students.",
+        "details": "1. Update the database schema to add explicit currency code columns (e.g., 'currency_code', 'original_amount', 'converted_amount_ngn') to all tables storing university pricing, tuition, and fees. Ensure all monetary fields support sufficient decimal precision (at least 4 decimals) to minimize rounding errors during conversion[2][3].\n2. Design and implement a multi-provider exchange rate service that integrates with CBN, OpenExchangeRates, and Fixer APIs, with automatic fallback logic and provider health monitoring. Store fetched rates in a dedicated 'exchange_rates' table with timestamps and provider metadata for auditability[4].\n3. Build a 3-tier caching system: (a) in-memory cache for immediate lookups, (b) persistent local storage (e.g., IndexedDB or Redis) for offline/3G resilience, and (c) server-side cache for batch conversions and rate prefetching. Optimize cache invalidation and refresh intervals for Nigerian network conditions.\n4. Enhance UI components to display both the original university currency and the NGN-converted price side-by-side, with clear currency codes and tooltips explaining conversion rates and timestamps. Ensure all cost comparison charts and widgets leverage the new multicurrency logic.\n5. Implement batch conversion endpoints and utilities to process large sets of prices efficiently, minimizing API calls and leveraging cached rates where possible.\n6. Add real-time exchange rate monitoring and alerting for rate changes, with admin dashboard integration for manual overrides and provider status.\n7. Refactor and extend 'src/utils/currency.ts' to support enterprise-grade multicurrency operations, including formatting, rounding, and provider failover.",
+        "testStrategy": "- Verify database migrations add currency columns and preserve existing data integrity.\n- Test exchange rate service with all providers, simulating provider failures and ensuring correct fallback behavior.\n- Simulate 3G network conditions and validate cache hit rates, cache refresh, and offline conversion accuracy.\n- Confirm UI displays both original and NGN prices for all supported currencies, with correct formatting and tooltips.\n- Run batch conversion tests with large datasets, measuring performance and correctness.\n- Monitor real-time rate updates and ensure alerts trigger on significant changes. Validate admin override and provider status features.\n- Perform regression testing on all cost comparison and dashboard features to ensure multicurrency logic is consistently applied.",
+        "status": "pending",
+        "dependencies": [
+          2,
+          8
+        ],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-07T18:19:57.916Z",
+      "updated": "2025-07-11T02:21:07.414Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

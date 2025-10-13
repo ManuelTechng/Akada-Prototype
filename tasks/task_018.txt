@@ -1,0 +1,11 @@
+# Task ID: 18
+# Title: Write User and Developer Documentation
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+# Priority: low
+# Description: Create user guide (docs/user-guide.md), developer guide (docs/dev-guide.md), and test plan (docs/test-plan.md).
+# Details:
+Write Markdown files with setup instructions, API endpoints, Supabase schema, and test results.
+
+# Test Strategy:
+Review documentation for completeness and accuracy. Test setup steps from user guide.

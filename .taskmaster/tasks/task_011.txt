@@ -1,0 +1,23 @@
+# Task ID: 11
+# Title: Enterprise-Grade Multicurrency System Implementation
+# Status: pending
+# Dependencies: 2, 8
+# Priority: high
+# Description: Implement a robust multicurrency system for Akada to support accurate university pricing and conversions across CAD, GBP, EUR, AUD, and other currencies, with real-time NGN comparisons for Nigerian students.
+# Details:
+1. Update the database schema to add explicit currency code columns (e.g., 'currency_code', 'original_amount', 'converted_amount_ngn') to all tables storing university pricing, tuition, and fees. Ensure all monetary fields support sufficient decimal precision (at least 4 decimals) to minimize rounding errors during conversion[2][3].
+2. Design and implement a multi-provider exchange rate service that integrates with CBN, OpenExchangeRates, and Fixer APIs, with automatic fallback logic and provider health monitoring. Store fetched rates in a dedicated 'exchange_rates' table with timestamps and provider metadata for auditability[4].
+3. Build a 3-tier caching system: (a) in-memory cache for immediate lookups, (b) persistent local storage (e.g., IndexedDB or Redis) for offline/3G resilience, and (c) server-side cache for batch conversions and rate prefetching. Optimize cache invalidation and refresh intervals for Nigerian network conditions.
+4. Enhance UI components to display both the original university currency and the NGN-converted price side-by-side, with clear currency codes and tooltips explaining conversion rates and timestamps. Ensure all cost comparison charts and widgets leverage the new multicurrency logic.
+5. Implement batch conversion endpoints and utilities to process large sets of prices efficiently, minimizing API calls and leveraging cached rates where possible.
+6. Add real-time exchange rate monitoring and alerting for rate changes, with admin dashboard integration for manual overrides and provider status.
+7. Refactor and extend 'src/utils/currency.ts' to support enterprise-grade multicurrency operations, including formatting, rounding, and provider failover.
+
+# Test Strategy:
+- Verify database migrations add currency columns and preserve existing data integrity.
+- Test exchange rate service with all providers, simulating provider failures and ensuring correct fallback behavior.
+- Simulate 3G network conditions and validate cache hit rates, cache refresh, and offline conversion accuracy.
+- Confirm UI displays both original and NGN prices for all supported currencies, with correct formatting and tooltips.
+- Run batch conversion tests with large datasets, measuring performance and correctness.
+- Monitor real-time rate updates and ensure alerts trigger on significant changes. Validate admin override and provider status features.
+- Perform regression testing on all cost comparison and dashboard features to ensure multicurrency logic is consistently applied.

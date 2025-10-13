@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: Develop Program Search Feature
+# Status: done
+# Dependencies: 2, 3
+# Priority: high
+# Description: Implement searchable database of international programs with filters (country, cost, duration, specialization). Display results with key details.
+# Details:
+Build search UI with filters. Query Supabase programs table. Display: name, university, country, tuition (NGN), duration, specialization. Use Supabase client: `supabase.from('programs').select().eq('country', country).gte('tuition', min).lte('tuition', max)`.
+
+# Test Strategy:
+Test search with various filters. Verify results match query and display correctly.

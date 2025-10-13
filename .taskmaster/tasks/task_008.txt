@@ -1,0 +1,49 @@
+# Task ID: 8
+# Title: Smart Dashboard Widgets and Data Visualization
+# Status: in-progress
+# Dependencies: 3, 5
+# Priority: medium
+# Description: Implement profile completion tracker, application timeline, smart recommendations, and cost comparison charts. Integrate comprehensive data layer hooks and services for real-time, personalized insights.
+# Details:
+Leverage the completed dashboard data layer with smart hooks and services: useProfileCompletion (tracks 5-section completion with Nigerian-specific next steps), useApplicationTimeline (deadline tracking with urgency detection), useCostAnalysis (budget analysis with NGN calculations), useSmartDashboard (aggregates all insights with priority ranking), and useCostVisualization (chart data prep for cost breakdowns and country comparisons). All hooks utilize the unified preference service and optimized database. Prepare for UI integration once Cursor delivers components.
+
+# Test Strategy:
+Test all dashboard hooks and services with mock and real user data. Verify that profile completion, timeline urgency, cost analysis, and recommendations are accurate and update in real time. Ensure chart data is correct for NGN and country comparisons. Confirm readiness for seamless UI integration.
+
+# Subtasks:
+## 1. Integrate useProfileCompletion hook [in-progress]
+### Dependencies: None
+### Description: Connect the useProfileCompletion hook to the dashboard, ensuring it tracks all 5 profile sections and provides Nigerian-specific next steps.
+### Details:
+
+
+## 2. Integrate useApplicationTimeline hook [in-progress]
+### Dependencies: None
+### Description: Add the useApplicationTimeline hook for deadline tracking and urgency detection in the application timeline widget.
+### Details:
+
+
+## 3. Integrate useCostAnalysis and useCostVisualization hooks [in-progress]
+### Dependencies: None
+### Description: Implement useCostAnalysis for budget analysis with NGN calculations and useCostVisualization for preparing chart data for cost breakdowns and country comparisons.
+### Details:
+
+
+## 4. Integrate useSmartDashboard hook [in-progress]
+### Dependencies: None
+### Description: Aggregate all dashboard insights and recommendations using the useSmartDashboard hook, ensuring priority ranking is reflected.
+### Details:
+
+
+## 5. Validate unified preference service and database optimization [in-progress]
+### Dependencies: None
+### Description: Ensure all hooks leverage the unified preference service and optimized database for accurate, real-time data.
+### Details:
+
+
+## 6. Prepare for UI integration [in-progress]
+### Dependencies: None
+### Description: Coordinate with Cursor team to integrate hooks and services into the dashboard UI components once available.
+### Details:
+
+

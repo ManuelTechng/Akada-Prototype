@@ -1,0 +1,11 @@
+# Task ID: 10
+# Title: Implement Cost Calculator
+# Status: done
+# Dependencies: 2, 3, 6
+# Priority: medium
+# Description: Calculate total costs (tuition, living, visa) in NGN using real data from Supabase.
+# Details:
+Build calculator UI. Fetch tuition, living, visa costs from Supabase. Sum and display in NGN using `toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })`.
+
+# Test Strategy:
+Test calculator with various inputs. Verify totals match expected values and display in NGN.

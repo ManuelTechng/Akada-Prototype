@@ -1,0 +1,11 @@
+# Task ID: 7
+# Title: Integrate AI Chat Assistance
+# Status: done
+# Dependencies: 2, 4
+# Priority: medium
+# Description: Add real-time chat support using Grok 3 via xAI API. Store chat history in chat_logs table.
+# Details:
+Implement chat UI. Call xAI Grok 3 API for responses. Save messages and responses to chat_logs table. Anonymize user data as needed.
+
+# Test Strategy:
+Test chat sends/receives messages. Verify chat history is stored in Supabase.

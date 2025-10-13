@@ -5,13 +5,18 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-export const getAssistantResponse = async (message: string) => {
+export const getAssistantResponse = async (
+  message: string, 
+  systemPrompt?: string
+) => {
   try {
+    const defaultSystemPrompt = "You are an AI assistant helping students with international education applications. Provide helpful, accurate, and concise responses.";
+    
     const completion = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
-          content: "You are an AI assistant helping students with international education applications. Provide helpful, accurate, and concise responses."
+          content: systemPrompt || defaultSystemPrompt
         },
         { 
           role: "user", 
@@ -20,7 +25,7 @@ export const getAssistantResponse = async (message: string) => {
       ],
       model: "gpt-3.5-turbo",
       temperature: 0.7,
-      max_tokens: 500
+      max_tokens: 800  // Increased for more detailed responses
     });
 
     return completion.choices[0].message.content;

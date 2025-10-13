@@ -105,15 +105,7 @@ const LandingFooter: React.FC = () => {
         </div>
       </div>
       
-      {/* Glassmorphism copyright bar */}
-      <div className="fixed bottom-0 left-0 right-0 backdrop-blur-md bg-black/30 border-t border-white/10 py-2 z-50">
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="flex justify-between items-center">
-            <p className="text-white/90 text-sm">Akada &copy; {currentYear} - Empowering Education</p>
-            <p className="text-white/70 text-xs">Made with ❤️ in Nigeria</p>
-          </div>
-        </div>
-      </div>
+
     </footer>
   );
 };

@@ -1,0 +1,11 @@
+# Task ID: 20
+# Title: Deploy to Netlify and Promote
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+# Priority: high
+# Description: Deploy app to Netlify with environment variables. Promote via X, Instagram, WhatsApp.
+# Details:
+Set up Netlify project. Add env vars (SUPABASE_URL, SUPABASE_KEY, API keys). Deploy with `npm run build`. Promote on social media.
+
+# Test Strategy:
+Verify app is live and functional. Monitor user signups and engagement.

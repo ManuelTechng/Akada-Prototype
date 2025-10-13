@@ -1,0 +1,11 @@
+# Task ID: 2
+# Title: Database Schema Standardization and Indexing
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Standardize scholarship fields, convert budget storage to numeric NGN, add performance indexes, and clean up dual preference system conflicts.
+# Details:
+Update Supabase schema: consolidate has_scholarships and scholarship_available into a single field. Convert budget fields to numeric NGN. Add indexes for frequently queried fields. Resolve data conflicts between user_preferences and user_profiles.study_preferences.
+
+# Test Strategy:
+Test schema changes with sample data. Verify query performance improvements. Ensure data consistency and integrity after migration.

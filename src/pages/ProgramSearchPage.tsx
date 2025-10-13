@@ -22,10 +22,13 @@ import {
 import { searchPrograms } from '../lib/program';
 import { convertCurrency, formatCurrency, getCountryCurrency } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
+import ProgramCard from '../components/app/ProgramCard';
+import { useSavedProgramsContext } from '../contexts/SavedProgramsContext';
 import type { Program } from '../lib/types';
 
 const ProgramSearchPage: React.FC = () => {
   const navigate = useNavigate();
+  const { savedPrograms, saveProgram, removeSavedProgram } = useSavedProgramsContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -40,8 +43,6 @@ const ProgramSearchPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('match');
   const [error, setError] = useState<string | null>(null);
-  const [savedPrograms, setSavedPrograms] = useState<string[]>([]);
-  const [showUniversityDetails, setShowUniversityDetails] = useState<string | null>(null);
   
   // Sample programs data for development
   const samplePrograms = [
@@ -264,72 +265,17 @@ const ProgramSearchPage: React.FC = () => {
       setError(null);
 
       try {
-        // In a real implementation, we would fetch data from the API
-        // const results = await searchPrograms({
-        //   query: searchQuery,
-        //   country: filters.country,
-        //   maxTuition: filters.maxTuition !== 'any' ? parseInt(filters.maxTuition) : undefined,
-        //   degreeType: filters.degreeType !== 'any' ? filters.degreeType : undefined,
-        //   field: filters.field !== 'any' ? filters.field : undefined,
-        //   scholarshipsOnly: filters.scholarshipsOnly,
-        //   sortBy
-        // });
-        
-        // Simulate API call with timeout
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Filter the sample data based on the search query and filters
-        let results = [...samplePrograms];
-        
-        if (searchQuery) {
-          const query = searchQuery.toLowerCase();
-          results = results.filter(
-            program => 
-              program.name.toLowerCase().includes(query) || 
-              program.university.toLowerCase().includes(query) ||
-              program.country.toLowerCase().includes(query) ||
-              program.fields?.some(field => field.toLowerCase().includes(query))
-          );
-        }
-        
-        if (filters.country) {
-          results = results.filter(program => program.country === filters.country);
-        }
-        
-        if (filters.degreeType) {
-          results = results.filter(program => program.degree_type === filters.degreeType);
-        }
-        
-        if (filters.maxTuition !== 'any') {
-          results = results.filter(program => program.tuition_fee <= parseInt(filters.maxTuition));
-        }
-        
-        if (filters.field) {
-          results = results.filter(program => 
-            program.fields?.some(field => field.toLowerCase().includes(filters.field.toLowerCase()))
-          );
-        }
-        
-        if (filters.scholarshipsOnly) {
-          results = results.filter(program => program.has_scholarships);
-        }
-        
-        // Sort results based on sortBy parameter
-        results = results.sort((a, b) => {
-          switch (sortBy) {
-            case 'match':
-              return (b.match || 0) - (a.match || 0);
-            case 'tuition-low':
-              return a.tuition_fee - b.tuition_fee;
-            case 'tuition-high':
-              return b.tuition_fee - a.tuition_fee;
-            case 'deadline':
-              // This is a simplified sort by deadline - in real app, parse actual dates
-              return (a.deadline || '').localeCompare(b.deadline || '');
-            default:
-              return 0;
-          }
+        // Fetch real data from the database
+        let results = await searchPrograms({
+          query: searchQuery,
+          country: filters.country,
+          maxTuition: filters.maxTuition !== 'any' ? parseInt(filters.maxTuition) : undefined,
+          degreeType: filters.degreeType !== 'any' ? filters.degreeType : undefined,
+          field: filters.field !== 'any' ? filters.field : undefined,
+          scholarshipsOnly: filters.scholarshipsOnly,
+          sortBy
         });
+
         
         setPrograms(results);
       } catch (error) {
@@ -390,29 +336,31 @@ const ProgramSearchPage: React.FC = () => {
     setSearchQuery('');
   };
 
-  const toggleSaveProgram = (programId: string) => {
-    setSavedPrograms(prev => 
-      prev.includes(programId) 
-        ? prev.filter(id => id !== programId) 
-        : [...prev, programId]
-    );
-  };
-  
-  const toggleUniversityDetails = (programId: string) => {
-    setShowUniversityDetails(prevId => prevId === programId ? null : programId);
+  const toggleSaveProgram = async (programId: string, programData?: any) => {
+    const isSaved = savedPrograms.some(sp => sp.program_id === programId);
+    
+    try {
+      if (isSaved) {
+        await removeSavedProgram(programId);
+      } else {
+        await saveProgram(programId, programData);
+      }
+    } catch (error) {
+      console.error('Failed to toggle save program:', error);
+    }
   };
 
   const getFilterSection = () => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sliders className="h-5 w-5 text-indigo-600" />
-          <h2 className="font-semibold text-gray-900 text-lg">Filters</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">Filters</h2>
         </div>
         {activeFilters.length > 0 && (
           <button
             onClick={clearAllFilters}
-            className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
           >
             Clear all
           </button>
@@ -425,7 +373,7 @@ const ProgramSearchPage: React.FC = () => {
           {activeFilters.map((filter) => (
             <div 
               key={filter} 
-              className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-sm"
+              className="inline-flex items-center gap-1 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-full text-sm"
             >
               <span>{filter}</span>
               <button 
@@ -441,13 +389,15 @@ const ProgramSearchPage: React.FC = () => {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Country
           </label>
           <select
+            aria-label="Country"
+            title="Country"
             value={filters.country}
             onChange={(e) => handleFilterChange('country', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
           >
             <option value="">Any country</option>
             <option value="Nigeria">Nigeria</option>
@@ -463,13 +413,15 @@ const ProgramSearchPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Degree Type
           </label>
           <select
+            aria-label="Degree Type"
+            title="Degree Type"
             value={filters.degreeType}
             onChange={(e) => handleFilterChange('degreeType', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
           >
             <option value="">Any type</option>
             <option value="Masters">Master's</option>
@@ -480,13 +432,15 @@ const ProgramSearchPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Tuition Range
           </label>
           <select
+            aria-label="Tuition Range"
+            title="Tuition Range"
             value={filters.maxTuition}
             onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
           >
             <option value="any">Any range</option>
             <option value="5000">Under $5,000/year</option>
@@ -499,13 +453,15 @@ const ProgramSearchPage: React.FC = () => {
         {showAdvancedFilters && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field of Study
               </label>
               <select
+                aria-label="Field of Study"
+                title="Field of Study"
                 value={filters.field}
                 onChange={(e) => handleFilterChange('field', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
               >
                 <option value="">Any field</option>
                 <option value="Computer Science">Computer Science</option>
@@ -524,9 +480,9 @@ const ProgramSearchPage: React.FC = () => {
                 id="scholarshipsOnly"
                 checked={filters.scholarshipsOnly}
                 onChange={(e) => handleFilterChange('scholarshipsOnly', e.target.checked)}
-                className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                className="w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-400 rounded focus:ring-indigo-500 bg-white dark:bg-white"
               />
-              <label htmlFor="scholarshipsOnly" className="text-sm text-gray-700">
+              <label htmlFor="scholarshipsOnly" className="text-sm text-gray-700 dark:text-gray-300">
                 Only show programs with scholarships
               </label>
             </div>
@@ -534,6 +490,8 @@ const ProgramSearchPage: React.FC = () => {
         )}
 
         <button
+          aria-label={showAdvancedFilters ? "Show less filters" : "Show more filters"}
+          title={showAdvancedFilters ? "Show less filters" : "Show more filters"}
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
           className="flex items-center gap-1 text-indigo-600 text-sm font-medium hover:text-indigo-800"
         >
@@ -554,180 +512,20 @@ const ProgramSearchPage: React.FC = () => {
   );
 
   const renderProgram = (program: any) => {
-    const countryCurrency = getCountryCurrency(program.country);
-    const localAmount = program.tuition_fee;
-    const ngnAmount = convertCurrency(localAmount, countryCurrency, 'NGN');
-    const isSaved = savedPrograms.includes(program.id);
-    const isNigerianProgram = program.country === 'Nigeria';
-    const isExpanded = showUniversityDetails === program.id;
-
+    const isSaved = savedPrograms.some(sp => sp.program_id === program.id);
+    
     return (
-      <div 
-        key={program.id} 
-        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300"
-      >
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                {program.abbreviation && (
-                  <span className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded text-xs font-bold">
-                    {program.abbreviation}
-                  </span>
-                )}
-                <h3 className="font-heading font-semibold text-lg text-gray-900 break-words">{program.name}</h3>
-              </div>
-              <p className="font-sans text-gray-600 break-words">{program.university}</p>
-              {program.location && (
-                <p className="text-sm text-gray-500 mt-1">{program.location}</p>
-              )}
-            </div>
-            <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium flex-shrink-0">
-              {program.match}% Match
-            </div>
-          </div>
-          
-          {program.description && (
-            <div className="mb-4">
-              <p className="text-sm text-gray-600">{program.description}</p>
-            </div>
-          )}
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
-              <span className="truncate">{program.country}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <DollarSign className="h-4 w-4 text-gray-400 flex-shrink-0" />
-              <div className="flex flex-col">
-                <span className="text-indigo-600 font-medium truncate">
-                  {formatCurrency(localAmount, countryCurrency)}/year
-                </span>
-                {program.country !== 'Nigeria' && (
-                  <span className="text-xs text-gray-500 truncate">
-                    ≈ {formatCurrency(ngnAmount, 'NGN')}/year
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
-              <span className="truncate">{program.deadline} • {program.term}</span>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap gap-2 mb-4">
-            {program.fields && program.fields.map((field: string, idx: number) => (
-              <span
-                key={idx}
-                className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
-              >
-                {field}
-              </span>
-            ))}
-            {program.has_scholarships && (
-              <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full text-xs">
-                Scholarships Available
-              </span>
-            )}
-          </div>
-          
-          {program.faculties && (
-            <div className="mb-4">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Available Faculties:</h4>
-              <div className="flex flex-wrap gap-2">
-                {program.faculties.map((faculty: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="bg-blue-50 text-blue-700 px-2 py-1 rounded-lg text-xs"
-                  >
-                    {faculty}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          <div className="border-t border-gray-100 pt-4">
-            <div className="flex flex-wrap gap-2">
-              {program.requirements && program.requirements.map((req: string, idx: number) => (
-                <span
-                  key={idx}
-                  className="bg-gray-50 text-gray-600 px-2 py-1 rounded-lg text-xs flex items-center gap-1"
-                >
-                  <GraduationCap className="h-3.5 w-3.5 text-gray-400" />
-                  {req}
-                </span>
-              ))}
-            </div>
-          </div>
-          
-          {isExpanded && (
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <div className="flex items-start gap-4">
-                {program.logo && (
-                  <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                    <img 
-                      src={program.logo} 
-                      alt={`${program.university} logo`} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">University Information</h4>
-                  <p className="text-sm text-gray-600 mb-3">{program.description}</p>
-                  {program.website && (
-                    <a 
-                      href={program.website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-indigo-600 text-sm font-medium hover:text-indigo-800"
-                    >
-                      Visit Official Website
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div className="flex justify-between items-center p-4 pt-3 border-t border-gray-100 bg-gray-50">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => toggleUniversityDetails(program.id)} 
-              className="text-indigo-600 text-sm font-medium hover:text-indigo-800 transition-colors flex items-center gap-1"
-            >
-              {isExpanded ? 'Hide Details' : 'University Details'}
-              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-            {!isExpanded && (
-              <button className="text-indigo-600 text-sm font-medium hover:text-indigo-800 transition-colors flex items-center gap-1">
-                View Program
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-          <div className="flex gap-3">
-            <button 
-              className={`${isSaved ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-500'} transition-colors`}
-              onClick={() => toggleSaveProgram(program.id)}
-              aria-label={isSaved ? "Unsave program" : "Save program"}
-            >
-              <Star className="h-5 w-5" />
-            </button>
-            <button 
-              className="text-gray-400 hover:text-indigo-600 transition-colors"
-              aria-label="Share program"
-            >
-              <Share2 className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <ProgramCard
+        key={program.id}
+        program={program}
+        isSaved={isSaved}
+        onSave={() => toggleSaveProgram(program.id, {
+          name: program.name,
+          university: program.university,
+          country: program.country
+        })}
+        onUnsave={() => toggleSaveProgram(program.id)}
+      />
     );
   };
 
@@ -736,8 +534,10 @@ const ProgramSearchPage: React.FC = () => {
       {/* Header with breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
             <button 
+              aria-label="Back to Dashboard"
+              title="Back to Dashboard"
               onClick={() => navigate('/dashboard')}
               className="inline-flex items-center gap-1 hover:text-indigo-600 transition-colors"
             >
@@ -745,18 +545,23 @@ const ProgramSearchPage: React.FC = () => {
               <span>Back to Dashboard</span>
             </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 font-heading">Find Your Program</h1>
-          <p className="text-gray-500">Discover programs that match your profile and preferences</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-heading">Find Your Program</h1>
+          <p className="text-gray-500 dark:text-gray-400">Discover programs that match your profile and preferences</p>
         </div>
         <div className="flex gap-3">
           <button 
+            aria-label="Go to Cost Calculator"
+            title="Go to Cost Calculator"
             onClick={() => navigate('/dashboard/calculator')} 
-            className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
+            className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
           >
             <Calculator className="h-5 w-5" />
             <span className="hidden sm:inline">Cost Calculator</span>
           </button>
-          <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2">
+          <button className="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors inline-flex items-center gap-2"
+            aria-label="Show Match Filters"
+            title="Show Match Filters"
+          >
             <Filter className="h-5 w-5" />
             <span className="hidden sm:inline">Match Filters</span>
           </button>
@@ -771,7 +576,7 @@ const ProgramSearchPage: React.FC = () => {
         <input
           type="text"
           placeholder="Search for programs, universities, or keywords..."
-          className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white shadow-sm"
+          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-400 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white shadow-sm text-gray-900 dark:text-gray-900 placeholder-gray-500 dark:placeholder-gray-400"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -784,16 +589,21 @@ const ProgramSearchPage: React.FC = () => {
           {getFilterSection()}
           
           {/* Tools section */}
-          <div className="bg-indigo-600 rounded-xl shadow-sm p-6 text-white">
+          <div className="bg-indigo-600 dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
             <h2 className="font-semibold mb-4 text-lg">Need Help Finding Programs?</h2>
             <p className="text-indigo-100 mb-4">
               Our AI assistant can help you discover programs that match your profile, preferences, and career goals.
             </p>
-            <button className="w-full bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2 mb-4">
+            <button className="w-full bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 transition-colors flex items-center justify-center gap-2 mb-4"
+              aria-label="Get Personalized Suggestions"
+              title="Get Personalized Suggestions"
+            >
               <Search className="h-5 w-5" />
               Get Personalized Suggestions
             </button>
             <button 
+              aria-label="Calculate Education Costs"
+              title="Calculate Education Costs"
               onClick={() => navigate('/dashboard/calculator')}
               className="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
             >
@@ -806,22 +616,22 @@ const ProgramSearchPage: React.FC = () => {
         {/* Results area */}
         <div className="lg:col-span-2 xl:col-span-3 space-y-6">
           {/* Results header */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="font-semibold text-lg text-gray-900">
+                <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <div className="animate-spin h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
-                      <span>Searching...</span>
+                      <span className="text-gray-900 dark:text-gray-100">Searching...</span>
                     </div>
                   ) : error ? (
-                    <span className="text-red-600">{error}</span>
+                    <span className="text-red-600 dark:text-red-400">{error}</span>
                   ) : (
                     `${programs.length} Programs Found`
                   )}
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {programs.length > 0 && !loading && !error 
                     ? `Showing programs matching your criteria`
                     : ''}
@@ -829,11 +639,13 @@ const ProgramSearchPage: React.FC = () => {
               </div>
               
               <div className="flex gap-3 items-center">
-                <span className="text-sm text-gray-500 hidden sm:inline-block">Sort by:</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline-block">Sort by:</span>
                 <select 
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-white text-gray-900 dark:text-gray-900"
+                  aria-label="Sort by"
+                  title="Sort by"
                 >
                   <option value="match">Best Match</option>
                   <option value="deadline">Deadline (Soonest)</option>
@@ -863,17 +675,17 @@ const ProgramSearchPage: React.FC = () => {
 
           {/* Results grid */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+            <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
               <div className="animate-spin h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full mb-4"></div>
-              <p className="text-gray-600">Searching for programs that match your criteria...</p>
+              <p className="text-gray-600 dark:text-gray-400">Searching for programs that match your criteria...</p>
             </div>
           ) : error ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-              <div className="bg-red-100 text-red-600 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+              <div className="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <AlertIcon className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">Error</h3>
-              <p className="text-gray-600 mb-4">{error}</p>
+              <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">Error</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
               <button 
                 onClick={() => window.location.reload()}
                 className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
@@ -882,12 +694,12 @@ const ProgramSearchPage: React.FC = () => {
               </button>
             </div>
           ) : programs.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-              <div className="bg-gray-100 text-gray-500 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+              <div className="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Search className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">No Programs Found</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">No Programs Found</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 Try adjusting your search criteria or removing some filters.
               </p>
               <button 
@@ -898,7 +710,7 @@ const ProgramSearchPage: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {programs.map(program => renderProgram(program))}
             </div>
           )}

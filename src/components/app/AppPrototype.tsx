@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
-import { 
-  Search, Home, User, BookOpen, MessageSquare, FileText, Bell, Settings, Menu, X,
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
+import {
+  Search, User, BookOpen, MessageSquare, FileText, Bell, Menu, X,
   LayoutDashboard, Folder, Users, Calendar, BarChart, LogOut, Calculator,
   Clock, HelpCircle, BookmarkIcon, BellRing, Headphones, ArrowLeft
 } from 'lucide-react';
-import ProgramSearch from './app/ProgramSearch';
-import Dashboard from './app/Dashboard';
-import Profile from './app/Profile';
-import Resources from './app/Resources';
-import ChatAssistant from './app/ChatAssistant';
-import ApplicationTracker from './app/ApplicationTracker';
-import Applications from './app/Applications';
-import Documents from './app/Documents';
-import Community from './app/Community';
-import { useNotifications } from '../contexts/NotificationContext';
-import NotificationDropdown from './NotificationDropdown';
+import ProgramSearch from './ProgramSearch';
+import Dashboard from './Dashboard';
+import ProfileSettings from './ProfileSettings';
+import Resources from './Resources';
+import ChatAssistant from './ChatAssistant';
+import ApplicationTracker from './ApplicationTracker';
+import Applications from './Applications';
+import Documents from './Documents';
+import Community from './Community';
+import { useNotifications } from '../../contexts/NotificationContext';
+import NotificationDropdown from '../NotificationDropdown';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const AppPrototype: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const { unreadCount } = useNotifications();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -62,8 +66,18 @@ const AppPrototype: React.FC = () => {
     setActiveTab("dashboard");
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      navigate('/login');
+    }
+  };
+
   return (
-    <div className="flex h-full bg-gray-50">
+    <div className="flex h-screen bg-gray-50">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
@@ -131,7 +145,11 @@ const AppPrototype: React.FC = () => {
               <div className="font-medium text-gray-900">Oluwaseun A.</div>
               <div className="text-sm text-gray-500">Premium Plan</div>
             </div>
-            <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100">
+            <button 
+              onClick={handleLogout}
+              className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+              title="Log out"
+            >
               <LogOut className="h-5 w-5" />
             </button>
           </div>
@@ -139,7 +157,7 @@ const AppPrototype: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen w-full">
+      <div className="flex-1 flex flex-col h-full lg:ml-0">
         {/* Header */}
         <header className="h-16 bg-white border-b border-gray-200 px-4 lg:px-8 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4">
@@ -196,8 +214,8 @@ const AppPrototype: React.FC = () => {
           </div>
         </header>
 
-        {/* Content Area - added padding to bottom to prevent overlap */}
-        <div className="flex-1 overflow-y-auto pb-28">
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto">
           <Tabs value={activeTab} className="h-full">
             <TabsContent value="dashboard" className="h-full m-0">
               <Dashboard />
@@ -221,26 +239,16 @@ const AppPrototype: React.FC = () => {
               <ChatAssistant />
             </TabsContent>
             <TabsContent value="profile" className="h-full m-0">
-              <Profile />
+              <ProfileSettings />
             </TabsContent>
           </Tabs>
         </div>
 
-        {/* Footer - no top border */}
-        <footer className="py-4 px-6 bg-white z-10 shadow-sm">
-          <div className="flex justify-between items-center max-w-7xl mx-auto">
-            <p className="text-sm text-gray-500">© {new Date().getFullYear()} Akada - All Rights Reserved</p>
-            <div className="flex items-center gap-3">
-              <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                Connected to Supabase
-              </span>
-            </div>
-          </div>
-        </footer>
+
       </div>
 
-      {/* Floating Chat Button - positioned above footer */}
-      <button className="fixed bottom-20 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 z-40">
+      {/* Floating Chat Button - positioned at bottom right */}
+      <button className="fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 z-40">
         <MessageSquare className="h-6 w-6" />
         <span className="relative flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
