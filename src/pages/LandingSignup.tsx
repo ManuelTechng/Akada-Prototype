@@ -10,7 +10,7 @@ const LandingSignup: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real implementation, this would connect to your backend
-    console.log({ name, email, educationLevel });
+    // TODO: Integrate with backend API
     setSubmitted(true);
   };
 

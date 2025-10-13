@@ -1,7 +1,5 @@
 "use client";
 
-console.log('LandingPage loaded');
-
 import React from 'react';
 import LandingNavbar from './LandingNavbar';
 import LandingHero from './LandingHero';
@@ -16,19 +14,21 @@ import LandingSignup from './LandingSignup';
 import LandingFooter from './LandingFooter';
 
 const LandingPage: React.FC = () => (
-  <main className="flex flex-col min-h-screen bg-white text-gray-800" aria-label="Akada landing page">
+  <div className="bg-white text-gray-800 min-h-screen" aria-label="Akada landing page">
     <LandingNavbar />
-    <LandingHero />
-    <LandingFeatures />
-    <LandingProblemSolution />
-    <LandingHowItWorks />
-    <LandingSuccessStories />
-    <LandingPricing />
-    <LandingFAQ />
-    <LandingAbout />
-    <LandingSignup />
+    <main>
+      <LandingHero />
+      <LandingFeatures />
+      <LandingProblemSolution />
+      <LandingHowItWorks />
+      <LandingSuccessStories />
+      <LandingPricing />
+      <LandingFAQ />
+      <LandingAbout />
+      <LandingSignup />
+    </main>
     <LandingFooter />
-  </main>
+  </div>
 );
 
 export default LandingPage;

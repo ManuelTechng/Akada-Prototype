@@ -14,8 +14,7 @@
 
 @layer base {
   html, body, #root {
-    height: 100%;
-    overflow: hidden; /* Prevent body-level scrolling */
+    min-height: 100%;
   }
   
   body {
@@ -23,7 +22,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    overflow: hidden; /* Completely disable body scrolling */
     position: relative;
     background-color: #f9fafb;
   }
@@ -64,15 +62,18 @@
   @apply h-full rounded-full transition-all duration-500 ease-out;
 }
 
-/* Ensure no double scrollbars */
-html, body {
-  overflow: hidden !important;
-  height: 100vh !important;
+/* Ensure proper scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 #root {
-  height: 100vh !important;
-  overflow: hidden !important;
+  min-height: 100vh;
 }
 
 /* Custom scrollbar */
