@@ -8,8 +8,7 @@ import {
   ChevronRight,
   Download,
   Trash,
-  RefreshCw,
-  X
+  RefreshCw
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { 
@@ -19,7 +18,6 @@ import {
   downloadDocument,
   Document 
 } from '../lib/documents';
-import { useNotifications } from '../contexts/NotificationContext';
 
 const DocumentUpload: React.FC = () => {
   const { user } = useAuth();

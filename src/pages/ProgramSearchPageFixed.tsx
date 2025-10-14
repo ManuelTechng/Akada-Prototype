@@ -150,7 +150,7 @@ const ProgramSearchPageFixed: React.FC = () => {
 
       if (queryError) {
         console.error('❌ Supabase query error:', queryError);
-        throw new Error(`Database error: ${queryError.message}`);
+        throw new Error(`Database error: ${(queryError as any).message || 'Unknown error'}`);
       }
 
       console.log('📊 Query successful, got data:', { count: data?.length || 0 });

@@ -67,10 +67,14 @@ const OnboardingFlow: React.FC = () => {
           setFormData(prevData => ({
             ...prevData,
             ...profileData,
+            // Ensure gpa is string for form compatibility
+            gpa: String(profileData.gpa ?? prevData.gpa ?? ''),
             // Ensure nested objects are properly merged
             test_scores: {
               ...prevData.test_scores,
               ...(profileData.test_scores || {}),
+              ielts: String(profileData.test_scores?.ielts ?? prevData.test_scores?.ielts ?? ''),
+              toefl: String(profileData.test_scores?.toefl ?? prevData.test_scores?.toefl ?? ''),
               gre: {
                 ...prevData.test_scores?.gre,
                 ...(profileData.test_scores?.gre || {}),
@@ -85,6 +89,7 @@ const OnboardingFlow: React.FC = () => {
               ...(profileData.study_preferences || {}),
               // Ensure arrays are properly handled
               countries: profileData.study_preferences?.countries || [],
+              max_tuition: String(profileData.study_preferences?.max_tuition ?? prevData.study_preferences?.max_tuition ?? ''),
               program_type: profileData.study_preferences?.program_type || []
             }
           }));

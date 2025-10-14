@@ -146,6 +146,46 @@ export const INTERNATIONAL_CURRENCIES: Record<string, CurrencyConfig> = {
     region: 'international',
     countries: ['CH'],
     priority: 18
+  },
+  SGD: {
+    code: 'SGD',
+    symbol: 'S$',
+    name: 'Singapore Dollar',
+    locale: 'en-SG',
+    decimals: 2,
+    region: 'international',
+    countries: ['SG'],
+    priority: 19
+  },
+  JPY: {
+    code: 'JPY',
+    symbol: '¥',
+    name: 'Japanese Yen',
+    locale: 'ja-JP',
+    decimals: 0,
+    region: 'international',
+    countries: ['JP'],
+    priority: 20
+  },
+  NZD: {
+    code: 'NZD',
+    symbol: 'NZ$',
+    name: 'New Zealand Dollar',
+    locale: 'en-NZ',
+    decimals: 2,
+    region: 'international',
+    countries: ['NZ'],
+    priority: 21
+  },
+  HKD: {
+    code: 'HKD',
+    symbol: 'HK$',
+    name: 'Hong Kong Dollar',
+    locale: 'en-HK',
+    decimals: 2,
+    region: 'international',
+    countries: ['HK'],
+    priority: 22
   }
 };
 
@@ -264,7 +304,7 @@ export const COUNTRY_CURRENCY_MAP: Record<string, string> = {
   JP: 'JPY', // Japan
   SG: 'SGD', // Singapore
   NZ: 'NZD', // New Zealand
-  HK: 'HKD', // Hong Kong
+  HK: 'HKD'  // Hong Kong
 };
 
 // Locale to currency mapping

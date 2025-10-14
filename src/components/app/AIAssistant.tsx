@@ -316,7 +316,7 @@ What would be most helpful for you right now?`
     handleSendMessage(action.prompt)
   }
 
-  const handleActionClick = (action: Message['actions'][0]) => {
+  const handleActionClick = (action: NonNullable<Message['actions']>[0]) => {
     if (action.type === 'navigate' || action.type === 'calculate') {
       navigate(action.data)
     } else if (action.type === 'search') {

@@ -7,7 +7,6 @@ import {
   Trash2, 
   SortAsc,
   SortDesc,
-  Heart,
   AlertCircle,
   RefreshCw
 } from 'lucide-react'
@@ -33,7 +32,6 @@ const createProgramFromSaved = (savedProgram: any): Program => ({
   location: savedProgram.location || savedProgram.country || 'Unknown Country',
   created_at: savedProgram.created_at || savedProgram.saved_at || new Date().toISOString()
 })
-import { formatNGN } from '../../utils/currency'
 import { useNavigate } from 'react-router-dom'
 import ProgramCard from './ProgramCard'
 import type { Program } from '../../lib/types'

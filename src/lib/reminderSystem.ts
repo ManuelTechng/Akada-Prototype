@@ -177,7 +177,7 @@ export async function checkDeadlineReminders(): Promise<number> {
             await createDeadlineReminder(
               application.user_id,
               application.id,
-              application.programs.name,
+              application.programs[0]?.name || 'Unknown Program',
               application.deadline,
               daysUntilDeadline
             )

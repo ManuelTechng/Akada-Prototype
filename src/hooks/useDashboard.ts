@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useUserPreferences } from './usePreferences'
-import UnifiedPreferenceService, { UserPreferences } from '../lib/preferences'
+import { UserPreferences } from '../lib/preferences'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 
@@ -9,7 +9,6 @@ import { supabase } from '../lib/supabase'
  * Provides real-time completion status and next steps for Nigerian students
  */
 export const useProfileCompletion = () => {
-  const { user } = useAuth()
   const { preferences, loading } = useUserPreferences()
   const [completionData, setCompletionData] = useState<{
     percentage: number
@@ -52,7 +51,7 @@ export const useProfileCompletion = () => {
     const completed: string[] = []
     const missing: string[] = []
 
-    Object.entries(sections).forEach(([key, section]) => {
+    Object.entries(sections).forEach(([, section]) => {
       if (section.complete) {
         totalScore += section.weight
         completed.push(section.label)
@@ -337,7 +336,7 @@ export const useCostAnalysis = () => {
       if (savedError) throw savedError
 
       // Get cost estimates for countries
-      const countries = [...new Set(savedPrograms?.map(sp => sp.programs?.country).filter(Boolean))]
+      const countries = [...new Set(savedPrograms?.map(sp => sp.programs[0]?.country).filter(Boolean))]
       const { data: countryEstimates, error: estimatesError } = await supabase
         .from('country_estimates')
         .select('*')
@@ -350,7 +349,7 @@ export const useCostAnalysis = () => {
 
       // Calculate total costs for each saved program
       const savedProgramsCosts = savedPrograms?.map(sp => {
-        const program = sp.programs // Access programs directly
+        const program = sp.programs[0] // Access first program from array
         if (!program) return null
         
         const countryData = countryEstimates?.find(ce => ce.country === program.country)
@@ -434,7 +433,7 @@ export const useCostAnalysis = () => {
     if (!costData?.budgetAnalysis) return []
 
     const insights = []
-    const { budgetUtilization, affordablePrograms, averageProgramCost, totalBudget } = costData.budgetAnalysis
+    const { budgetUtilization } = costData.budgetAnalysis
 
     if (budgetUtilization > 120) {
       insights.push({
