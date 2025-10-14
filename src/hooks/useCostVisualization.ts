@@ -84,7 +84,7 @@ export const useCostVisualization = () => {
       if (savedError) throw savedError
 
       // Get country cost estimates
-      const countries = [...new Set(savedPrograms?.map(sp => sp.programs.country) || [])]
+      const countries = [...new Set(savedPrograms?.map(sp => sp.programs[0]?.country).filter(Boolean) || [])]
       const { data: countryEstimates, error: estimatesError } = await supabase
         .from('country_estimates')
         .select('*')
@@ -94,7 +94,9 @@ export const useCostVisualization = () => {
 
       // Process cost breakdowns for each program
       const breakdowns: CostBreakdownData[] = savedPrograms?.map(sp => {
-        const program = sp.programs
+        const program = sp.programs[0] // Get the first program from the array
+        if (!program) return null
+        
         const countryData = countryEstimates?.find(ce => ce.country === program.country)
         
         // Calculate duration in months
@@ -114,16 +116,16 @@ export const useCostVisualization = () => {
 
         return {
           programId: program.id,
-          programName: program.name,
-          university: program.university,
-          country: program.country,
+          programName: program.name || 'Unknown Program',
+          university: program.university || 'Unknown University',
+          country: program.country || 'Unknown Country',
           ...costs,
           total,
           currency: 'NGN',
           isAffordable: userBudget > 0 ? total <= userBudget : true,
           scholarshipAvailable: program.scholarship_available || false
         }
-      }) || []
+      }).filter((item): item is CostBreakdownData => item !== null) || []
 
       setCostBreakdowns(breakdowns)
 

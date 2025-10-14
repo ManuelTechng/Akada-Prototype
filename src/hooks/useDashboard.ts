@@ -332,7 +332,7 @@ export const useCostAnalysis = () => {
       if (savedError) throw savedError
 
       // Get cost estimates for countries
-      const countries = [...new Set(savedPrograms?.map(sp => sp.programs.country))]
+      const countries = [...new Set(savedPrograms?.map(sp => sp.programs[0]?.country).filter(Boolean))]
       const { data: countryEstimates, error: estimatesError } = await supabase
         .from('country_estimates')
         .select('*')
@@ -342,7 +342,9 @@ export const useCostAnalysis = () => {
 
       // Calculate total costs for each saved program
       const savedProgramsCosts = savedPrograms?.map(sp => {
-        const program = sp.programs
+        const program = sp.programs[0] // Get the first program from the array
+        if (!program) return null
+        
         const countryData = countryEstimates?.find(ce => ce.country === program.country)
         
         // Parse duration to months
@@ -364,7 +366,7 @@ export const useCostAnalysis = () => {
           },
           isAffordable: preferences.budgetRange ? totalCostNGN <= preferences.budgetRange : true
         }
-      }) || []
+      }).filter((item): item is any => item !== null) || []
 
       // Budget analysis
       const userBudget = preferences.budgetRange || 0
@@ -383,7 +385,7 @@ export const useCostAnalysis = () => {
 
       // Find scholarship opportunities
       const scholarshipPrograms = savedProgramsCosts.filter(spc => 
-        spc.programs.scholarship_available && !spc.isAffordable
+        spc.programs[0]?.scholarship_available && !spc.isAffordable
       )
 
       setCostData({

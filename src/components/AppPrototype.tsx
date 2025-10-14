@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { 
   Search, User, BookOpen, MessageSquare, FileText, Bell, Menu, X,
   LayoutDashboard, Folder, Users, Calendar, BarChart, LogOut, Calculator,
-  Clock, HelpCircle, BellRing, Headphones, ArrowLeft, Bookmark
+  Clock, HelpCircle, BellRing, Headphones, ArrowLeft, Bookmark, GraduationCap
 } from 'lucide-react';
 import ProgramSearch from './app/ProgramSearch';
 import Dashboard from './app/Dashboard';
@@ -242,23 +242,5 @@ const AppPrototype: React.FC = () => {
   );
 };
 
-// Graduation cap icon component
-const GraduationCap = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-    <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-  </svg>
-);
 
 export default AppPrototype;

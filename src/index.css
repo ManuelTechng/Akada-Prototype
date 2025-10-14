@@ -16,7 +16,7 @@
   html, body, #root {
     min-height: 100%;
   }
-  
+
   body {
     font-family: 'Inter', 'Montserrat', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -24,12 +24,26 @@
     text-rendering: optimizeLegibility;
     position: relative;
     background-color: #f9fafb;
+    /* CSS variables for react-select dark mode */
+    --select-bg: #ffffff;
+    --select-border: #d1d5db;
+    --select-text: #111827;
+    --select-hover: #f3f4f6;
+    --select-multi-bg: #e0e7ff;
+    --select-multi-text: #4f46e5;
   }
-  
+
   .dark body {
     background-color: #111827;
+    /* Dark mode variables for react-select */
+    --select-bg: #374151;
+    --select-border: #4b5563;
+    --select-text: #f3f4f6;
+    --select-hover: #4b5563;
+    --select-multi-bg: #312e81;
+    --select-multi-text: #c7d2fe;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
   }

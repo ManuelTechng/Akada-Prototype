@@ -5,9 +5,7 @@ import { useNotifications } from '../contexts/NotificationContext';
 import { 
   createContextualResponse, 
   getSuggestedQuestions,
-  getChatHistory,
-  getQuickResponse,
-  ChatMessage as ChatLog
+  getQuickResponse
 } from '../lib/chat';
 
 interface Message {
@@ -20,7 +18,7 @@ interface Message {
 
 const ChatButton: React.FC = () => {
   const { user, profile } = useAuth();
-  const { addNotification } = useNotifications();
+  // const { addNotification } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');

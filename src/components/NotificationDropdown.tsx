@@ -9,12 +9,8 @@ interface NotificationDropdownProps {
 }
 
 const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onClose }) => {
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
-  
-  // Safety check to prevent undefined errors
-  if (!notifications) {
-    return null;
-  }
+  const { state, markAsRead, markAllAsRead } = useNotifications();
+  const { notifications, unreadCount } = state;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -105,7 +101,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
               key={notification.id}
               onClick={() => handleNotificationClick(notification)}
               className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${
-                !notification.read ? 'bg-indigo-50/50 dark:bg-indigo-900/20' : ''
+                !notification.is_read ? 'bg-indigo-50/50 dark:bg-indigo-900/20' : ''
               }`}
             >
               <div className="flex items-start gap-3">
@@ -116,11 +112,11 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
                   <div className="flex items-start justify-between gap-2">
                     <p className="font-medium text-gray-900 dark:text-gray-100 break-words">{notification.title}</p>
                     <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap flex-shrink-0">
-                      {formatTime(notification.timestamp)}
+                      {formatTime(new Date(notification.created_at || new Date()))}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 break-words">{notification.message}</p>
-                  {notification.actionRequired && (
+                  {notification.action_url && (
                     <div className="flex items-center gap-1 mt-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium">
                       Take action
                       <ChevronRight className="h-4 w-4" />

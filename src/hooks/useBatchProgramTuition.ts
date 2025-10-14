@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { currencyService } from '../lib/currency/CurrencyService'
-import { getCountryCurrency } from '../lib/currency/detection'
+import { getCurrencyFromCountry } from '../lib/currency/utils'
 import { formatCurrency } from '../lib/currency/formatters'
 import type { Program } from '../lib/types'
 
@@ -55,7 +55,7 @@ export const useBatchProgramTuition = (
 
   // Extract unique currencies from countries
   const currencies = useMemo(() => {
-    const uniqueCurrencies = new Set(countries.map(country => getCountryCurrency(country)))
+    const uniqueCurrencies = new Set(countries.map(country => getCurrencyFromCountry(country)))
     return Array.from(uniqueCurrencies).filter(c => c !== 'NGN') // NGN is base, no conversion needed
   }, [countries])
 
@@ -99,7 +99,7 @@ export const useBatchProgramTuition = (
         const tuitionMap = new Map<string, ProgramTuitionDisplay>()
 
         programs.forEach(program => {
-          const programCurrency = getCountryCurrency(program.country || '')
+          const programCurrency = getCurrencyFromCountry(program.country || '')
           const tuitionAmount = program.tuition_fee || 0
           const isNigerian = programCurrency === 'NGN'
 
@@ -152,7 +152,7 @@ export const useBatchProgramTuition = (
         // Create fallback tuition data with errors
         const fallbackMap = new Map<string, ProgramTuitionDisplay>()
         programs.forEach(program => {
-          const programCurrency = getCountryCurrency(program.country || '')
+          const programCurrency = getCurrencyFromCountry(program.country || '')
           fallbackMap.set(program.id, {
             programId: program.id,
             primary: formatCurrency(program.tuition_fee || 0, programCurrency),

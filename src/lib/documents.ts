@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { reviewDocumentWithGemini } from './gemini';
+import { analyzeDocument } from './gemini';
 
 export interface Document {
   id: string;
@@ -148,7 +148,7 @@ export const requestAIReview = async (
 
     // Download and review document content with Gemini
     const documentContent = await downloadDocumentContent(documentUrl);
-    const feedback = await reviewDocumentWithGemini(documentContent, type);
+    const feedback = await analyzeDocument(documentContent, type as 'sop' | 'cv');
     
     // Update document with feedback
     await updateDocumentStatus(documentId, 'reviewed', feedback);

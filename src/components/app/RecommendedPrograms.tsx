@@ -144,9 +144,22 @@ const RecommendedPrograms: React.FC = () => {
     return recommendations.reduce((total, category) => total + category.programs.length, 0)
   }
 
-  const handleApplyToProgram = (program: Program) => {
-    setSelectedProgram(program)
-    setShowApplicationModal(true)
+  const handleApplyToProgram = (programId: string) => {
+    // Find the program from the recommendations
+    let foundProgram: Program | null = null
+    
+    for (const category of recommendations) {
+      const program = category.programs.find((p: any) => p.id === programId)
+      if (program) {
+        foundProgram = program
+        break
+      }
+    }
+    
+    if (foundProgram) {
+      setSelectedProgram(foundProgram)
+      setShowApplicationModal(true)
+    }
   }
 
   const handleApplicationSuccess = () => {

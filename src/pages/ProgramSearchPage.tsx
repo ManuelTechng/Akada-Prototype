@@ -397,7 +397,7 @@ const ProgramSearchPage: React.FC = () => {
             title="Country"
             value={filters.country}
             onChange={(e) => handleFilterChange('country', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Any country</option>
             <option value="Nigeria">Nigeria</option>
@@ -421,7 +421,7 @@ const ProgramSearchPage: React.FC = () => {
             title="Degree Type"
             value={filters.degreeType}
             onChange={(e) => handleFilterChange('degreeType', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="">Any type</option>
             <option value="Masters">Master's</option>
@@ -440,7 +440,7 @@ const ProgramSearchPage: React.FC = () => {
             title="Tuition Range"
             value={filters.maxTuition}
             onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="any">Any range</option>
             <option value="5000">Under $5,000/year</option>
@@ -461,7 +461,7 @@ const ProgramSearchPage: React.FC = () => {
                 title="Field of Study"
                 value={filters.field}
                 onChange={(e) => handleFilterChange('field', e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white text-gray-900 dark:text-gray-900"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               >
                 <option value="">Any field</option>
                 <option value="Computer Science">Computer Science</option>
@@ -480,7 +480,7 @@ const ProgramSearchPage: React.FC = () => {
                 id="scholarshipsOnly"
                 checked={filters.scholarshipsOnly}
                 onChange={(e) => handleFilterChange('scholarshipsOnly', e.target.checked)}
-                className="w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-400 rounded focus:ring-indigo-500 bg-white dark:bg-white"
+                className="w-4 h-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 bg-white dark:bg-gray-700"
               />
               <label htmlFor="scholarshipsOnly" className="text-sm text-gray-700 dark:text-gray-300">
                 Only show programs with scholarships
@@ -576,7 +576,7 @@ const ProgramSearchPage: React.FC = () => {
         <input
           type="text"
           placeholder="Search for programs, universities, or keywords..."
-          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-400 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-white shadow-sm text-gray-900 dark:text-gray-900 placeholder-gray-500 dark:placeholder-gray-400"
+          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 shadow-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -640,10 +640,10 @@ const ProgramSearchPage: React.FC = () => {
               
               <div className="flex gap-3 items-center">
                 <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline-block">Sort by:</span>
-                <select 
-                  value={sortBy} 
+                <select
+                  value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 dark:border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-white text-gray-900 dark:text-gray-900"
+                  className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   aria-label="Sort by"
                   title="Sort by"
                 >

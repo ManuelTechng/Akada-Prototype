@@ -223,15 +223,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         {/* Logo Section */}
         <div className="h-20 flex items-center px-6 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold text-lg">
-              A
-            </div>
-            <div>
-              <span className="font-bold text-lg text-gray-900 dark:text-gray-100">Akada</span>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Study Abroad Platform</p>
-            </div>
+            <img
+              src="/akada-logo-simple.svg"
+              alt="Akada"
+              className="h-10 w-auto"
+            />
           </div>
-          <button 
+          <button
             className="lg:hidden p-2 ml-auto rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400"
             onClick={toggleSidebar}
             title="Close sidebar"

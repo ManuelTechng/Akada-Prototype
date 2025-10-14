@@ -500,7 +500,7 @@ const ProfileSettings: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Full Name
           </label>
           <div className="relative">
@@ -517,7 +517,7 @@ const ProfileSettings: React.FC = () => {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Email
           </label>
           <div className="relative">
@@ -537,7 +537,7 @@ const ProfileSettings: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Phone Number
           </label>
           <div className="relative">
@@ -557,7 +557,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Date of Birth
           </label>
           <input
@@ -581,16 +581,16 @@ const ProfileSettings: React.FC = () => {
           onChange={handleInputChange}
           disabled={!isEditing}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           placeholder="Tell us a bit about yourself..."
         />
       </div>
       
-      <h3 className="text-lg font-medium text-gray-900 mt-8 mb-4">Contact Address</h3>
+      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mt-8 mb-4">Contact Address</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Address Line 1
           </label>
           <div className="relative">
@@ -610,7 +610,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Address Line 2
           </label>
           <input
@@ -625,7 +625,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             City
           </label>
           <input
@@ -639,7 +639,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             State / Province
           </label>
           <input
@@ -653,7 +653,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Postal / Zip Code
           </label>
           <input
@@ -667,7 +667,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Country
           </label>
           <select
@@ -701,7 +701,7 @@ const ProfileSettings: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Current/Previous University
           </label>
           <div className="relative">
@@ -720,7 +720,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Field of Study
           </label>
           <input
@@ -736,7 +736,7 @@ const ProfileSettings: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             GPA
           </label>
           <input
@@ -750,7 +750,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Education Level
           </label>
           <select
@@ -769,10 +769,10 @@ const ProfileSettings: React.FC = () => {
       </div>
       
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-3">Test Scores</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Test Scores</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               IELTS
             </label>
             <input
@@ -787,7 +787,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               TOEFL
             </label>
             <input
@@ -802,7 +802,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               GRE Verbal
             </label>
             <input
@@ -819,7 +819,7 @@ const ProfileSettings: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               GRE Quantitative
             </label>
             <input
@@ -834,7 +834,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               GRE Analytical
             </label>
             <input
@@ -855,7 +855,7 @@ const ProfileSettings: React.FC = () => {
   const renderPreferencesSection = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Preferred Countries
         </label>
         <Select
@@ -875,16 +875,42 @@ const ProfileSettings: React.FC = () => {
           }}
           classNamePrefix="react-select"
           placeholder="Select preferred countries..."
+          styles={{
+            control: (base) => ({
+              ...base,
+              backgroundColor: 'var(--select-bg)',
+              borderColor: 'var(--select-border)',
+              color: 'var(--select-text)'
+            }),
+            menu: (base) => ({
+              ...base,
+              backgroundColor: 'var(--select-bg)',
+              color: 'var(--select-text)'
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? 'var(--select-hover)' : 'var(--select-bg)',
+              color: 'var(--select-text)'
+            }),
+            multiValue: (base) => ({
+              ...base,
+              backgroundColor: 'var(--select-multi-bg)'
+            }),
+            multiValueLabel: (base) => ({
+              ...base,
+              color: 'var(--select-multi-text)'
+            })
+          }}
         />
-        <p className="text-xs text-gray-500 mt-1">You can search and select multiple countries</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">You can search and select multiple countries</p>
         {!isEditing && (
-          <p className="text-xs text-red-500 mt-2">Click "Edit Profile" to update your study preferences.</p>
+          <p className="text-xs text-red-500 dark:text-red-400 mt-2">Click "Edit Profile" to update your study preferences.</p>
         )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Maximum Tuition Budget (₦ NGN/year)
           </label>
           <select
@@ -904,7 +930,7 @@ const ProfileSettings: React.FC = () => {
             <option value="75000000">₦60M - ₦75M (~$40,000 - $50,000)</option>
             <option value="100000000">₦75M+ (~$50,000+)</option>
           </select>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             All amounts are in Nigerian Naira. USD equivalents shown for reference using current rates.
           </p>
         </div>
@@ -1017,7 +1043,7 @@ const ProfileSettings: React.FC = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Program Types
         </label>
         <Select
@@ -1037,8 +1063,34 @@ const ProfileSettings: React.FC = () => {
           }}
           classNamePrefix="react-select"
           placeholder="Select program types..."
+          styles={{
+            control: (base) => ({
+              ...base,
+              backgroundColor: 'var(--select-bg)',
+              borderColor: 'var(--select-border)',
+              color: 'var(--select-text)'
+            }),
+            menu: (base) => ({
+              ...base,
+              backgroundColor: 'var(--select-bg)',
+              color: 'var(--select-text)'
+            }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isFocused ? 'var(--select-hover)' : 'var(--select-bg)',
+              color: 'var(--select-text)'
+            }),
+            multiValue: (base) => ({
+              ...base,
+              backgroundColor: 'var(--select-multi-bg)'
+            }),
+            multiValueLabel: (base) => ({
+              ...base,
+              color: 'var(--select-multi-text)'
+            })
+          }}
         />
-        <p className="text-xs text-gray-500 mt-1">You can search and select multiple program types</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">You can search and select multiple program types</p>
       </div>
     </div>
   );
@@ -1089,8 +1141,8 @@ const ProfileSettings: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 font-heading">Profile Settings</h1>
-        <p className="text-gray-600">Manage your account settings and preferences</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-heading">Profile Settings</h1>
+        <p className="text-gray-600 dark:text-gray-400">Manage your account settings and preferences</p>
       </div>
       
       {/* Loading state */}
@@ -1102,7 +1154,7 @@ const ProfileSettings: React.FC = () => {
       ) : (
         <>
           {/* Profile Header */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-8">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div className="relative group">
                 <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl font-bold flex-shrink-0 overflow-hidden">
@@ -1156,8 +1208,8 @@ const ProfileSettings: React.FC = () => {
                 )}
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-xl font-bold text-gray-900 mb-1">{formData.full_name || 'Not provided'}</h2>
-                <p className="text-gray-600 mb-4">{formData.email || 'No email address'}</p>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">{formData.full_name || 'Not provided'}</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">{formData.email || 'No email address'}</p>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-2">
@@ -1229,14 +1281,14 @@ const ProfileSettings: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Sidebar */}
             <div className="md:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
                 <nav className="space-y-1">
                   <button
                     onClick={() => setActiveSection('personal')}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'personal' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
+                      activeSection === 'personal'
+                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <User className="h-5 w-5 flex-shrink-0" />
@@ -1246,9 +1298,9 @@ const ProfileSettings: React.FC = () => {
                   <button
                     onClick={() => setActiveSection('academic')}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'academic' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
+                      activeSection === 'academic'
+                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <BookOpen className="h-5 w-5 flex-shrink-0" />
@@ -1258,9 +1310,9 @@ const ProfileSettings: React.FC = () => {
                   <button
                     onClick={() => setActiveSection('preferences')}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
-                      activeSection === 'preferences' 
-                        ? 'bg-indigo-50 text-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
+                      activeSection === 'preferences'
+                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <MapPin className="h-5 w-5 flex-shrink-0" />
@@ -1292,7 +1344,7 @@ const ProfileSettings: React.FC = () => {
             
             {/* Main Content */}
             <div className="md:col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
                 {isEditing && (
                   <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center">
                     <User className="h-5 w-5 flex-shrink-0 mr-2" />
@@ -1303,7 +1355,7 @@ const ProfileSettings: React.FC = () => {
                   </div>
                 )}
                 
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
                   {activeSection === 'personal' && 'Personal Information'}
                   {activeSection === 'academic' && 'Academic Information'}
                   {activeSection === 'preferences' && 'Study Preferences'}

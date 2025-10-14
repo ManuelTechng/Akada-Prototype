@@ -70,51 +70,6 @@ const getStorage = () => {
       console.warn("Supabase Storage: localStorage not available, using memory storage");
       return createFallbackStorage();
     }
-    
-    return {
-      getItem: (key: string) => {
-        try {
-          if (workingStorage) {
-            const value = workingStorage.getItem(key);
-            if (value) {
-              // Validate that the value is not "[object Object]"
-              if (value === "[object Object]") {
-                console.warn(`Supabase Storage: Invalid value detected for key ${key}, removing`);
-                workingStorage.removeItem(key);
-                return null;
-              }
-              return value;
-            }
-          }
-          return memoryStorage.get(key) ?? null;
-        } catch (error) {
-          handleStorageError('getItem', error);
-          return memoryStorage.get(key) ?? null;
-        }
-      },
-      setItem: (key: string, value: string) => {
-        try {
-          if (workingStorage) {
-            workingStorage.setItem(key, value);
-          }
-          memoryStorage.set(key, value); // Backup to memory
-        } catch (error) {
-          handleStorageError('setItem', error);
-          memoryStorage.set(key, value);
-        }
-      },
-      removeItem: (key: string) => {
-        try {
-          if (workingStorage) {
-            workingStorage.removeItem(key);
-          }
-          memoryStorage.delete(key);
-        } catch (error) {
-          handleStorageError('removeItem', error);
-          memoryStorage.delete(key);
-        }
-      }
-    };
   } catch (error) {
     console.warn('Supabase Storage: localStorage not available, using in-memory storage', error);
     return createFallbackStorage();

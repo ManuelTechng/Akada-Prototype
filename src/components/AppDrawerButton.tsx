@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
@@ -7,8 +7,7 @@ interface AppDrawerButtonProps {
   onAuthClick: () => void;
 }
   
-const AppDrawerButton: React.FC<AppDrawerButtonProps> = ({ onAuthClick }) => {
-  const [, ] = useState(false);
+const AppDrawerButton: React.FC<AppDrawerButtonProps> = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
