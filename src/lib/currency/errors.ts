@@ -17,6 +17,7 @@ export class CurrencyError extends Error {
   public readonly retryable: boolean;
   public readonly fallbackAvailable: boolean;
   public readonly details?: any;
+  public readonly cause?: Error;
 
   constructor(
     type: CurrencyErrorType,
@@ -36,10 +37,7 @@ export class CurrencyError extends Error {
     this.retryable = options.retryable ?? false;
     this.fallbackAvailable = options.fallbackAvailable ?? true;
     this.details = options.details;
-    
-    if (options.cause) {
-      this.cause = options.cause;
-    }
+    this.cause = options.cause;
   }
 
   toJSON() {
@@ -184,16 +182,15 @@ export class RetryHandler {
   constructor(private config: RetryConfig = DEFAULT_RETRY_CONFIG) {}
 
   async execute<T>(
-    operation: () => Promise<T>,
-    context?: string
+    operation: () => Promise<T>
   ): Promise<T> {
     let lastError: Error | null = null;
-    
+
     for (let attempt = 1; attempt <= this.config.maxAttempts; attempt++) {
       try {
         return await operation();
       } catch (error) {
-        lastError = error;
+        lastError = error as Error;
         
         // Check if error is retryable
         if (error instanceof CurrencyError) {
@@ -309,7 +306,15 @@ export class FallbackRateProvider {
       CAD: 1.43,
       GBP: 0.79,
       EUR: 0.92,
-      AUD: 1.52
+      AUD: 1.52,
+      SEK: 10.85,
+      NOK: 10.95,
+      DKK: 6.85,
+      CHF: 0.88,
+      JPY: 149.50,
+      SGD: 1.34,
+      NZD: 1.68,
+      HKD: 7.78
     },
     CAD: {
       NGN: 1050,      // CRITICAL FIX: 1 CAD = 1050 NGN (October 2025)
@@ -345,6 +350,40 @@ export class FallbackRateProvider {
       USD: 0.658,     // 1 AUD = 0.658 USD (1/1.52)
       NGN: 987,       // 1 AUD = 987 NGN
       CAD: 0.943      // 1 AUD = 0.943 CAD (1/1.06)
+    },
+    SEK: {
+      USD: 0.092,     // 1 SEK = 0.092 USD (1/10.85)
+      NGN: 138,       // 1 SEK = 138 NGN
+      EUR: 0.085      // 1 SEK = 0.085 EUR
+    },
+    SGD: {
+      USD: 0.746,     // 1 SGD = 0.746 USD (1/1.34)
+      NGN: 1119,      // 1 SGD = 1119 NGN (0.746 * 1500)
+      CAD: 1.067      // 1 SGD = 1.067 CAD
+    },
+    NOK: {
+      USD: 0.091,     // 1 NOK = 0.091 USD (1/10.95)
+      NGN: 137        // 1 NOK = 137 NGN
+    },
+    DKK: {
+      USD: 0.146,     // 1 DKK = 0.146 USD (1/6.85)
+      NGN: 219        // 1 DKK = 219 NGN
+    },
+    CHF: {
+      USD: 1.136,     // 1 CHF = 1.136 USD (1/0.88)
+      NGN: 1704       // 1 CHF = 1704 NGN
+    },
+    JPY: {
+      USD: 0.0067,    // 1 JPY = 0.0067 USD (1/149.50)
+      NGN: 10.03      // 1 JPY = 10.03 NGN
+    },
+    NZD: {
+      USD: 0.595,     // 1 NZD = 0.595 USD (1/1.68)
+      NGN: 893        // 1 NZD = 893 NGN
+    },
+    HKD: {
+      USD: 0.129,     // 1 HKD = 0.129 USD (1/7.78)
+      NGN: 193        // 1 HKD = 193 NGN
     }
   };
 

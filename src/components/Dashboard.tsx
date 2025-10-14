@@ -5,19 +5,9 @@ import {
   Calendar, 
   Plus, 
   ChevronRight,
-  Star,
-  Clock,
-  CheckCircle,
   ArrowRight,
   GraduationCap,
-  MapPin,
-  DollarSign,
   Target,
-  BarChart,
-  TrendingUp,
-  Award,
-  Users,
-  MessageSquare,
   Calculator
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

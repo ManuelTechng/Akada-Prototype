@@ -241,7 +241,7 @@ export function useResilientConversion(
       { fromCurrency, toCurrency }
     );
 
-    if (conversion) {
+    if (conversion && typeof conversion === 'object' && 'convertedAmount' in conversion && typeof conversion.convertedAmount === 'number') {
       setResult({
         value: conversion.convertedAmount,
         formatted: conversion.convertedAmount.toFixed(2),

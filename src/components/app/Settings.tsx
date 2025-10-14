@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Lock, 
   Bell, 
-  Trash2, 
   LogOut, 
   AlertCircle,
   CheckCircle,
@@ -13,8 +12,8 @@ import { signOut as signOutFn } from '../../lib/auth';
 
 const Settings: React.FC = () => {
   const { user, profile } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);

@@ -180,7 +180,7 @@ export async function updateApplicationStatus(
       await createApplicationStatusNotification(
         application.user_id,
         applicationId,
-        application.programs.name,
+        application.programs[0]?.name || 'Unknown Program',
         oldStatus,
         newStatus
       )
@@ -334,7 +334,7 @@ export async function bulkUpdateApplicationStatuses(
   updatedBy: 'user' | 'system' | 'university' = 'user',
   notes?: string
 ): Promise<{ success: string[]; failed: string[] }> {
-  const results = { success: [], failed: [] }
+  const results: { success: string[]; failed: string[] } = { success: [], failed: [] }
 
   for (const applicationId of applicationIds) {
     const success = await updateApplicationStatus(applicationId, newStatus, updatedBy, notes)

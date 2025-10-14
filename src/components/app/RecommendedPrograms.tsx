@@ -5,21 +5,14 @@ import {
   Brain, 
   TrendingUp, 
   RefreshCw, 
-  Filter, 
   Search, 
   Settings,
-  BookmarkIcon,
   ExternalLink,
   Info,
-  CheckCircle,
   Star,
-  Zap,
-  Globe,
-  Calendar,
   DollarSign
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-import { formatNGN } from '../../utils/currency'
 import { useNavigate } from 'react-router-dom'
 import ProgramCard from './ProgramCard'
 import type { Program } from '../../lib/types'

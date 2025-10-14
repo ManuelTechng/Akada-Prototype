@@ -927,7 +927,7 @@ export const ApplicationTracker: React.FC = () => {
                       onClick={() => setViewMode('timeline')}
                       className={cn(
                         'p-2 rounded-md transition-colors',
-                        viewMode === 'timeline' 
+                        viewMode === 'list' 
                           ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       )}

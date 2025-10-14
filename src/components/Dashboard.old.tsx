@@ -1,28 +1,5 @@
 // BACKUP: Original Dashboard component - replaced by SmartDashboard
-import React, { useState, useEffect } from 'react';
-import { 
-  FileText, 
-  BookOpen, 
-  Calendar, 
-  Plus, 
-  ChevronRight,
-  Star,
-  Clock,
-  CheckCircle,
-  ArrowRight,
-  GraduationCap,
-  MapPin,
-  DollarSign,
-  Target,
-  BarChart,
-  TrendingUp,
-  Award,
-  Users,
-  MessageSquare,
-  Calculator
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React from 'react';
 
 const Dashboard: React.FC = () => {
   // ... Original Dashboard code was here ...

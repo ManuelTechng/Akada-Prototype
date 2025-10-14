@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, Send, Bot, User, X, Lightbulb, Loader } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNotifications } from '../contexts/NotificationContext';
 import { 
   createContextualResponse, 
   getSuggestedQuestions,

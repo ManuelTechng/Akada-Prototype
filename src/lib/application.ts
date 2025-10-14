@@ -79,7 +79,7 @@ export const getApplications = async (
     }
 
     // Apply sorting
-    let orderColumn = sortBy;
+    let orderColumn: string = sortBy;
     if (sortBy === 'university') {
       orderColumn = 'programs.university';
     }
