@@ -390,10 +390,21 @@ export const useCostAnalysis = () => {
         budgetUtilization
       }
 
-      // Find scholarship opportunities
+      // Find scholarship opportunities (regardless of affordability)
       const scholarshipPrograms = savedProgramsCosts.filter(spc => 
-        spc.programs?.scholarship_available && !spc.isAffordable
+        spc.programs?.scholarship_available
       )
+
+      // Debug scholarship detection
+      console.log('🔍 Scholarship Debug:', {
+        allPrograms: savedProgramsCosts.map(spc => ({
+          programName: spc.programs?.name,
+          hasScholarship: spc.programs?.scholarship_available,
+          isAffordable: spc.isAffordable,
+          scholarshipAvailable: spc.programs?.scholarship_available
+        })),
+        scholarshipProgramsCount: scholarshipPrograms.length
+      })
 
       console.log('🔍 Dashboard Debug - Cost Analysis:', {
         savedProgramsCount: savedPrograms?.length || 0,
