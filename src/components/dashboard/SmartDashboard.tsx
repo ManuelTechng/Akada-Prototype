@@ -179,7 +179,8 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
     profileData,
     timelineData,
     costData,
-    recommendedPrograms
+    recommendedPrograms,
+    preferences
   } = useSmartDashboard()
   
   const { notifications, hasUrgentNotifications, urgentCount } = useDashboardNotifications()
