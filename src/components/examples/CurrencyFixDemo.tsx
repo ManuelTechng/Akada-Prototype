@@ -1,6 +1,6 @@
 // Demo component to test currency fixes for Swedish programs
 import React from 'react';
-import { formatCurrency, getCountryCurrency } from '../../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 import { getCurrencyFromCountry } from '../../lib/currency/utils';
 
 /**

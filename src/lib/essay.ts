@@ -65,7 +65,7 @@ export const createTextReview = async (
 ): Promise<string> => {
   try {
     const fullPrompt = `${prompt}\n\nContent to review:\n${content}`;
-    const response = await getGeminiResponse(fullPrompt);
+    const response = await generateResponse(fullPrompt);
     return response;
   } catch (error) {
     console.error('Error creating text review:', error);

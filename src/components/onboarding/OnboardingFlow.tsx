@@ -74,10 +74,10 @@ const OnboardingFlow: React.FC = () => {
               gre: {
                 ...prevData.test_scores?.gre,
                 ...(profileData.test_scores?.gre || {}),
-                // Ensure all values are properly typed
-                verbal: profileData.test_scores?.gre?.verbal ?? prevData.test_scores?.gre?.verbal ?? '',
-                quantitative: profileData.test_scores?.gre?.quantitative ?? prevData.test_scores?.gre?.quantitative ?? '',
-                analytical: profileData.test_scores?.gre?.analytical ?? prevData.test_scores?.gre?.analytical ?? ''
+                // Ensure all values are properly typed as strings
+                verbal: String(profileData.test_scores?.gre?.verbal ?? prevData.test_scores?.gre?.verbal ?? ''),
+                quantitative: String(profileData.test_scores?.gre?.quantitative ?? prevData.test_scores?.gre?.quantitative ?? ''),
+                analytical: String(profileData.test_scores?.gre?.analytical ?? prevData.test_scores?.gre?.analytical ?? '')
               }
             },
             study_preferences: {

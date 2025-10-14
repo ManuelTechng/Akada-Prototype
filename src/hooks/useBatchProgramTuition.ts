@@ -55,7 +55,7 @@ export const useBatchProgramTuition = (
 
   // Extract unique currencies from countries
   const currencies = useMemo(() => {
-    const uniqueCurrencies = new Set(countries.map(country => getCurrencyFromCountry(country)))
+    const uniqueCurrencies = new Set(countries.map(country => getCurrencyFromCountry(country)).filter((currency): currency is string => Boolean(currency)))
     return Array.from(uniqueCurrencies).filter(c => c !== 'NGN') // NGN is base, no conversion needed
   }, [countries])
 

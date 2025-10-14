@@ -244,9 +244,9 @@ const OnboardingPage: React.FC = () => {
         ielts: formData.test_scores.ielts ? parseFloat(formData.test_scores.ielts) : undefined,
         toefl: formData.test_scores.toefl ? parseFloat(formData.test_scores.toefl) : undefined,
         gre: {
-          verbal: formData.test_scores.gre.verbal ? (isNaN(parseFloat(formData.test_scores.gre.verbal)) ? formData.test_scores.gre.verbal : parseFloat(formData.test_scores.gre.verbal)) : undefined,
-          quantitative: formData.test_scores.gre.quantitative ? (isNaN(parseFloat(formData.test_scores.gre.quantitative)) ? formData.test_scores.gre.quantitative : parseFloat(formData.test_scores.gre.quantitative)) : undefined,
-          analytical: formData.test_scores.gre.analytical ? (isNaN(parseFloat(formData.test_scores.gre.analytical)) ? formData.test_scores.gre.analytical : parseFloat(formData.test_scores.gre.analytical)) : undefined,
+          verbal: formData.test_scores.gre.verbal ? (isNaN(parseFloat(formData.test_scores.gre.verbal)) ? formData.test_scores.gre.verbal : parseFloat(formData.test_scores.gre.verbal)) : '',
+          quantitative: formData.test_scores.gre.quantitative ? (isNaN(parseFloat(formData.test_scores.gre.quantitative)) ? formData.test_scores.gre.quantitative : parseFloat(formData.test_scores.gre.quantitative)) : '',
+          analytical: formData.test_scores.gre.analytical ? (isNaN(parseFloat(formData.test_scores.gre.analytical)) ? formData.test_scores.gre.analytical : parseFloat(formData.test_scores.gre.analytical)) : '',
         }
       },
       study_preferences: {
