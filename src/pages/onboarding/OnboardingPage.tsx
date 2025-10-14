@@ -71,9 +71,9 @@ const OnboardingPage: React.FC = () => {
         setFormData(prev => ({
           ...prev,
           [section]: {
-            ...prev[section as keyof typeof prev],
+            ...(prev[section as keyof typeof prev] || {}),
             [field]: {
-              ...prev[section as keyof typeof prev][field as keyof typeof prev[keyof typeof prev]],
+              ...(prev[section as keyof typeof prev]?.[field as keyof typeof prev[keyof typeof prev]] || {}),
               [subfield]: value
             }
           }
@@ -82,7 +82,7 @@ const OnboardingPage: React.FC = () => {
         setFormData(prev => ({
           ...prev,
           [section]: {
-            ...prev[section as keyof typeof prev],
+            ...(prev[section as keyof typeof prev] || {}),
             [field]: value
           }
         }));
@@ -117,7 +117,7 @@ const OnboardingPage: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...(prev[section as keyof typeof prev] || {}),
         [field]: selectedValues
       }
     }));
@@ -244,9 +244,9 @@ const OnboardingPage: React.FC = () => {
         ielts: formData.test_scores.ielts ? parseFloat(formData.test_scores.ielts) : undefined,
         toefl: formData.test_scores.toefl ? parseFloat(formData.test_scores.toefl) : undefined,
         gre: {
-          verbal: formData.test_scores.gre.verbal ? parseFloat(formData.test_scores.gre.verbal) : undefined,
-          quantitative: formData.test_scores.gre.quantitative ? parseFloat(formData.test_scores.gre.quantitative) : undefined,
-          analytical: formData.test_scores.gre.analytical ? parseFloat(formData.test_scores.gre.analytical) : undefined,
+          verbal: formData.test_scores.gre.verbal ? (isNaN(parseFloat(formData.test_scores.gre.verbal)) ? formData.test_scores.gre.verbal : parseFloat(formData.test_scores.gre.verbal)) : undefined,
+          quantitative: formData.test_scores.gre.quantitative ? (isNaN(parseFloat(formData.test_scores.gre.quantitative)) ? formData.test_scores.gre.quantitative : parseFloat(formData.test_scores.gre.quantitative)) : undefined,
+          analytical: formData.test_scores.gre.analytical ? (isNaN(parseFloat(formData.test_scores.gre.analytical)) ? formData.test_scores.gre.analytical : parseFloat(formData.test_scores.gre.analytical)) : undefined,
         }
       },
       study_preferences: {

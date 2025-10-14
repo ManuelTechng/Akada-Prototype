@@ -49,7 +49,7 @@ export const useBatchProgramTuition = (
 
   // Extract unique countries from programs
   const countries = useMemo(() => {
-    const uniqueCountries = new Set(programs.map(p => p.country).filter(Boolean))
+    const uniqueCountries = new Set(programs.map(p => p.country).filter((country): country is string => Boolean(country)))
     return Array.from(uniqueCountries)
   }, [programs])
 
@@ -81,8 +81,14 @@ export const useBatchProgramTuition = (
               maxAge: cacheTime
             })
 
-            exchangeRates = rates.rates || {}
-            setIsRealTime(rates.source === 'api' || rates.source === 'cache')
+            // Extract rates from ExchangeRate objects
+            exchangeRates = {}
+            Object.entries(rates).forEach(([currency, rateData]) => {
+              if (rateData && typeof rateData === 'object' && 'rate' in rateData) {
+                exchangeRates[currency] = rateData.rate
+                setIsRealTime(rateData.source === 'api' || rateData.source === 'cache')
+              }
+            })
           } catch (err) {
             console.warn('Failed to fetch real-time rates, using static fallback:', err)
             // Use static rates as fallback
@@ -99,7 +105,7 @@ export const useBatchProgramTuition = (
         const tuitionMap = new Map<string, ProgramTuitionDisplay>()
 
         programs.forEach(program => {
-          const programCurrency = getCurrencyFromCountry(program.country || '')
+          const programCurrency = getCurrencyFromCountry(program.country || '') || 'USD'
           const tuitionAmount = program.tuition_fee || 0
           const isNigerian = programCurrency === 'NGN'
 
@@ -152,7 +158,7 @@ export const useBatchProgramTuition = (
         // Create fallback tuition data with errors
         const fallbackMap = new Map<string, ProgramTuitionDisplay>()
         programs.forEach(program => {
-          const programCurrency = getCurrencyFromCountry(program.country || '')
+          const programCurrency = getCurrencyFromCountry(program.country || '') || 'USD'
           fallbackMap.set(program.id, {
             programId: program.id,
             primary: formatCurrency(program.tuition_fee || 0, programCurrency),
