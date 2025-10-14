@@ -68,24 +68,31 @@ const OnboardingPage: React.FC = () => {
       const [section, field, subfield] = name.split('.');
       
       if (subfield) {
-        setFormData(prev => ({
-          ...prev,
-          [section]: {
-            ...(prev[section as keyof typeof prev] || {}),
-            [field]: {
-              ...(prev[section as keyof typeof prev]?.[field as keyof typeof prev[keyof typeof prev]] || {}),
-              [subfield]: value
+        setFormData(prev => {
+          const currentSection = prev[section as keyof typeof prev] || {};
+          const currentField = (currentSection as any)?.[field] || {};
+          return {
+            ...prev,
+            [section]: {
+              ...currentSection,
+              [field]: {
+                ...currentField,
+                [subfield]: value
+              }
             }
-          }
-        }));
+          };
+        });
       } else {
-        setFormData(prev => ({
-          ...prev,
-          [section]: {
-            ...(prev[section as keyof typeof prev] || {}),
-            [field]: value
-          }
-        }));
+        setFormData(prev => {
+          const currentSection = prev[section as keyof typeof prev] || {};
+          return {
+            ...prev,
+            [section]: {
+              ...currentSection,
+              [field]: value
+            }
+          };
+        });
       }
     } else {
       setFormData(prev => ({
@@ -114,13 +121,16 @@ const OnboardingPage: React.FC = () => {
       });
     }
     
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...(prev[section as keyof typeof prev] || {}),
-        [field]: selectedValues
-      }
-    }));
+        setFormData(prev => {
+          const currentSection = prev[section as keyof typeof prev] || {};
+          return {
+            ...prev,
+            [section]: {
+              ...currentSection,
+              [field]: selectedValues
+            }
+          };
+        });
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -251,7 +261,7 @@ const OnboardingPage: React.FC = () => {
       },
       study_preferences: {
         ...formData.study_preferences,
-        max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : undefined,
+        max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : 0,
       },
       profile_completed: true
     };
