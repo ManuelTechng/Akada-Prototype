@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
-import { Copy, Check, Palette, Grid, Type, Spacing, DollarSign } from 'lucide-react';
+import { Copy, Check, Palette, Grid, Type, DollarSign } from 'lucide-react';
 
 interface ShowcaseSection {
   id: string;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useProfileCompletion, useApplicationTimeline, useCostAnalysis } from './useDashboard'
-import { usePersonalizedPrograms } from './usePreferences'
+import { usePersonalizedPrograms, useUserPreferences } from './usePreferences'
 import { formatNGN, formatCompactNGN } from './usePreferences'
 import { useRealtime, useRefresh } from './useRealtime'
 
@@ -35,6 +35,7 @@ export const useSmartDashboard = () => {
   const { timelineData, getTimelineInsights, getDaysUntilDeadline } = useApplicationTimeline()
   const { costData, getBudgetInsights } = useCostAnalysis()
   const { programs: recommendedPrograms } = usePersonalizedPrograms(5)
+  const { preferences } = useUserPreferences()
 
   const [insights, setInsights] = useState<DashboardInsight[]>([])
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
@@ -410,7 +411,8 @@ export const useSmartDashboard = () => {
     profileData: { completionData, isProfileOptimal },
     timelineData,
     costData,
-    recommendedPrograms
+    recommendedPrograms,
+    preferences
   }
 }
 

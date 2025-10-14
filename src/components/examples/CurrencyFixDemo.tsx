@@ -1,6 +1,6 @@
 // Demo component to test currency fixes for Swedish programs
 import React from 'react';
-import { formatCurrency, getCountryCurrency } from '../../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 import { getCurrencyFromCountry } from '../../lib/currency/utils';
 
 /**
@@ -23,7 +23,7 @@ export function CurrencyFixDemo() {
       
       <div className="space-y-4">
         {testCases.map((testCase, index) => {
-          const legacyCurrency = getCountryCurrency(testCase.country);
+          const legacyCurrency = getCurrencyFromCountry(testCase.country);
           const newCurrency = getCurrencyFromCountry(
             testCase.country === 'Sweden' ? 'SE' : 
             testCase.country === 'Norway' ? 'NO' :

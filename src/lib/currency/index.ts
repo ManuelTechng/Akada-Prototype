@@ -12,7 +12,10 @@ export {
   formatNGNWithRealTime,
   formatUSDWithRealTime, 
   convertWithRealTime,
-  formatMultiCurrency
+  formatCurrency,
+  formatCurrencyAuto,
+  formatCurrencyRange,
+  formatCurrencyChange
 } from './formatters';
 
 // React hooks for currency functionality
@@ -50,6 +53,20 @@ export {
 } from './utils';
 
 // Default export combining all functionality
+import { currencyService } from './CurrencyService';
+import { currencyCache } from './cache';
+import { 
+  formatNGNWithRealTime,
+  formatUSDWithRealTime, 
+  convertWithRealTime,
+  formatCurrencyAuto
+} from './formatters';
+import {
+  formatCurrencyWithAPI,
+  convertCurrencyWithAPI,
+  getBulkConversions
+} from './utils';
+
 export default {
   // Core service
   service: currencyService,
@@ -59,7 +76,7 @@ export default {
   formatNGN: formatNGNWithRealTime,
   formatUSD: formatUSDWithRealTime,
   convertCurrency: convertWithRealTime,
-  formatMultiple: formatMultiCurrency,
+  formatMultiple: formatCurrencyAuto,
   
   // Utilities
   format: formatCurrencyWithAPI,

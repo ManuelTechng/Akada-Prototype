@@ -378,7 +378,8 @@ export async function fetchPersonalizedRecommendations(
         description,
         study_level,
         language_requirements,
-        city
+        city,
+        created_at
       `)
       .order('created_at', { ascending: false })
 
@@ -396,9 +397,14 @@ export async function fetchPersonalizedRecommendations(
 
     // Calculate advanced match scores for all programs
     const programMatches = await Promise.all(
-      programs.map(async program => 
-        await calculateAdvancedMatchScore(program, preferences, behavior)
-      )
+      programs.map(async (program: any) => {
+        // Ensure program has required properties
+        const programWithRequiredFields = {
+          ...program,
+          created_at: program.created_at || new Date().toISOString()
+        }
+        return await calculateAdvancedMatchScore(programWithRequiredFields, preferences, behavior)
+      })
     )
 
     // Sort by match score

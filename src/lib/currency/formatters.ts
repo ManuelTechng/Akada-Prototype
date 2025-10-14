@@ -1,5 +1,5 @@
 // Enhanced currency formatters with real-time API integration
-import type { CurrencyFormatOptions, CurrencyDisplayInfo, ConversionOptions } from './types';
+import type { CurrencyFormatOptions, CurrencyDisplayInfo, ConversionOptions, RateFetchOptions } from './types';
 import { getCurrencyConfig, ALL_CURRENCIES, COMPACT_THRESHOLDS } from './config';
 import { currencyService } from './CurrencyService';
 
@@ -111,7 +111,12 @@ export async function convertWithRealTime(
   options: ConversionOptions = {}
 ): Promise<string | number> {
   try {
-    const conversion = await currencyService.convertAmount(amount, from, to, options);
+    // Convert ConversionOptions to RateFetchOptions
+    const rateOptions: RateFetchOptions = {
+      strategy: 'realtime',
+      fallbackOnError: true
+    };
+    const conversion = await currencyService.convertAmount(amount, from, to, rateOptions);
     
     if (options.format) {
       return formatCurrency(conversion.convertedAmount, to, options.format);
@@ -124,12 +129,12 @@ export async function convertWithRealTime(
     // Fallback to static conversion if available
     if (from === 'USD' && to === 'NGN') {
       const fallbackAmount = amount * 1500; // Static rate
-      return options.format ? formatNGN(fallbackAmount, options.format) : fallbackAmount;
+      return options.format ? formatNGNInternal(fallbackAmount, options.format) : fallbackAmount;
     }
     
     if (from === 'NGN' && to === 'USD') {
       const fallbackAmount = amount / 1500; // Static rate
-      return options.format ? formatUSD(fallbackAmount, options.format) : fallbackAmount;
+      return options.format ? formatUSDInternal(fallbackAmount, options.format) : fallbackAmount;
     }
     
     throw error;

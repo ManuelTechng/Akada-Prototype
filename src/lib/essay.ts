@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 import { EssayReview } from './types';
-import { reviewDocumentWithGemini, getGeminiResponse } from './gemini';
+import { analyzeDocument, generateResponse } from './gemini';
 
 export const getEssayReviews = async (userId: string) => {
   try {
@@ -38,7 +38,7 @@ export const createEssayReview = async (
     if (essayError) throw essayError;
 
     // Get AI feedback using Gemini
-    const feedback = await reviewDocumentWithGemini(content, essayType);
+    const feedback = await analyzeDocument(content, essayType as 'sop' | 'cv');
 
     // Update the essay review with AI feedback
     const { data: updatedEssay, error: updateError } = await supabase
@@ -65,7 +65,7 @@ export const createTextReview = async (
 ): Promise<string> => {
   try {
     const fullPrompt = `${prompt}\n\nContent to review:\n${content}`;
-    const response = await getGeminiResponse(fullPrompt);
+    const response = await generateResponse(fullPrompt);
     return response;
   } catch (error) {
     console.error('Error creating text review:', error);

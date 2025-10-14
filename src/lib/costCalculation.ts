@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { convertCurrency } from './currency'
+import { convertCurrencyWithAPI } from './currency/utils'
 
 export interface CostBreakdown {
   tuition: {
@@ -163,65 +163,69 @@ export async function calculateProgramCosts(
     const duration = durationInMonths || calculateDurationInMonths(programData.duration)
 
     // Convert all amounts to NGN
-    const tuitionNGN = await convertCurrency(
+    const tuitionNGN = await convertCurrencyWithAPI(
       programData.tuitionFee,
       programData.tuitionFeeCurrency,
-      'NGN'
+      'NGN',
+      false
     )
 
-    const applicationFeeNGN = await convertCurrency(
+    const applicationFeeNGN = await convertCurrencyWithAPI(
       programData.applicationFee,
       programData.applicationFeeCurrency,
-      'NGN'
+      'NGN',
+      false
     )
 
-    const livingCostNGN = await convertCurrency(
+    const livingCostNGN = await convertCurrencyWithAPI(
       countryData.avgMonthlyLiving,
       countryData.currency,
-      'NGN'
+      'NGN',
+      false
     )
 
-    const visaFeeNGN = await convertCurrency(
+    const visaFeeNGN = await convertCurrencyWithAPI(
       countryData.studentVisaFee,
       countryData.currency,
-      'NGN'
+      'NGN',
+      false
     )
 
-    // Calculate totals
-    const totalLivingCost = livingCostNGN * duration
-    const totalCost = tuitionNGN + totalLivingCost + visaFeeNGN + applicationFeeNGN
+    // Calculate totals (ensure all values are numbers)
+    const totalLivingCost = (livingCostNGN as number) * duration
+    const totalCost = (tuitionNGN as number) + totalLivingCost + (visaFeeNGN as number) + (applicationFeeNGN as number)
 
     // Calculate percentages
-    const tuitionPercentage = (tuitionNGN / totalCost) * 100
+    const tuitionPercentage = ((tuitionNGN as number) / totalCost) * 100
     const livingPercentage = (totalLivingCost / totalCost) * 100
-    const visaPercentage = (visaFeeNGN / totalCost) * 100
-    const applicationPercentage = (applicationFeeNGN / totalCost) * 100
+    const visaPercentage = ((visaFeeNGN as number) / totalCost) * 100
+    const applicationPercentage = ((applicationFeeNGN as number) / totalCost) * 100
 
     return {
       tuition: {
         amount: programData.tuitionFee,
         currency: programData.tuitionFeeCurrency,
-        amountNGN: tuitionNGN
+        amountNGN: tuitionNGN as number
       },
       living: {
         amount: countryData.avgMonthlyLiving,
         currency: countryData.currency,
-        amountNGN: livingCostNGN,
+        amountNGN: livingCostNGN as number,
         monthly: countryData.avgMonthlyLiving,
-        monthlyNGN: livingCostNGN
+        monthlyNGN: livingCostNGN as number
       },
       visa: {
         amount: countryData.studentVisaFee,
         currency: countryData.currency,
-        amountNGN: visaFeeNGN
+        amountNGN: visaFeeNGN as number
       },
       application: {
         amount: programData.applicationFee,
         currency: programData.applicationFeeCurrency,
-        amountNGN: applicationFeeNGN
+        amountNGN: applicationFeeNGN as number
       },
       total: {
-        amount: totalCost / (await convertCurrency(1, 'NGN', programData.tuitionFeeCurrency)),
+        amount: totalCost / (await convertCurrencyWithAPI(1, 'NGN', programData.tuitionFeeCurrency, false) as number),
         currency: programData.tuitionFeeCurrency,
         amountNGN: totalCost
       },
@@ -393,9 +397,9 @@ export async function getBudgetRecommendations(
 
         return {
           programId: saved.program_id,
-          name: saved.programs.name,
-          university: saved.programs.university,
-          country: saved.programs.country,
+          name: saved.programs[0]?.name,
+          university: saved.programs[0]?.university,
+          country: saved.programs[0]?.country,
           totalCostNGN: breakdown.total.amountNGN,
           savings: maxBudgetNGN - breakdown.total.amountNGN,
           percentage: (breakdown.total.amountNGN / maxBudgetNGN) * 100

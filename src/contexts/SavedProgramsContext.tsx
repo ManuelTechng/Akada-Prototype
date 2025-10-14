@@ -12,6 +12,18 @@ interface SavedProgram {
   country?: string
   created_at?: string
   saved_at?: string
+  notes?: string
+  tuition_fee?: number
+  tuition_fee_currency?: string
+  degree_type?: string
+  specialization?: string
+  duration?: string
+  scholarship_available?: boolean
+  study_level?: string
+  description?: string
+  website?: string
+  location?: string
+  requirements?: any[]
 }
 
 interface SavedProgramsContextType {
@@ -83,21 +95,43 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
       
       const startTime = performance.now()
 
-      // Try a simple query first (without JOIN) to test connectivity
-      const simpleQueryPromise = supabase
+      // Query with JOIN to get full program details
+      const queryPromise = supabase
         .from('saved_programs')
-        .select('id, user_id, program_id, saved_at, notes')
+        .select(`
+          id,
+          user_id,
+          program_id,
+          saved_at,
+          notes,
+          programs (
+            id,
+            name,
+            university,
+            country,
+            degree_type,
+            tuition_fee,
+            tuition_fee_currency,
+            duration,
+            specialization,
+            scholarship_available,
+            study_level,
+            description,
+            website,
+            location,
+            requirements
+          )
+        `)
         .eq('user_id', userId)
         .order('saved_at', { ascending: false })
-        .limit(10)
 
-      // Create timeout promise - reduced for faster failure
+      // Create timeout promise
       const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout after 4 seconds')), 4000)
+        setTimeout(() => reject(new Error('Request timeout after 8 seconds')), 8000)
       )
 
-      // Race the simple query against the timeout
-      const result = await Promise.race([simpleQueryPromise, timeoutPromise]) as any
+      // Race the query against the timeout
+      const result = await Promise.race([queryPromise, timeoutPromise]) as any
       const { data, error: fetchError } = result
 
       const endTime = performance.now()
@@ -105,7 +139,7 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
 
       if (fetchError) {
         console.error('❌ Error fetching saved programs:', fetchError)
-        
+
         // If it's a timeout, show a user-friendly message and continue with empty state
         if (fetchError.message?.includes('timeout')) {
           console.log('⏰ Saved programs query timed out, continuing with empty state')
@@ -113,7 +147,7 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
           setSavedPrograms([])
           return
         }
-        
+
         setError(`Failed to load saved programs: ${fetchError.message}`)
         setSavedPrograms([])
         return
@@ -121,23 +155,32 @@ export const SavedProgramsProvider: React.FC<SavedProgramsProviderProps> = ({
 
       console.log('📊 Raw saved programs data:', { count: data?.length || 0 })
 
-      // Transform data with minimal program info (since we're not doing JOIN)
-      const transformedData = (data || []).map(item => ({
-        id: item.id,
-        user_id: item.user_id,
-        program_id: item.program_id,
-        saved_at: item.saved_at,
-        notes: item.notes,
-        // Placeholder values since we're not joining with programs table
-        program_name: 'Program', // Will be filled when program details are needed
-        university: 'University', // Placeholder
-        country: 'Country', // Placeholder
-        tuition_fee: 0,
-        degree_type: 'Unknown',
-        specialization: 'Unknown',
-        duration: 'Unknown',
-        scholarship_available: false
-      }))
+      // Transform data with full program info from JOIN
+      const transformedData = (data || []).map((item: any) => {
+        const program = item.programs
+        return {
+          id: item.id,
+          user_id: item.user_id,
+          program_id: item.program_id,
+          saved_at: item.saved_at,
+          notes: item.notes,
+          // Real program data from JOIN
+          program_name: program?.name || 'Unknown Program',
+          university: program?.university || 'Unknown University',
+          country: program?.country || 'Unknown Country',
+          tuition_fee: program?.tuition_fee || 0,
+          tuition_fee_currency: program?.tuition_fee_currency || 'NGN',
+          degree_type: program?.degree_type || program?.study_level || 'Unknown',
+          specialization: program?.specialization || 'Unknown',
+          duration: program?.duration || 'Unknown',
+          scholarship_available: program?.scholarship_available || false,
+          study_level: program?.study_level,
+          description: program?.description,
+          website: program?.website,
+          location: program?.location,
+          requirements: program?.requirements
+        }
+      })
 
       console.log('✅ Transformed saved programs:', { count: transformedData.length })
       setSavedPrograms(transformedData)

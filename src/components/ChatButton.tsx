@@ -5,9 +5,7 @@ import { useNotifications } from '../contexts/NotificationContext';
 import { 
   createContextualResponse, 
   getSuggestedQuestions,
-  getChatHistory,
-  getQuickResponse,
-  ChatMessage as ChatLog
+  getQuickResponse
 } from '../lib/chat';
 
 interface Message {
@@ -20,7 +18,7 @@ interface Message {
 
 const ChatButton: React.FC = () => {
   const { user, profile } = useAuth();
-  const { addNotification } = useNotifications();
+  // const { addNotification } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -75,11 +73,7 @@ What would you like to know about studying abroad?`,
     if (!textToSend || isLoading) return;
 
     if (!user) {
-      addNotification({
-        title: 'Authentication Required',
-        message: 'Please log in to chat with Akada AI',
-        type: 'error'
-      });
+      console.error('Please log in to chat with Akada AI');
       return;
     }
 
@@ -148,11 +142,7 @@ What would you like to know about studying abroad?`,
         }];
       });
 
-      addNotification({
-        title: 'Chat Error',
-        message: 'Chat temporarily unavailable',
-        type: 'error'
-      });
+      console.error('Chat temporarily unavailable');
     } finally {
       setIsLoading(false);
     }

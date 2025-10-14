@@ -12,6 +12,14 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue
 );
 
+const Form = React.forwardRef<
+  HTMLFormElement,
+  React.FormHTMLAttributes<HTMLFormElement>
+>(({ ...props }, ref) => {
+  return <form ref={ref} {...props} />;
+});
+Form.displayName = "Form";
+
 const FormField = <
   TFieldValues extends Record<string, any> = Record<string, any>
 >({

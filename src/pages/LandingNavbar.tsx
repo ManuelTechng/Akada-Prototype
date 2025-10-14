@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, GraduationCap, LogIn, UserPlus, ChevronDown } from 'lucide-react';
+import { Menu, X, LogIn, UserPlus, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const LandingNavbar: React.FC = () => {
@@ -77,18 +77,14 @@ const LandingNavbar: React.FC = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2.5 group"
+            className="flex items-center gap-2 group"
             aria-label="Akada Home"
           >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-violet-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative bg-gradient-to-br from-blue-600 to-violet-600 p-1.5 rounded-xl">
-                <GraduationCap className="h-6 w-6 text-white" />
-              </div>
-            </div>
-            <span className="text-xl lg:text-2xl font-bold text-slate-900 tracking-tight">
-              Akada
-            </span>
+            <img
+              src="/akada-logo-simple.svg"
+              alt="Akada"
+              className="h-10 lg:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+            />
           </Link>
 
           {/* Desktop Navigation */}

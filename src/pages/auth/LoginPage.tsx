@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signIn } from '../../lib/auth';
-import { GraduationCap, Mail, Lock, Check, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Check, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -46,10 +46,11 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-10 w-10 text-indigo-600" />
-            <h2 className="text-3xl font-bold text-gray-900">Akada</h2>
-          </div>
+          <img
+            src="/akada-logo-simple.svg"
+            alt="Akada"
+            className="h-12 w-auto"
+          />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
         <p className="mt-2 text-center text-sm text-gray-600">

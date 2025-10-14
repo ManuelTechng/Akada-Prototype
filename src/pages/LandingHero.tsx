@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Bot, GraduationCap, UserPlus, LogIn, Sparkles, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bot, UserPlus, LogIn, Sparkles, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const LandingHero: React.FC = () => {
@@ -38,15 +38,15 @@ const LandingHero: React.FC = () => {
 
           {/* Headline - Fixed for visibility */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight mb-6 md:mb-8 leading-tight">
-            Your Gateway to{' '}
             <span className="text-blue-600">
-              Global Tech Education
-            </span>
+              Democratizing Global Education
+            </span>{' '}
+            for African Students
           </h1>
 
           {/* Subheadline */}
           <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed">
-            Akada helps Nigerian students explore, plan, and apply to international academic programs in technology with personalized AI guidance.
+            Explore, plan, and apply to programs across tech, business and more both locally and internationally with personalized AI guidance.
           </p>
 
           {/* CTA Buttons */}

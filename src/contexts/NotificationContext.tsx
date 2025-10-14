@@ -83,6 +83,9 @@ function notificationReducer(state: NotificationState, action: NotificationActio
 
 interface NotificationContextType {
   state: NotificationState
+  notifications: Notification[]
+  unreadCount: number
+  addNotification: (notification: Notification) => void
   fetchNotifications: () => Promise<void>
   markAsRead: (notificationId: string) => Promise<void>
   markAllAsRead: () => Promise<void>
@@ -200,8 +203,15 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     }
   }, [user, fetchNotifications, refreshCounts])
 
+  const addNotification = useCallback((notification: Notification) => {
+    dispatch({ type: 'ADD_NOTIFICATION', payload: notification })
+  }, [])
+
   const value: NotificationContextType = {
     state,
+    notifications: state.notifications,
+    unreadCount: state.unreadCount,
+    addNotification,
     fetchNotifications,
     markAsRead,
     markAllAsRead,

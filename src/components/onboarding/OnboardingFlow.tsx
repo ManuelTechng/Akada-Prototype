@@ -70,7 +70,15 @@ const OnboardingFlow: React.FC = () => {
             // Ensure nested objects are properly merged
             test_scores: {
               ...prevData.test_scores,
-              ...(profileData.test_scores || {})
+              ...(profileData.test_scores || {}),
+              gre: {
+                ...prevData.test_scores?.gre,
+                ...(profileData.test_scores?.gre || {}),
+                // Ensure all values are properly typed as strings
+                verbal: String(profileData.test_scores?.gre?.verbal ?? prevData.test_scores?.gre?.verbal ?? ''),
+                quantitative: String(profileData.test_scores?.gre?.quantitative ?? prevData.test_scores?.gre?.quantitative ?? ''),
+                analytical: String(profileData.test_scores?.gre?.analytical ?? prevData.test_scores?.gre?.analytical ?? '')
+              }
             },
             study_preferences: {
               ...prevData.study_preferences,
@@ -98,7 +106,11 @@ const OnboardingFlow: React.FC = () => {
 
     try {
       // Update the user's profile with all form data
-      await updateUserProfile(user.id, formData);
+      const profileData = {
+        ...formData,
+        gpa: formData.gpa ? parseFloat(formData.gpa) : undefined
+      }
+      await updateUserProfile(user.id, profileData);
       
       // Navigate to dashboard after successful onboarding
       navigate('/dashboard');

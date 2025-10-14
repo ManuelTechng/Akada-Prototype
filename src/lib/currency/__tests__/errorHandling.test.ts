@@ -1,5 +1,5 @@
 // Tests for currency error handling and fallback mechanisms
-import { describe, it, expect, jest, beforeEach } from '@jest/testing-library';
+import { describe, it, expect, jest, beforeEach } from '@testing-library/jest-dom';
 import { 
   CurrencyError, 
   CurrencyErrorFactory, 

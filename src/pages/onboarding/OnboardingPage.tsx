@@ -68,24 +68,31 @@ const OnboardingPage: React.FC = () => {
       const [section, field, subfield] = name.split('.');
       
       if (subfield) {
-        setFormData(prev => ({
-          ...prev,
-          [section]: {
-            ...prev[section as keyof typeof prev],
-            [field]: {
-              ...prev[section as keyof typeof prev][field as keyof typeof prev[keyof typeof prev]],
-              [subfield]: value
+        setFormData(prev => {
+          const currentSection = prev[section as keyof typeof prev] || {};
+          const currentField = (currentSection as any)?.[field] || {};
+          return {
+            ...prev,
+            [section]: {
+              ...currentSection,
+              [field]: {
+                ...currentField,
+                [subfield]: value
+              }
             }
-          }
-        }));
+          };
+        });
       } else {
-        setFormData(prev => ({
-          ...prev,
-          [section]: {
-            ...prev[section as keyof typeof prev],
-            [field]: value
-          }
-        }));
+        setFormData(prev => {
+          const currentSection = prev[section as keyof typeof prev] || {};
+          return {
+            ...prev,
+            [section]: {
+              ...currentSection,
+              [field]: value
+            }
+          };
+        });
       }
     } else {
       setFormData(prev => ({
@@ -114,13 +121,16 @@ const OnboardingPage: React.FC = () => {
       });
     }
     
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [field]: selectedValues
-      }
-    }));
+        setFormData(prev => {
+          const currentSection = prev[section as keyof typeof prev] || {};
+          return {
+            ...prev,
+            [section]: {
+              ...currentSection,
+              [field]: selectedValues
+            }
+          };
+        });
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -244,14 +254,14 @@ const OnboardingPage: React.FC = () => {
         ielts: formData.test_scores.ielts ? parseFloat(formData.test_scores.ielts) : undefined,
         toefl: formData.test_scores.toefl ? parseFloat(formData.test_scores.toefl) : undefined,
         gre: {
-          verbal: formData.test_scores.gre.verbal ? parseFloat(formData.test_scores.gre.verbal) : undefined,
-          quantitative: formData.test_scores.gre.quantitative ? parseFloat(formData.test_scores.gre.quantitative) : undefined,
-          analytical: formData.test_scores.gre.analytical ? parseFloat(formData.test_scores.gre.analytical) : undefined,
+          verbal: formData.test_scores.gre.verbal ? (isNaN(parseFloat(formData.test_scores.gre.verbal)) ? formData.test_scores.gre.verbal : parseFloat(formData.test_scores.gre.verbal)) : '',
+          quantitative: formData.test_scores.gre.quantitative ? (isNaN(parseFloat(formData.test_scores.gre.quantitative)) ? formData.test_scores.gre.quantitative : parseFloat(formData.test_scores.gre.quantitative)) : '',
+          analytical: formData.test_scores.gre.analytical ? (isNaN(parseFloat(formData.test_scores.gre.analytical)) ? formData.test_scores.gre.analytical : parseFloat(formData.test_scores.gre.analytical)) : '',
         }
       },
       study_preferences: {
         ...formData.study_preferences,
-        max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : undefined,
+        max_tuition: formData.study_preferences.max_tuition ? parseFloat(formData.study_preferences.max_tuition) : 0,
       },
       profile_completed: true
     };

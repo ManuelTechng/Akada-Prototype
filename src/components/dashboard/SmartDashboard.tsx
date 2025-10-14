@@ -179,7 +179,8 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
     profileData,
     timelineData,
     costData,
-    recommendedPrograms
+    recommendedPrograms,
+    preferences
   } = useSmartDashboard()
   
   const { notifications, hasUrgentNotifications, urgentCount } = useDashboardNotifications()
@@ -249,7 +250,7 @@ export const SmartDashboard: React.FC<{ className?: string }> = ({ className }) 
       keyMetrics: {
         profileScore: metrics?.profileCompletionPercentage || 0,
         upcomingDeadlines: metrics?.urgentDeadlines || 0,
-        budgetHealth: metrics?.averageCostNGN ? 'Set' : 'Not Set',
+        budgetHealth: preferences?.budgetRange ? 'Set' : 'Not Set',
         matchedPrograms: recommendedPrograms?.length || 0
       },
       nextBestAction: {

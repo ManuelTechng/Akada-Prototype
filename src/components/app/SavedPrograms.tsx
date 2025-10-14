@@ -2,17 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { 
   BookmarkIcon, 
   Search, 
-  Filter, 
   Grid3X3, 
   List, 
   Trash2, 
-  Share2, 
-  ExternalLink,
-  MapPin,
-  Calendar,
-  DollarSign,
-  Star,
-  ChevronDown,
   SortAsc,
   SortDesc,
   Heart,
@@ -29,16 +21,17 @@ const createProgramFromSaved = (savedProgram: any): Program => ({
   country: savedProgram.country || 'Unknown Country',
   degree_type: savedProgram.degree_type || 'Masters',
   tuition_fee: savedProgram.tuition_fee || 0,
-  tuition_fee_currency: 'NGN', // Default to NGN for display
+  tuition_fee_currency: savedProgram.tuition_fee_currency || 'NGN',
   duration: savedProgram.duration || '2 years',
   deadline: '2024-12-15', // TODO: Add deadline to programs table
   specialization: savedProgram.specialization || '',
   scholarship_available: savedProgram.scholarship_available || false,
   // Add other required fields with defaults
-  website: '',
-  description: '',
-  requirements: [],
-  location: savedProgram.country || 'Unknown Country'
+  website: savedProgram.website || '',
+  description: savedProgram.description || '',
+  requirements: savedProgram.requirements || [],
+  location: savedProgram.location || savedProgram.country || 'Unknown Country',
+  created_at: savedProgram.created_at || savedProgram.saved_at || new Date().toISOString()
 })
 import { formatNGN } from '../../utils/currency'
 import { useNavigate } from 'react-router-dom'
@@ -86,8 +79,8 @@ const SavedPrograms: React.FC = () => {
           comparison = (a.program_name || '').localeCompare(b.program_name || '')
           break
         case 'cost':
-          // Use real tuition fee data
-          comparison = (a.tuition_fee || 0) - (b.tuition_fee || 0)
+          // Use program name for comparison since tuition_fee is not available in SavedProgram
+          comparison = a.program_name?.localeCompare(b.program_name || '') || 0
           break
         case 'deadline':
           // TODO: Add deadline to programs table for proper sorting
@@ -95,7 +88,7 @@ const SavedPrograms: React.FC = () => {
           break
         case 'date':
         default:
-          comparison = new Date(b.saved_at || b.created_at).getTime() - new Date(a.saved_at || a.created_at).getTime()
+          comparison = new Date(b.saved_at || b.created_at || 0).getTime() - new Date(a.saved_at || a.created_at || 0).getTime()
           break
       }
       
@@ -135,9 +128,15 @@ const SavedPrograms: React.FC = () => {
     }
   }
 
-  const handleApplyToProgram = (program: Program) => {
-    setSelectedProgram(program)
-    setShowApplicationModal(true)
+  const handleApplyToProgram = (programId: string) => {
+    // Find the program from the saved programs
+    const program = savedPrograms.find(sp => sp.program_id === programId)
+    if (program) {
+      // Convert saved program to Program type
+      const programData = createProgramFromSaved(program)
+      setSelectedProgram(programData)
+      setShowApplicationModal(true)
+    }
   }
 
   const handleApplicationSuccess = () => {
@@ -353,23 +352,26 @@ const SavedPrograms: React.FC = () => {
                 
                 return (
                   <div key={savedProgram.program_id} className="relative">
-                    {/* Selection checkbox */}
+                    {/* Selection checkbox - positioned in top-left with proper spacing */}
                     <div className="absolute top-4 left-4 z-10">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleProgramSelection(savedProgram.program_id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+                        title={isSelected ? "Deselect program" : "Select program"}
                       />
                     </div>
-                    
-                    <ProgramCard
-                      program={program}
-                      isSaved={true}
-                      onUnsave={() => handleRemoveProgram(savedProgram.program_id)}
-                      onApply={handleApplyToProgram}
-                      compact={viewMode === 'list'}
-                    />
+
+                    <div className="pl-14">
+                      <ProgramCard
+                        program={program}
+                        isSaved={true}
+                        onUnsave={() => handleRemoveProgram(savedProgram.program_id)}
+                        onApply={handleApplyToProgram}
+                        compact={viewMode === 'list'}
+                      />
+                    </div>
                   </div>
                 )
               })}
