@@ -316,6 +316,11 @@ export const useCostAnalysis = () => {
 
     try {
       setLoading(true)
+      console.log('🔍 Dashboard Debug - Preferences:', {
+        budgetRange: preferences.budgetRange,
+        hasPreferences: !!preferences,
+        userId: user.id
+      })
 
       // Fetch saved programs with cost data
       const { data: savedPrograms, error: savedError } = await supabase
@@ -332,7 +337,7 @@ export const useCostAnalysis = () => {
       if (savedError) throw savedError
 
       // Get cost estimates for countries
-      const countries = [...new Set(savedPrograms?.map(sp => sp.programs[0]?.country).filter(Boolean))]
+      const countries = [...new Set(savedPrograms?.map(sp => sp.programs?.country).filter(Boolean))]
       const { data: countryEstimates, error: estimatesError } = await supabase
         .from('country_estimates')
         .select('*')
@@ -340,9 +345,12 @@ export const useCostAnalysis = () => {
 
       if (estimatesError) throw estimatesError
 
+      // Get user budget for calculations
+      const userBudget = preferences.budgetRange || 0
+
       // Calculate total costs for each saved program
       const savedProgramsCosts = savedPrograms?.map(sp => {
-        const program = sp.programs[0] // Get the first program from the array
+        const program = sp.programs // Access programs directly
         if (!program) return null
         
         const countryData = countryEstimates?.find(ce => ce.country === program.country)
@@ -364,12 +372,11 @@ export const useCostAnalysis = () => {
             living: (countryData?.avg_monthly_living || 0) * durationMonths,
             visa: countryData?.student_visa_fee || 0
           },
-          isAffordable: preferences.budgetRange ? totalCostNGN <= preferences.budgetRange : true
+          isAffordable: userBudget > 0 ? totalCostNGN <= userBudget : true
         }
       }).filter((item): item is any => item !== null) || []
 
       // Budget analysis
-      const userBudget = preferences.budgetRange || 0
       const totalCosts = savedProgramsCosts.map(spc => spc.totalCostNGN)
       const averageCost = totalCosts.length > 0 ? 
         totalCosts.reduce((sum, cost) => sum + cost, 0) / totalCosts.length : 0
@@ -385,8 +392,17 @@ export const useCostAnalysis = () => {
 
       // Find scholarship opportunities
       const scholarshipPrograms = savedProgramsCosts.filter(spc => 
-        spc.programs[0]?.scholarship_available && !spc.isAffordable
+        spc.programs?.scholarship_available && !spc.isAffordable
       )
+
+      console.log('🔍 Dashboard Debug - Cost Analysis:', {
+        savedProgramsCount: savedPrograms?.length || 0,
+        savedProgramsCostsCount: savedProgramsCosts.length,
+        userBudget,
+        affordableCount,
+        scholarshipProgramsCount: scholarshipPrograms.length,
+        budgetAnalysis
+      })
 
       setCostData({
         savedProgramsCosts,
