@@ -246,7 +246,9 @@ class ImageCache {
     if (this.cache.size >= this.maxSize) {
       // Remove oldest entry (first in Map)
       const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
     }
     
     // Delete if exists to move to end

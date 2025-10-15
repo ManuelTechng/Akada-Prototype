@@ -104,9 +104,7 @@ export class CurrencyDetectionService {
   private async detectFromLocation(): Promise<string | null> {
     try {
       // Use a free IP geolocation service
-      const response = await fetch('https://ipapi.co/json/', {
-        timeout: 5000
-      });
+      const response = await fetch('https://ipapi.co/json/');
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -134,9 +132,7 @@ export class CurrencyDetectionService {
       
       // Try alternative service
       try {
-        const fallbackResponse = await fetch('https://api.country.is/', {
-          timeout: 3000
-        });
+        const fallbackResponse = await fetch('https://api.country.is/');
         
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();

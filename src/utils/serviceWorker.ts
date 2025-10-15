@@ -319,7 +319,9 @@ const syncOfflineQueue = async (): Promise<void> => {
   if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
     try {
       const registration = await navigator.serviceWorker.ready;
-      await registration.sync.register('background-sync');
+      if ('sync' in registration) {
+        await (registration as any).sync.register('background-sync');
+      }
       console.log('SW: Background sync registered');
     } catch (error) {
       console.error('SW: Background sync registration failed:', error);
@@ -343,7 +345,7 @@ const manualSyncOfflineQueue = async (): Promise<void> => {
   
   console.log('SW: Manually syncing offline queue:', offlineQueue.length, 'items');
   
-  const processedItems = [];
+  const processedItems: any[] = [];
   
   for (const item of offlineQueue) {
     try {
@@ -363,7 +365,7 @@ const manualSyncOfflineQueue = async (): Promise<void> => {
   }
   
   // Remove processed items
-  const remainingQueue = offlineQueue.filter(item => !processedItems.includes(item));
+  const remainingQueue = offlineQueue.filter((item: any) => !processedItems.includes(item));
   localStorage.setItem('offline-queue', JSON.stringify(remainingQueue));
 };
 

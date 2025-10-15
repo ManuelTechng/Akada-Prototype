@@ -57,26 +57,10 @@ export default defineConfig({
 
           // Supabase and auth - separate chunk for lazy loading
           'vendor-supabase': ['@supabase/supabase-js'],
-          'app-auth': [
-            './src/contexts/AuthContext',
-            './src/lib/auth',
-            './src/lib/supabase'
-          ],
 
           // Non-critical utilities
           'vendor-utils': ['date-fns', 'react-hook-form', '@hookform/resolvers', 'zod'],
-          'app-utils': [
-            './src/utils/currency',
-            './src/utils/imageOptimization',
-            './src/hooks/useResponsive',
-            './src/hooks/useDarkMode'
-          ],
 
-          // App components - lazy loaded
-          'app-components': [
-            './src/components/ui',
-            './src/components/app'
-          ]
         },
         // Optimize chunk names for caching
         chunkFileNames: (chunkInfo) => {

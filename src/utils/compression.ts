@@ -60,12 +60,12 @@ export const compressText = async (
   }
 
   try {
-    let compressedData: ArrayBuffer;
+    let compressedData: Uint8Array;
     let compressionFormat: string;
 
     // Use CompressionStream API if available (modern browsers)
     if ('CompressionStream' in window) {
-      const stream = new CompressionStream(format);
+      const stream = new CompressionStream(format === 'brotli' ? 'gzip' : format);
       const writer = stream.writable.getWriter();
       const reader = stream.readable.getReader();
 

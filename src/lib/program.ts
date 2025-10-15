@@ -81,7 +81,7 @@ export const searchPrograms = async (filters: {
       deadline: program.deadline || 'TBD',
       requirements: program.requirements || [],
       // Add default values for optional fields
-      abbreviation: program.abbreviation || program.university.split(' ').map(w => w[0]).join(''),
+      abbreviation: program.abbreviation || program.university.split(' ').map((w: string) => w[0]).join(''),
       description: program.description || `${program.degree_type} program in ${program.specialization || program.name} at ${program.university}`,
       website: program.website || '#',
       logo: program.logo || 'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
