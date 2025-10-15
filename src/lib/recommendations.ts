@@ -314,7 +314,7 @@ async function getSpecializationInterest(savedProgramIds: string[]): Promise<str
       .not('specialization', 'is', null)
 
     const specializations = programs
-      ?.map(p => p.specialization?.split(',').map(s => s.trim()))
+      ?.map(p => p.specialization?.split(',').map((s: string) => s.trim()))
       .flat()
       .filter(Boolean) || []
 

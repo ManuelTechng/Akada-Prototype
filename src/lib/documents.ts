@@ -157,7 +157,7 @@ export const requestAIReview = async (
     return feedback;
   } catch (error) {
     console.error('Documents: AI review error:', error);
-    await updateDocumentStatus(documentId, 'error', `Review failed: ${error.message}`);
+    await updateDocumentStatus(documentId, 'error', `Review failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     throw error;
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
-import { Copy, Check, Palette, Grid, Type, DollarSign } from 'lucide-react';
+import { Copy, Check, Palette, Grid, Type, DollarSign, Square } from 'lucide-react';
 
 interface ShowcaseSection {
   id: string;
@@ -15,7 +15,7 @@ const DesignTokenShowcase: React.FC = () => {
 
   const sections: ShowcaseSection[] = [
     { id: 'colors', title: 'Colors', icon: <Palette className="h-4 w-4" /> },
-    { id: 'spacing', title: 'Spacing', icon: <Spacing className="h-4 w-4" /> },
+    { id: 'spacing', title: 'Spacing', icon: <Square className="h-4 w-4" /> },
     { id: 'typography', title: 'Typography', icon: <Type className="h-4 w-4" /> },
     { id: 'currency', title: 'Currency', icon: <DollarSign className="h-4 w-4" /> },
     { id: 'components', title: 'Components', icon: <Grid className="h-4 w-4" /> },
@@ -257,11 +257,15 @@ const DesignTokenShowcase: React.FC = () => {
                       <div 
                         className="bg-indigo-500 h-4 rounded"
                         style={{ 
-                          width: tokens.spacing[size as keyof typeof tokens.spacing]
+                          width: typeof tokens.spacing[size as keyof typeof tokens.spacing] === 'string' 
+                            ? tokens.spacing[size as keyof typeof tokens.spacing] 
+                            : (tokens.spacing[size as keyof typeof tokens.spacing] as any).desktop || '16px'
                         }}
                       />
                       <span className="text-sm" style={{ color: tokens.colors.text('secondary') }}>
-                        {tokens.spacing[size as keyof typeof tokens.spacing]}
+                        {typeof tokens.spacing[size as keyof typeof tokens.spacing] === 'string' 
+                          ? tokens.spacing[size as keyof typeof tokens.spacing] 
+                          : (tokens.spacing[size as keyof typeof tokens.spacing] as any).desktop || '16px'}
                       </span>
                     </div>
                   ))}
