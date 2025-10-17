@@ -1,0 +1,441 @@
+.container {
+  	width: 100%;
+  	height: 346px;
+  	position: relative;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 16px;
+  	text-align: left;
+  	font-size: 24px;
+  	color: #fff;
+  	font-family: Arial;
+}
+.glasswelcomecarddark {
+  	align-self: stretch;
+  	height: 130px;
+  	position: relative;
+  	box-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
+  	border-radius: 16px;
+  	background-color: rgba(16, 24, 40, 0.4);
+  	border: 1px solid rgba(255, 255, 255, 0.1);
+  	box-sizing: border-box;
+  	overflow: hidden;
+  	flex-shrink: 0;
+}
+.container2 {
+  	position: absolute;
+  	top: 1px;
+  	left: 1px;
+  	background: linear-gradient(135deg, rgba(97, 95, 255, 0.2), rgba(173, 70, 255, 0.2) 50%, rgba(246, 51, 154, 0.2));
+  	width: 1342px;
+  	height: 128px;
+}
+.container3 {
+  	position: absolute;
+  	top: -127px;
+  	left: 1215px;
+  	filter: blur(128px);
+  	border-radius: 16777200px;
+  	background-color: rgba(97, 95, 255, 0.3);
+  	width: 256px;
+  	height: 256px;
+}
+.container4 {
+  	position: absolute;
+  	top: 33px;
+  	left: -95px;
+  	filter: blur(128px);
+  	border-radius: 16777200px;
+  	background-color: rgba(173, 70, 255, 0.3);
+  	width: 192px;
+  	height: 192px;
+}
+.container5 {
+  	position: absolute;
+  	top: 33px;
+  	left: 33px;
+  	width: 1278px;
+  	height: 64px;
+  	display: flex;
+  	align-items: flex-start;
+  	justify-content: space-between;
+  	gap: 20px;
+}
+.container6 {
+  	height: 64px;
+  	width: 580.4px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 8px;
+}
+.heading2 {
+  	align-self: stretch;
+  	height: 32px;
+  	display: flex;
+  	align-items: flex-start;
+}
+.goodAfternoonTosin {
+  	position: relative;
+  	line-height: 32px;
+}
+.paragraph {
+  	align-self: stretch;
+  	height: 24px;
+  	position: relative;
+  	font-size: 16px;
+  	color: #d1d5dc;
+}
+.everyApplicationBrings {
+  	position: absolute;
+  	top: -2px;
+  	left: 0px;
+  	line-height: 24px;
+}
+.buttonIcon {
+  	height: 36px;
+  	width: 36px;
+  	border-radius: 8px;
+}
+.container7 {
+  	align-self: stretch;
+  	height: 200px;
+  	position: relative;
+  	font-size: 36px;
+}
+.glassstatsgriddark {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 890.7px;
+  	height: 180px;
+}
+.glassmetriccarddark {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
+  	border-radius: 14px;
+  	background-color: rgba(16, 24, 40, 0.4);
+  	border: 1px solid rgba(255, 255, 255, 0.1);
+  	box-sizing: border-box;
+  	width: 210.7px;
+  	height: 180px;
+  	overflow: hidden;
+}
+.container8 {
+  	position: absolute;
+  	top: 1px;
+  	left: 1px;
+  	background: linear-gradient(135deg, rgba(0, 201, 80, 0.3), rgba(0, 188, 125, 0.2));
+  	width: 208.7px;
+  	height: 178px;
+}
+.container9 {
+  	position: absolute;
+  	top: 1px;
+  	left: 129.66px;
+  	filter: blur(80px);
+  	border-radius: 16777200px;
+  	background-color: rgba(0, 201, 80, 0.4);
+  	width: 80px;
+  	height: 80px;
+  	opacity: 0;
+}
+.container10 {
+  	position: absolute;
+  	top: 115px;
+  	left: 145.66px;
+  	border-radius: 16777200px 0px 0px 0px;
+  	background-color: rgba(255, 255, 255, 0.05);
+  	width: 64px;
+  	height: 64px;
+}
+.container11 {
+  	position: absolute;
+  	top: 56px;
+  	left: 25px;
+  	width: 160.7px;
+  	height: 68px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 8px;
+}
+.container12 {
+  	align-self: stretch;
+  	height: 40px;
+  	position: relative;
+}
+.div {
+  	position: absolute;
+  	top: -3px;
+  	left: 0px;
+  	line-height: 40px;
+}
+.container13 {
+  	align-self: stretch;
+  	height: 20px;
+  	position: relative;
+  	font-size: 14px;
+  	color: #d1d5dc;
+}
+.profileComplete {
+  	position: absolute;
+  	top: -1.5px;
+  	left: 0px;
+  	line-height: 20px;
+}
+.glassmetriccarddark2 {
+  	position: absolute;
+  	top: 0px;
+  	left: 226.66px;
+  	box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
+  	border-radius: 14px;
+  	background-color: rgba(16, 24, 40, 0.4);
+  	border: 1px solid rgba(255, 255, 255, 0.1);
+  	box-sizing: border-box;
+  	width: 210.7px;
+  	height: 180px;
+  	overflow: hidden;
+}
+.container14 {
+  	position: absolute;
+  	top: 1px;
+  	left: 1px;
+  	background: linear-gradient(135deg, rgba(43, 127, 255, 0.3), rgba(0, 184, 219, 0.2));
+  	width: 208.7px;
+  	height: 178px;
+}
+.container15 {
+  	position: absolute;
+  	top: 1px;
+  	left: 129.66px;
+  	filter: blur(80px);
+  	border-radius: 16777200px;
+  	background-color: rgba(43, 127, 255, 0.4);
+  	width: 80px;
+  	height: 80px;
+  	opacity: 0;
+}
+.glassmetriccarddark3 {
+  	position: absolute;
+  	top: 0px;
+  	left: 453.33px;
+  	box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
+  	border-radius: 14px;
+  	background-color: rgba(16, 24, 40, 0.4);
+  	border: 1px solid rgba(255, 255, 255, 0.1);
+  	box-sizing: border-box;
+  	width: 210.7px;
+  	height: 180px;
+  	overflow: hidden;
+}
+.container20 {
+  	position: absolute;
+  	top: 1px;
+  	left: 1px;
+  	background: linear-gradient(135deg, rgba(173, 70, 255, 0.3), rgba(246, 51, 154, 0.2));
+  	width: 208.7px;
+  	height: 178px;
+}
+.container21 {
+  	position: absolute;
+  	top: 1px;
+  	left: 129.66px;
+  	filter: blur(80px);
+  	border-radius: 16777200px;
+  	background-color: rgba(173, 70, 255, 0.4);
+  	width: 80px;
+  	height: 80px;
+  	opacity: 0;
+}
+.glassmetriccarddark4 {
+  	position: absolute;
+  	top: 0px;
+  	left: 679.99px;
+  	box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
+  	border-radius: 14px;
+  	background-color: rgba(16, 24, 40, 0.4);
+  	border: 1px solid rgba(255, 255, 255, 0.1);
+  	box-sizing: border-box;
+  	width: 210.7px;
+  	height: 180px;
+  	overflow: hidden;
+}
+.container26 {
+  	position: absolute;
+  	top: 1px;
+  	left: 1px;
+  	background: linear-gradient(135deg, rgba(255, 105, 0, 0.3), rgba(251, 44, 54, 0.2));
+  	width: 208.7px;
+  	height: 178px;
+}
+.container27 {
+  	position: absolute;
+  	top: 1px;
+  	left: 129.67px;
+  	filter: blur(80px);
+  	border-radius: 16777200px;
+  	background-color: rgba(255, 105, 0, 0.4);
+  	width: 80px;
+  	height: 80px;
+  	opacity: 0;
+}
+.container28 {
+  	position: absolute;
+  	top: 115px;
+  	left: 145.67px;
+  	border-radius: 16777200px 0px 0px 0px;
+  	background-color: rgba(255, 255, 255, 0.05);
+  	width: 64px;
+  	height: 64px;
+}
+.glassactioncarddark {
+  	position: absolute;
+  	top: 0px;
+  	left: 906.66px;
+  	box-shadow: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
+  	border-radius: 14px;
+  	background-color: rgba(16, 24, 40, 0.4);
+  	border: 1px solid rgba(255, 255, 255, 0.1);
+  	box-sizing: border-box;
+  	width: 437.3px;
+  	height: 200px;
+  	overflow: hidden;
+  	font-size: 14px;
+}
+.container32 {
+  	position: absolute;
+  	top: 1px;
+  	left: 1px;
+  	background: linear-gradient(135deg, rgba(97, 95, 255, 0.2), rgba(173, 70, 255, 0.2));
+  	width: 435.3px;
+  	height: 198px;
+}
+.container33 {
+  	position: absolute;
+  	top: 1px;
+  	left: -141.07px;
+  	background: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0));
+  	width: 435.3px;
+  	height: 198px;
+}
+.container34 {
+  	position: absolute;
+  	top: 103px;
+  	left: 340.34px;
+  	border-radius: 16777200px 0px 0px 0px;
+  	background-color: rgba(255, 255, 255, 0.05);
+  	width: 96px;
+  	height: 96px;
+}
+.container35 {
+  	position: absolute;
+  	top: 25px;
+  	left: 25px;
+  	width: 387.3px;
+  	height: 132px;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: 16px;
+}
+.containerIcon {
+  	height: 48px;
+  	width: 48px;
+  	border-radius: 10px;
+}
+.container36 {
+  	height: 132px;
+  	flex: 1;
+  	position: relative;
+}
+.container37 {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 323.3px;
+  	height: 16px;
+  	display: flex;
+  	align-items: center;
+  	gap: 8px;
+  	font-size: 12px;
+  	color: #99a1af;
+}
+.text {
+  	height: 16px;
+  	width: 112.8px;
+  	display: flex;
+  	align-items: flex-start;
+}
+.nextBestAction {
+  	position: relative;
+  	letter-spacing: 0.6px;
+  	line-height: 16px;
+  	text-transform: uppercase;
+  	flex-shrink: 0;
+}
+.container38 {
+  	height: 4px;
+  	width: 4px;
+  	position: relative;
+  	border-radius: 16777200px;
+  	background-color: #6a7282;
+}
+.text2 {
+  	height: 16px;
+  	width: 79.8px;
+  	display: flex;
+  	align-items: flex-start;
+}
+.recommended {
+  	position: relative;
+  	line-height: 16px;
+}
+.heading3 {
+  	position: absolute;
+  	top: 24px;
+  	left: 0px;
+  	width: 323.3px;
+  	height: 28px;
+  	font-size: 18px;
+}
+.continueBuildingYour {
+  	position: absolute;
+  	top: -1px;
+  	left: 0px;
+  	line-height: 28px;
+}
+.paragraph2 {
+  	position: absolute;
+  	top: 60px;
+  	left: 0px;
+  	width: 323.3px;
+  	height: 20px;
+  	color: #d1d5dc;
+}
+.button {
+  	position: absolute;
+  	top: 96px;
+  	left: 0px;
+  	box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -4px rgba(0, 0, 0, 0.1);
+  	border-radius: 8px;
+  	background-color: #615fff;
+  	width: 128.1px;
+  	height: 36px;
+}
+.getStarted {
+  	position: absolute;
+  	top: 6.5px;
+  	left: 12px;
+  	line-height: 20px;
+}
+.icon {
+  	position: absolute;
+  	top: 10px;
+  	left: 100.13px;
+  	width: 16px;
+  	height: 16px;
+}
+

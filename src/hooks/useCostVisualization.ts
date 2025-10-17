@@ -81,10 +81,24 @@ export const useCostVisualization = () => {
         `)
         .eq('user_id', user.id)
 
+      // Type assertion for the joined data structure
+      const typedSavedPrograms = savedPrograms as Array<{
+        programs: {
+          id: string;
+          name: string;
+          university: string;
+          country: string;
+          tuition_fee: number;
+          duration: string;
+          scholarship_available: boolean;
+          application_fee: number;
+        }
+      }> | null
+
       if (savedError) throw savedError
 
       // Get country cost estimates
-      const countries = [...new Set(savedPrograms?.map(sp => sp.programs[0]?.country).filter(Boolean) || [])]
+      const countries = [...new Set(typedSavedPrograms?.map(sp => sp.programs?.country).filter(Boolean) || [])]
       const { data: countryEstimates, error: estimatesError } = await supabase
         .from('country_estimates')
         .select('*')
@@ -93,8 +107,8 @@ export const useCostVisualization = () => {
       if (estimatesError) throw estimatesError
 
       // Process cost breakdowns for each program
-      const breakdowns: CostBreakdownData[] = savedPrograms?.map(sp => {
-        const program = sp.programs[0] // Get the first program from the array
+      const breakdowns: CostBreakdownData[] = typedSavedPrograms?.map(sp => {
+        const program = sp.programs // Access program object directly
         if (!program) return null
         
         const countryData = countryEstimates?.find(ce => ce.country === program.country)

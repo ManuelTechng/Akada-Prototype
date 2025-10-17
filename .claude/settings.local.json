@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Read(//c/Users/oyiny/OneDrive/2025/manueltech/Projects/Akada Modern UI Redesign/**)"
     ],
     "deny": [],
     "ask": []

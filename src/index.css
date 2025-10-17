@@ -1,7 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,18 +8,57 @@
   box-sizing: border-box;
 }
 
+:root {
+  --font-sans: 'Open Sans', 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Open Sans', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Figma Design Tokens */
+  --figma-background: #ffffff;
+  --figma-foreground: #111827;
+  --figma-card: #ffffff;
+  --figma-card-foreground: #111827;
+  --figma-border: rgba(0, 0, 0, 0.1);
+  --figma-muted: #f3f4f6;
+  --figma-muted-foreground: #6b7280;
+  --figma-primary: #4f46e5;
+  --figma-primary-foreground: #ffffff;
+  --figma-secondary: #10b981;
+  --figma-secondary-foreground: #ffffff;
+  --figma-radius: 0.625rem;
+}
+
+.dark {
+  --figma-background: #0f172a;
+  --figma-foreground: #f8fafc;
+  --figma-card: rgba(16, 24, 40, 0.4);
+  --figma-card-foreground: #f8fafc;
+  --figma-border: rgba(255, 255, 255, 0.1);
+  --figma-muted: rgba(255, 255, 255, 0.05);
+  --figma-muted-foreground: #9ca3af;
+  --figma-primary: #818cf8;
+  --figma-primary-foreground: #0f172a;
+  --figma-secondary: #34d399;
+  --figma-secondary-foreground: #0f172a;
+}
+
 @layer base {
   html, body, #root {
     min-height: 100%;
   }
 
   body {
-    font-family: 'Inter', 'Montserrat', sans-serif;
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     position: relative;
-    background-color: #f9fafb;
+    background-color: #F5F6FA;
     /* CSS variables for react-select dark mode */
     --select-bg: #ffffff;
     --select-border: #d1d5db;
@@ -34,7 +69,7 @@
   }
 
   .dark body {
-    background-color: #111827;
+    background-color: #0A0E1A;
     /* Dark mode variables for react-select */
     --select-bg: #374151;
     --select-border: #4b5563;
@@ -44,17 +79,30 @@
     --select-multi-text: #c7d2fe;
   }
 
+  body.darkMode {
+    background-color: #1a1a1a;
+    color: #f9f9f9;
+    --select-bg: #374151;
+    --select-border: #4b5563;
+    --select-text: #f3f4f6;
+    --select-hover: #4b5563;
+    --select-multi-bg: #312e81;
+    --select-multi-text: #c7d2fe;
+  }
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-semibold);
   }
 }
 
 .font-heading {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
 }
 
 .font-sans {
-  font-family: 'Inter', 'Montserrat', sans-serif;
+  font-family: var(--font-sans);
 }
 
 .card-shadow {
@@ -124,6 +172,20 @@ body {
   animation: fadeIn 0.5s ease-out;
 }
 
+/* Glassmorphism shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
 /* Grid layout for dashboard cards */
 .dashboard-grid {
   display: grid;
@@ -136,3 +198,75 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
 }
+
+/* Figma Design Utility Classes */
+.figma-card {
+  @apply rounded-3xl border border-white/10 shadow-lg shadow-slate-200/40;
+  background: var(--figma-card) !important;
+  border-color: var(--figma-border) !important;
+  backdrop-filter: blur(12px);
+}
+
+.dark .figma-card {
+  background: rgba(16, 24, 40, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 28px 60px -28px rgba(7, 12, 28, 0.85);
+}
+
+.figma-card-content {
+  @apply p-5 sm:p-6;
+}
+
+.figma-notification-card {
+  @apply p-4 rounded-lg border border-white/10 transition-colors hover:border-white/20;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .figma-notification-card {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.figma-button-primary {
+  @apply rounded-lg text-white text-sm font-medium transition-all;
+  background: var(--figma-primary);
+  color: var(--figma-primary-foreground);
+}
+
+.figma-button-secondary {
+  @apply rounded-lg text-sm font-medium transition-all;
+  background: var(--figma-secondary);
+  color: var(--figma-secondary-foreground);
+}
+
+.figma-text-primary {
+  color: var(--figma-foreground);
+}
+
+  .figma-text-secondary {
+    color: var(--figma-muted-foreground);
+  }
+
+  /* Open Sans Font Utilities */
+  .font-open-sans {
+    font-family: var(--font-sans);
+  }
+
+  .font-light {
+    font-weight: var(--font-weight-light);
+  }
+
+  .font-normal {
+    font-weight: var(--font-weight-normal);
+  }
+
+  .font-medium {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .font-semibold {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .font-bold {
+    font-weight: var(--font-weight-bold);
+  }

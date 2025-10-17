@@ -385,21 +385,37 @@ export async function getBudgetRecommendations(
       `)
       .eq('user_id', userId)
 
-    if (error || !savedPrograms) {
+    // Type assertion for the joined data structure
+    const typedSavedPrograms = savedPrograms as Array<{
+      program_id: string;
+      programs: {
+        id: string;
+        name: string;
+        university: string;
+        country: string;
+        tuition_fee: number;
+        tuition_fee_currency: string;
+        application_fee: number;
+        application_fee_currency: string;
+        duration: string;
+      }
+    }> | null
+
+    if (error || !typedSavedPrograms) {
       console.error('Error fetching saved programs:', error)
       return null
     }
 
     const programCosts = await Promise.all(
-      savedPrograms.map(async (saved) => {
+      typedSavedPrograms.map(async (saved) => {
         const breakdown = await calculateProgramCosts(saved.program_id)
         if (!breakdown) return null
 
         return {
           programId: saved.program_id,
-          name: saved.programs[0]?.name,
-          university: saved.programs[0]?.university,
-          country: saved.programs[0]?.country,
+          name: saved.programs?.name,
+          university: saved.programs?.university,
+          country: saved.programs?.country,
           totalCostNGN: breakdown.total.amountNGN,
           savings: maxBudgetNGN - breakdown.total.amountNGN,
           percentage: (breakdown.total.amountNGN / maxBudgetNGN) * 100

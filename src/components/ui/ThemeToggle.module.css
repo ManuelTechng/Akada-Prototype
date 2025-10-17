@@ -1,0 +1,139 @@
+/* Toggle Track Base Styles */
+.toggleTrack {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border-radius: 14.2px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Light Mode Track */
+.lightMode {
+  background-color: #e9eaf0;
+  box-shadow: -7.100000381469727px -7.100000381469727px 14.2px rgba(233, 234, 240, 0.7), 
+               7.100000381469727px 7.100000381469727px 14.2px rgba(36, 39, 44, 0.7);
+}
+
+/* Dark Mode Track */
+.darkMode {
+  background-color: #24272c;
+  box-shadow: 0px 3.2200000286102295px 3.22px rgba(0, 0, 0, 0.25), 
+               8.050000190734863px 8.050000190734863px 16.1px #24272c;
+  border-radius: 16.1px;
+}
+
+/* Toggle Thumb Base Styles */
+.toggleThumb {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(4px); /* Light mode position */
+}
+
+/* Light Mode Thumb */
+.thumbLight {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  transform: translateX(4px);
+}
+
+/* Dark Mode Thumb */
+.thumbDark {
+  background-color: #1f2937;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid #374151;
+  transform: translateX(calc(100% + 4px)); /* Dark mode position */
+}
+
+/* Icon Container */
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sun Icon (Light Mode) */
+.sunIcon {
+  width: 16px;
+  height: 16px;
+  color: #f59e0b;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Moon Icon (Dark Mode) */
+.moonIcon {
+  width: 16px;
+  height: 16px;
+  color: #6366f1;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Focus States */
+.toggleTrack:focus {
+  outline: none;
+  ring: 2px solid #6366f1;
+  ring-opacity: 0.5;
+}
+
+.toggleTrack:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Hover Effects */
+.toggleTrack:hover .toggleThumb {
+  transform: scale(1.05);
+}
+
+.lightMode:hover .toggleThumb {
+  transform: translateX(4px) scale(1.05);
+}
+
+.darkMode:hover .toggleThumb {
+  transform: translateX(calc(100% + 4px)) scale(1.05);
+}
+
+/* Active States */
+.toggleTrack:active .toggleThumb {
+  transform: scale(0.95);
+}
+
+.lightMode:active .toggleThumb {
+  transform: translateX(4px) scale(0.95);
+}
+
+.darkMode:active .toggleThumb {
+  transform: translateX(calc(100% + 4px)) scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .toggleTrack {
+    height: 36px;
+  }
+  
+  .toggleThumb {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .sunIcon,
+  .moonIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+

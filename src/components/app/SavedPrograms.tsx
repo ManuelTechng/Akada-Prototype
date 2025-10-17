@@ -11,6 +11,10 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { useSavedProgramsContext } from '../../contexts/SavedProgramsContext'
+import { useNavigate } from 'react-router-dom'
+import ProgramCard from './ProgramCard'
+import type { Program } from '../../lib/types'
+import CreateApplicationModal from './CreateApplicationModal'
 
 // Convert saved program data to Program type for display
 const createProgramFromSaved = (savedProgram: any): Program => ({
@@ -32,10 +36,6 @@ const createProgramFromSaved = (savedProgram: any): Program => ({
   location: savedProgram.location || savedProgram.country || 'Unknown Country',
   created_at: savedProgram.created_at || savedProgram.saved_at || new Date().toISOString()
 })
-import { useNavigate } from 'react-router-dom'
-import ProgramCard from './ProgramCard'
-import type { Program } from '../../lib/types'
-import CreateApplicationModal from './CreateApplicationModal'
 
 const SavedPrograms: React.FC = () => {
   const navigate = useNavigate()
@@ -169,9 +169,9 @@ const SavedPrograms: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-7xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-heading">
             Saved Programs
@@ -180,10 +180,10 @@ const SavedPrograms: React.FC = () => {
             {savedPrograms.length} program{savedPrograms.length !== 1 ? 's' : ''} saved for later review
           </p>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate('/dashboard/search')}
+            onClick={() => navigate('/app/programs')}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
           >
             <Search className="h-4 w-4" />
@@ -205,7 +205,7 @@ const SavedPrograms: React.FC = () => {
             Start building your shortlist by saving programs that interest you. This will help you compare and track your favorites.
           </p>
           <button
-            onClick={() => navigate('/dashboard/search')}
+            onClick={() => navigate('/app/programs')}
             className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
           >
             <Search className="h-5 w-5" />
@@ -215,8 +215,8 @@ const SavedPrograms: React.FC = () => {
       ) : (
         <>
           {/* Controls */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 mb-5">
+            <div className="flex flex-col lg:flex-row lg:items-center gap-3">
               {/* Search */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -233,6 +233,7 @@ const SavedPrograms: React.FC = () => {
               <div className="flex items-center gap-3">
                 {/* Country Filter */}
                 <select
+                  aria-label="Filter saved programs by country"
                   value={filterCountry}
                   onChange={(e) => setFilterCountry(e.target.value)}
                   className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
@@ -246,6 +247,7 @@ const SavedPrograms: React.FC = () => {
                 {/* Sort */}
                 <div className="flex items-center gap-1">
                   <select
+                    aria-label="Sort saved programs"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
                     className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
@@ -257,6 +259,7 @@ const SavedPrograms: React.FC = () => {
                   </select>
                   
                   <button
+                    aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
                     className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   >
@@ -267,6 +270,7 @@ const SavedPrograms: React.FC = () => {
                 {/* View Mode */}
                 <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                   <button
+                    aria-label="Switch to grid view"
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded transition-colors ${
                       viewMode === 'grid' 
@@ -277,6 +281,7 @@ const SavedPrograms: React.FC = () => {
                     <Grid3X3 className="h-4 w-4" />
                   </button>
                   <button
+                    aria-label="Switch to list view"
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded transition-colors ${
                       viewMode === 'list' 
@@ -339,9 +344,9 @@ const SavedPrograms: React.FC = () => {
             </div>
           ) : (
             <div className={`
-              ${viewMode === 'grid' 
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
-                : 'space-y-4'
+              ${viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5'
+                : 'space-y-3'
               }
             `}            >
               {filteredPrograms.map((savedProgram) => {
@@ -351,17 +356,17 @@ const SavedPrograms: React.FC = () => {
                 return (
                   <div key={savedProgram.program_id} className="relative">
                     {/* Selection checkbox - positioned in top-left with proper spacing */}
-                    <div className="absolute top-4 left-4 z-10">
+                    <div className="absolute top-3 left-3 z-10">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleProgramSelection(savedProgram.program_id)}
-                        className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded cursor-pointer"
                         title={isSelected ? "Deselect program" : "Select program"}
                       />
                     </div>
 
-                    <div className="pl-14">
+                    <div className="pl-10">
                       <ProgramCard
                         program={program}
                         isSaved={true}

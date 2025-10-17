@@ -48,42 +48,42 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           id: "programs", 
           label: "Programs", 
           icon: Search, 
-          path: "/dashboard/search",
+          path: "/app/search",
           count: null
         },
         { 
           id: "saved", 
           label: "Saved", 
           icon: Bookmark, 
-          path: "/dashboard/saved",
+          path: "/app/saved",
           count: savedPrograms.length
         },
         { 
           id: "recommended", 
           label: "Recommended", 
           icon: BookOpen, 
-          path: "/dashboard/recommended",
+          path: "/app/recommended",
           count: null
         },
         { 
           id: "applications", 
           label: "Applications", 
           icon: FileText, 
-          path: "/dashboard/applications",
+          path: "/app/applications",
           count: null
         },
         { 
           id: "resources", 
           label: "Resources", 
           icon: BookOpen, 
-          path: "/dashboard/resources",
+          path: "/app/resources",
           count: null
         },
         { 
           id: "community", 
           label: "Community", 
           icon: Users, 
-          path: "/dashboard/community",
+          path: "/app/community",
           count: null
         }
       ]
@@ -95,21 +95,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           id: "calculator", 
           label: "Cost Calculator", 
           icon: Calculator, 
-          path: "/dashboard/calculator",
+          path: "/app/calculator",
           count: null
         },
         { 
           id: "documents", 
           label: "AI Document Review", 
           icon: FileText, 
-          path: "/dashboard/documents",
+          path: "/app/documents",
           count: null
         },
         { 
           id: "assistant", 
           label: "AI Assistant (Advisor)", 
           icon: MessageSquare, 
-          path: "/dashboard/assistant",
+          path: "/app/assistant",
           count: null
         }
       ]
@@ -121,7 +121,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           id: "settings", 
           label: "Settings", 
           icon: Settings, 
-          path: "/dashboard/settings",
+          path: "/app/settings",
           count: null
         },
         { 
@@ -196,13 +196,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const getCurrentPageTitle = () => {
     const path = location.pathname;
     if (path === '/dashboard') return 'Dashboard';
-    if (path.includes('/search')) return 'Programs';
-    if (path.includes('/applications')) return 'Applications';
-    if (path.includes('/documents')) return 'Documents';
-    if (path.includes('/calculator')) return 'Cost Calculator';
-    if (path.includes('/resources')) return 'Resources';
-    if (path.includes('/community')) return 'Community';
-    if (path.includes('/settings')) return 'Settings';
+    if (path.includes('/app/search')) return 'Programs';
+    if (path.includes('/app/applications')) return 'Applications';
+    if (path.includes('/app/documents')) return 'Documents';
+    if (path.includes('/app/calculator')) return 'Cost Calculator';
+    if (path.includes('/app/resources')) return 'Resources';
+    if (path.includes('/app/community')) return 'Community';
+    if (path.includes('/app/settings')) return 'Settings';
+    if (path.includes('/app/profile')) return 'Profile';
+    if (path.includes('/app/saved')) return 'Saved Programs';
+    if (path.includes('/app/recommended')) return 'Recommended Programs';
+    if (path.includes('/app/assistant')) return 'AI Assistant';
     return 'Dashboard';
   };
 
@@ -418,17 +422,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 {
                   label: 'View Profile',
                   icon: User,
-                  onClick: () => navigate('/dashboard/profile')
+                  onClick: () => navigate('/app/profile')
                 },
                 {
                   label: 'Account Settings',
                   icon: Settings,
-                  onClick: () => navigate('/dashboard/settings')
+                  onClick: () => navigate('/app/settings')
                 },
                 {
                   label: 'Billing & Subscription',
                   icon: CreditCard,
-                  onClick: () => navigate('/dashboard/billing')
+                  onClick: () => navigate('/app/billing')
                 },
                 {
                   label: '',

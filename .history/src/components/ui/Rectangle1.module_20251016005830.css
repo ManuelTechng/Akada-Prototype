@@ -1,0 +1,99 @@
+.toggleButton {
+  width: 60px;
+  height: 32px;
+  border-radius: 16px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  background-color: #e9eaf0;
+  box-shadow: -7px -7px 14px rgba(233, 234, 240, 0.7),
+              7px 7px 14px rgba(36, 39, 44, 0.7);
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.light {
+  background-color: #e9eaf0;
+  box-shadow: -7px -7px 14px rgba(233, 234, 240, 0.7),
+              7px 7px 14px rgba(36, 39, 44, 0.7);
+}
+
+.dark {
+  background-color: #24272c;
+  box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25),
+              8px 8px 16px #24272c;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out, background 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.thumbLight {
+  transform: translateX(0);
+  background: linear-gradient(145deg, #ffffff, #dfe2eb);
+  box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.85),
+              3px 3px 6px rgba(174, 182, 193, 0.55);
+  color: #f6ad55;
+}
+
+.thumbDark {
+  transform: translateX(calc(100% + 4px));
+  background: linear-gradient(145deg, #2a2d33, #1c1f24);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4),
+              4px 4px 10px rgba(0, 0, 0, 0.35);
+  color: #c7d2ff;
+}
+
+.icon {
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.3s ease-in-out;
+}
+
+.toggleButton:hover .icon {
+  transform: scale(1.05);
+}
+
+.toggleButton:active .icon {
+  transform: scale(0.95);
+}
+
+.toggleButton:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, 0.8);
+  outline-offset: 3px;
+}
+
+.toggleButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (max-width: 640px) {
+  .toggleButton {
+    width: 56px;
+    height: 30px;
+  }
+
+  .toggleThumb {
+    width: 22px;
+    height: 22px;
+  }
+
+  .icon {
+    font-size: 13px;
+  }
+}

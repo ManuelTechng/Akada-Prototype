@@ -147,14 +147,27 @@ export async function checkDeadlineReminders(): Promise<number> {
       .lte('deadline', thirtyDaysFromNow.toISOString().split('T')[0])
       .in('status', ['planning', 'draft', 'submitted'])
 
-    if (fetchError || !applications) {
+    // Type assertion for the joined data structure
+    const typedApplications = applications as Array<{
+      id: string;
+      user_id: string;
+      program_id: string;
+      deadline: string;
+      status: string;
+      programs: {
+        name: string;
+        university: string;
+      }
+    }> | null
+
+    if (fetchError || !typedApplications) {
       console.error('Error fetching applications for reminders:', fetchError)
       return 0
     }
 
     let remindersCreated = 0
 
-    for (const application of applications) {
+    for (const application of typedApplications) {
       const deadline = new Date(application.deadline)
       const daysUntilDeadline = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 
@@ -177,7 +190,7 @@ export async function checkDeadlineReminders(): Promise<number> {
             await createDeadlineReminder(
               application.user_id,
               application.id,
-              application.programs[0]?.name || 'Unknown Program',
+              application.programs?.name || 'Unknown Program',
               application.deadline,
               daysUntilDeadline
             )

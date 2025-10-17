@@ -609,8 +609,8 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
             <CalendarIcon className="w-5 h-5 text-indigo-500" />
-            Application Timeline
-            {timelineData?.urgentCount && timelineData.urgentCount > 0 && (
+            <span>Application Timeline</span>
+            {timelineData?.urgentCount !== undefined && timelineData.urgentCount > 0 && (
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
                 {timelineData.urgentCount} urgent
               </span>

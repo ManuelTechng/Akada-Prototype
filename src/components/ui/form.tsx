@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 interface FormFieldContextValue<
   TFieldValues extends Record<string, any> = Record<string, any>
