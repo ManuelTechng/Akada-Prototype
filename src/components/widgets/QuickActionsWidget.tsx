@@ -12,7 +12,7 @@ const actions = [
   {
     icon: Award,
     label: 'View Scholarships',
-    path: '/app/scholarships',
+    path: '/app/programs?scholarshipsOnly=true',
   },
 ];
 

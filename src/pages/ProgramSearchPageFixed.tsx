@@ -23,7 +23,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { convertCurrency, formatCurrency, getCountryCurrency } from '../lib/utils';
 import { checkConnectionHealth, retryWithBackoff, isConnectionError } from '../lib/connectionHealth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ProgramCard from '../components/app/ProgramCard';
 import { useSavedProgramsContext } from '../contexts/SavedProgramsContext';
 import type { Program } from '../lib/types';
@@ -31,6 +31,7 @@ import type { Program } from '../lib/types';
 const ProgramSearchPageFixed: React.FC = () => {
   const navigate = useNavigate();
   const { savedPrograms, saveProgram, removeSavedProgram } = useSavedProgramsContext();
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -45,6 +46,14 @@ const ProgramSearchPageFixed: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('match');
   const [error, setError] = useState<string | null>(null);
+
+  // Parse URL parameters for initial filter state
+  useEffect(() => {
+    const scholarshipsOnly = searchParams.get('scholarshipsOnly');
+    if (scholarshipsOnly === 'true') {
+      setFilters(prev => ({ ...prev, scholarshipsOnly: true }));
+    }
+  }, [searchParams]);
 
   // Search programs with simplified query
   const searchPrograms = async () => {

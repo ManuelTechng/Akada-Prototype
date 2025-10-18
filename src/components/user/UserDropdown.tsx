@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function UserDropdown() {
   const { theme } = useTheme();
-  const { user, profile } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const isDarkTheme = theme === 'dark';
   const [isOpen, setIsOpen] = useState(false);
@@ -30,10 +30,17 @@ export function UserDropdown() {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    // Logout will be implemented with auth context
-    console.log('Logout clicked');
-    setIsOpen(false);
+  const handleLogout = async () => {
+    try {
+      console.log('UserDropdown: Logout button clicked');
+      setIsOpen(false);
+      console.log('UserDropdown: Calling signOut...');
+      await signOut();
+      console.log('UserDropdown: signOut complete, navigating to login');
+      navigate('/login');
+    } catch (error) {
+      console.error('UserDropdown: Error logging out:', error);
+    }
   };
 
   // Get user initials
