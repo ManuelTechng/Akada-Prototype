@@ -15,10 +15,11 @@ const buttonVariants = cva(
         link: "text-indigo-600 underline-offset-4 hover:underline dark:text-indigo-400",
       },
       size: {
-        default: "h-11 px-8 py-2 min-h-[44px]",
-        sm: "h-10 px-4 min-h-[44px]",
-        lg: "h-12 px-12 min-h-[44px]",
-        icon: "h-11 w-11 min-h-[44px] min-w-[44px]",
+        default: "h-10 sm:h-11 px-4 sm:px-8 py-2 min-h-[40px] sm:min-h-[44px] text-sm",
+        sm: "h-9 sm:h-10 px-3 sm:px-4 min-h-[36px] sm:min-h-[40px] text-xs sm:text-sm",
+        lg: "h-11 sm:h-12 px-6 sm:px-12 min-h-[44px] sm:min-h-[48px] text-sm sm:text-base",
+        icon: "h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 min-h-[36px] min-w-[36px] sm:min-h-[40px] sm:min-w-[40px] lg:min-h-[44px] lg:min-w-[44px]",
+        xs: "h-7 sm:h-8 px-2 sm:px-3 min-h-[28px] sm:min-h-[32px] text-xs",
       },
     },
     defaultVariants: {

@@ -427,6 +427,7 @@ const ProgramSearchPageFixed: React.FC = () => {
               <span>{filter}</span>
               <button 
                 onClick={() => handleRemoveFilter(filter)}
+                aria-label={`Remove filter ${filter}`}
                 className="text-indigo-600 hover:text-indigo-800"
               >
                 <X className="h-4 w-4" />
@@ -438,10 +439,11 @@ const ProgramSearchPageFixed: React.FC = () => {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="filter-country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Country
           </label>
           <select
+            id="filter-country"
             value={filters.country}
             onChange={(e) => handleFilterChange('country', e.target.value)}
             className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -460,10 +462,11 @@ const ProgramSearchPageFixed: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="filter-degree" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Degree Type
           </label>
           <select
+            id="filter-degree"
             value={filters.degreeType}
             onChange={(e) => handleFilterChange('degreeType', e.target.value)}
             className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -477,10 +480,11 @@ const ProgramSearchPageFixed: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="filter-tuition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Tuition Range (USD/year)
           </label>
           <select
+            id="filter-tuition"
             value={filters.maxTuition}
             onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
             className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -496,10 +500,11 @@ const ProgramSearchPageFixed: React.FC = () => {
         {showAdvancedFilters && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="filter-field" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field of Study
               </label>
               <select
+                id="filter-field"
                 value={filters.field}
                 onChange={(e) => handleFilterChange('field', e.target.value)}
                 className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -573,21 +578,21 @@ const ProgramSearchPageFixed: React.FC = () => {
       {/* Header with breadcrumb */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-            <button 
-              onClick={() => navigate('/dashboard')}
-              className="inline-flex items-center gap-1 hover:text-indigo-600 transition-colors"
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+            <button
+              onClick={() => navigate('/app')}
+              className="inline-flex items-center gap-1 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Dashboard</span>
             </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Find Your Program</h1>
-          <p className="text-gray-500">Discover programs that match your profile and preferences</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Find Your Program</h1>
+          <p className="text-gray-600 dark:text-gray-400">Discover programs that match your profile and preferences</p>
         </div>
         <div className="flex gap-3">
           <button 
-            onClick={() => navigate('/dashboard/calculator')} 
+            onClick={() => navigate('/app/calculator')} 
             className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
           >
             <Calculator className="h-5 w-5" />
@@ -623,14 +628,14 @@ const ProgramSearchPageFixed: React.FC = () => {
               Our AI assistant can help you discover programs that match your profile, preferences, and career goals.
             </p>
             <button 
-              onClick={() => navigate('/dashboard/assistant')}
+              onClick={() => navigate('/app/assistant')}
               className="w-full bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 mb-4"
             >
               <Search className="h-5 w-5" />
               Get Personalized Suggestions
             </button>
             <button 
-              onClick={() => navigate('/dashboard/calculator')}
+              onClick={() => navigate('/app/calculator')}
               className="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
             >
               <Calculator className="h-5 w-5" />
@@ -667,6 +672,7 @@ const ProgramSearchPageFixed: React.FC = () => {
               <div className="flex gap-3 items-center">
                 <span className="text-sm text-gray-500 hidden sm:inline-block">Sort by:</span>
                 <select
+                  aria-label="Sort programs"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"

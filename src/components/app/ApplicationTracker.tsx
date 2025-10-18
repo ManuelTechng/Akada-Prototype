@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   PlusIcon,
@@ -24,11 +24,13 @@ import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 import ApplicationTimelineWidget from '../dashboard/ApplicationTimelineWidget'
 import SkeletonLoader from '../ui/SkeletonLoader'
-import { formatNGN } from '../../utils/currency'
-import { cn } from '../../lib/utils'
+import { formatNGN, formatUSD } from '../../utils/currency'
+import { formatCurrency as formatCurrencyLib } from '../../lib/currency/formatters'
+import { cn, formatProgramTuition } from '../../lib/utils'
+import { useProgramTuition } from '../../hooks/useProgramTuition'
 
 // ======================================
-// TYPES AND INTERFACES  
+// TYPES AND INTERFACES
 // ======================================
 
 interface Application {
@@ -46,7 +48,11 @@ interface Application {
     university: string
     country: string
     tuition_fee: number
+    tuition_fee_currency?: string
+    tuition_fee_original?: number
     application_fee?: number
+    application_fee_currency?: string
+    application_fee_original?: number
     degree_type: string
     duration: string
     specialization: string
@@ -139,6 +145,8 @@ const getDaysUntilDeadline = (deadline: string) => {
   const timeDiff = deadlineDate.getTime() - today.getTime()
   return Math.ceil(timeDiff / (1000 * 3600 * 24))
 }
+
+// Removed formatAmount - using formatProgramTuition with hook instead
 
 // ======================================
 // APPLICATION FORM COMPONENT
@@ -338,12 +346,44 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onStatusChange
 }) => {
   const [showActions, setShowActions] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const statusConfig = getStatusConfig(application.status)
   const daysLeft = getDaysUntilDeadline(application.deadline)
   const isOverdue = daysLeft < 0
   const isUrgent = daysLeft <= 7 && daysLeft >= 0
 
   const StatusIcon = statusConfig.icon
+
+  // Calculate smart currency display using the same hook as Programs page
+  const tuitionAmount = application.programs.tuition_fee || 0
+  const tuitionDisplay = useProgramTuition(tuitionAmount, application.programs.country || '', {
+    showConversion: true,
+    enableRealTime: true,
+    cacheTime: 300000 // 5 minutes cache
+  })
+
+  // Fallback to static display if hook is still loading
+  const currencyDisplay = tuitionDisplay.isLoading
+    ? formatProgramTuition(tuitionAmount, application.programs.country || '')
+    : {
+        primary: tuitionDisplay.primary,
+        secondary: tuitionDisplay.secondary,
+        isNigerian: tuitionDisplay.isNigerian
+      }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowActions(false)
+      }
+    }
+
+    if (showActions) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showActions])
 
   if (viewMode === 'list') {
     return (
@@ -383,14 +423,14 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
               </p>
             </div>
             
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowActions(!showActions)}
                 className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <MoreVerticalIcon className="w-4 h-4" />
               </button>
-              
+
               {showActions && (
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg border border-gray-200 dark:border-gray-600 z-10">
                   <button
@@ -444,14 +484,14 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           </p>
         </div>
         
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowActions(!showActions)}
             className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             <MoreVerticalIcon className="w-4 h-4" />
           </button>
-          
+
           {showActions && (
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg border border-gray-200 dark:border-gray-600 z-10">
               <button
@@ -509,16 +549,48 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       </div>
 
       {/* Costs */}
-      {application.programs.tuition_fee && (
-        <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          <span className="font-medium">Tuition:</span> {formatNGN(application.programs.tuition_fee)}
-          {application.programs.application_fee && (
-            <span className="ml-2">
-              • <span className="font-medium">Application:</span> {formatNGN(application.programs.application_fee)}
-            </span>
-          )}
-        </div>
-      )}
+      <div className="space-y-2 mb-4">
+        {/* Tuition Fee - Using same display system as Programs page */}
+        {tuitionAmount > 0 ? (
+          <div className="text-sm">
+            <span className="font-medium text-gray-700 dark:text-gray-300">Annual Tuition:</span>
+            <div className="mt-1">
+              {tuitionDisplay.isLoading ? (
+                <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-5 w-32 rounded"></div>
+              ) : (
+                <>
+                  {/* Primary: Original currency */}
+                  <div className="text-gray-900 dark:text-white font-semibold">
+                    {currencyDisplay.primary}
+                  </div>
+                  {/* Secondary: NGN conversion (if not Nigerian school) */}
+                  {currencyDisplay.secondary && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {currencyDisplay.secondary}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="text-sm text-gray-500 dark:text-gray-500 italic">
+            Annual tuition fee not available
+          </div>
+        )}
+
+        {/* Application Fee - Will be implemented when database has application fee data */}
+        {application.programs.application_fee && application.programs.application_fee > 0 && (
+          <div className="text-sm">
+            <span className="font-medium text-gray-700 dark:text-gray-300">Application Fee:</span>
+            <div className="mt-1">
+              <div className="text-gray-900 dark:text-white font-semibold text-xs">
+                {formatNGN(application.programs.application_fee)}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Notes */}
       {application.notes && (
@@ -594,14 +666,11 @@ export const ApplicationTracker: React.FC = () => {
           .from('applications')
           .select(`
             *,
-            programs!inner(
-              id, name, university, country, tuition_fee, 
-              application_fee, degree_type, duration, specialization
-            )
+            programs!inner(*)
           `)
           .eq('user_id', user?.id)
           .order('created_at', { ascending: false }),
-        
+
         supabase
           .from('programs')
           .select('id, name, university, country')
@@ -677,20 +746,32 @@ export const ApplicationTracker: React.FC = () => {
   }
 
   const handleDeleteApplication = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this application?')) return
+    if (!window.confirm('Are you sure you want to delete this application? This action cannot be undone.')) {
+      return
+    }
 
     try {
       const { error } = await supabase
         .from('applications')
         .delete()
         .eq('id', id)
+        .eq('user_id', user?.id)
 
-      if (error) throw error
+      if (error) {
+        console.error('Error deleting application:', error)
+        alert(`Failed to delete application: ${error.message}`)
+        return
+      }
 
+      // Optimistic update - remove from state immediately
+      setApplications(prev => prev.filter(app => app.id !== id))
+
+      // Then refresh to ensure consistency
       await fetchData()
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error deleting application:', err)
-      alert('Failed to delete application. Please try again.')
+      alert(`Failed to delete application: ${err.message || 'Please try again.'}`)
+      await fetchData()
     }
   }
 
@@ -846,99 +927,104 @@ export const ApplicationTracker: React.FC = () => {
           </div>
         </div>
 
-        {/* Timeline Widget */}
+        {/* Filters and Search - Always visible */}
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
+          <div className="flex flex-col gap-4">
+            {/* Search */}
+            <div className="relative w-full">
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search applications..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
+              />
+            </div>
+
+            {/* Filters Row */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {/* Status Filter */}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
+                className="flex-1 sm:flex-none sm:min-w-[140px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="planning">Planning</option>
+                <option value="in-progress">In Progress</option>
+                <option value="submitted">Submitted</option>
+                <option value="in-review">In Review</option>
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+                <option value="deferred">Deferred</option>
+              </select>
+
+              {/* Sort Filter */}
+              <select
+                value={`${sortField}-${sortOrder}`}
+                onChange={(e) => {
+                  const [field, order] = e.target.value.split('-')
+                  setSortField(field as SortField)
+                  setSortOrder(order as SortOrder)
+                }}
+                className="flex-1 sm:flex-none sm:min-w-[160px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
+              >
+                <option value="deadline-asc">Deadline (Soon)</option>
+                <option value="deadline-desc">Deadline (Late)</option>
+                <option value="created_at-desc">Recently Added</option>
+                <option value="university-asc">University A-Z</option>
+                <option value="status-asc">Status</option>
+              </select>
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center justify-center sm:justify-start space-x-1 bg-gray-100 dark:bg-gray-700 rounded-md p-1 sm:ml-auto">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  title="Grid View"
+                  className={cn(
+                    'p-2 rounded-md transition-colors',
+                    viewMode === 'grid'
+                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  )}
+                >
+                  <GridIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  title="List View"
+                  className={cn(
+                    'p-2 rounded-md transition-colors',
+                    viewMode === 'list'
+                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  )}
+                >
+                  <ListIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('timeline')}
+                  title="Timeline View"
+                  className={cn(
+                    'p-2 rounded-md transition-colors',
+                    viewMode === 'timeline'
+                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  )}
+                >
+                  <CalendarIcon className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content - Timeline or Applications Grid/List */}
         {viewMode === 'timeline' ? (
           <ApplicationTimelineWidget className="mb-8" />
         ) : (
           <>
-            {/* Filters and Search */}
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                {/* Search */}
-                <div className="relative flex-1 max-w-md">
-                  <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search applications..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-                  />
-                </div>
-
-                {/* Filters */}
-                <div className="flex items-center space-x-4">
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="planning">Planning</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="submitted">Submitted</option>
-                    <option value="in-review">In Review</option>
-                    <option value="accepted">Accepted</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="deferred">Deferred</option>
-                  </select>
-
-                  <select
-                    value={`${sortField}-${sortOrder}`}
-                    onChange={(e) => {
-                      const [field, order] = e.target.value.split('-')
-                      setSortField(field as SortField)
-                      setSortOrder(order as SortOrder)
-                    }}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-                  >
-                    <option value="deadline-asc">Deadline (Soon)</option>
-                    <option value="deadline-desc">Deadline (Late)</option>
-                    <option value="created_at-desc">Recently Added</option>
-                    <option value="university-asc">University A-Z</option>
-                    <option value="status-asc">Status</option>
-                  </select>
-
-                  {/* View Mode Toggle */}
-                  <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 rounded-md p-1">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={cn(
-                        'p-2 rounded-md transition-colors',
-                        viewMode === 'grid' 
-                          ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                      )}
-                    >
-                      <GridIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={cn(
-                        'p-2 rounded-md transition-colors',
-                        viewMode === 'list' 
-                          ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                      )}
-                    >
-                      <ListIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('timeline')}
-                      className={cn(
-                        'p-2 rounded-md transition-colors',
-                        viewMode === 'list' 
-                          ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                      )}
-                    >
-                      <CalendarIcon className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Applications Grid/List */}
             {filteredAndSortedApplications.length === 0 ? (
               <div className="text-center py-12">

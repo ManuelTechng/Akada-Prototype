@@ -145,12 +145,24 @@ export async function updateApplicationStatus(
       .eq('id', applicationId)
       .single()
 
-    if (fetchError || !application) {
+    // Type assertion for the joined data structure
+    const typedApplication = application as {
+      id: string;
+      user_id: string;
+      program_id: string;
+      status: string;
+      programs: {
+        name: string;
+        university: string;
+      }
+    } | null
+
+    if (fetchError || !typedApplication) {
       console.error('Error fetching application:', fetchError)
       return false
     }
 
-    const oldStatus = application.status as ApplicationStatus
+    const oldStatus = typedApplication.status as ApplicationStatus
 
     // Validate status transition
     if (!isValidStatusTransition(oldStatus, newStatus)) {
@@ -178,9 +190,9 @@ export async function updateApplicationStatus(
     // Create notification for status change
     if (oldStatus !== newStatus) {
       await createApplicationStatusNotification(
-        application.user_id,
+        typedApplication.user_id,
         applicationId,
-        application.programs[0]?.name || 'Unknown Program',
+        typedApplication.programs?.name || 'Unknown Program',
         oldStatus,
         newStatus
       )

@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --font-sans: 'Inter var', 'Inter', 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Inter var', 'Inter', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+@layer base {
+  html, body, #root {
+    min-height: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    background-color: #f9fafb;
+    /* CSS variables for react-select dark mode */
+    --select-bg: #ffffff;
+    --select-border: #d1d5db;
+    --select-text: #111827;
+    --select-hover: #f3f4f6;
+    --select-multi-bg: #e0e7ff;
+    --select-multi-text: #4f46e5;
+  }
+
+  .dark body {
+    background-color: #111827;
+    /* Dark mode variables for react-select */
+    --select-bg: #374151;
+    --select-border: #4b5563;
+    --select-text: #f3f4f6;
+    --select-hover: #4b5563;
+    --select-multi-bg: #312e81;
+    --select-multi-text: #c7d2fe;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-hover:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Custom progress bar styling */
+.progress-bar {
+  @apply h-2 bg-gray-200 rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full rounded-full transition-all duration-500 ease-out;
+}
+
+/* Ensure proper scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Glassmorphism shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+/* Grid layout for dashboard cards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}

@@ -2,18 +2,20 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { SavedProgramsProvider } from './contexts/SavedProgramsContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAuth } from './contexts/AuthContext';
 import { checkEnvironmentVariables } from './utils/envCheck';
+import { cn } from './lib/utils';
 
 // Lazy load components for better performance
-const AppLayout = lazy(() => import('./components/layouts/AppLayout'));
+const DarkSidebar = lazy(() => import('./components/layouts/DarkSidebar').then(m => ({ default: m.DarkSidebar })));
+const DarkHeader = lazy(() => import('./components/layouts/DarkHeader').then(m => ({ default: m.DarkHeader })));
 const ProgramSearchPage = lazy(() => import('./pages/ProgramSearchPageFixed'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const AppDrawerButton = lazy(() => import('./components/AppDrawerButton'));
-const SmartDashboard = lazy(() => import('./components/dashboard/SmartDashboard'));
+const FigmaDashboard = lazy(() => import('./components/dashboard/FigmaDashboard'));
 const AuthModal = lazy(() => import('./components/auth/AuthModal'));
 const Applications = lazy(() => import('./components/app/Applications'));
 const Documents = lazy(() => import('./components/app/Documents'));
@@ -21,6 +23,7 @@ const Resources = lazy(() => import('./components/app/Resources'));
 const Community = lazy(() => import('./components/app/Community'));
 const ProfileSettings = lazy(() => import('./components/app/ProfileSettings'));
 const Settings = lazy(() => import('./components/app/Settings'));
+const Billing = lazy(() => import('./components/app/Billing'));
 const CostCalculator = lazy(() => import('./components/app/CostCalculator'));
 const SavedPrograms = lazy(() => import('./components/app/SavedPrograms'));
 const RecommendedPrograms = lazy(() => import('./components/app/RecommendedPrograms'));
@@ -79,6 +82,91 @@ export function EnvironmentWarning() {
   );
 }
 
+// Protected Route wrapper with DarkSidebar layout
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading, initialized } = useAuth();
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const { theme } = useTheme();
+
+  const isDarkTheme = theme === 'dark';
+
+  if (loading && !initialized) {
+    return <LoadingSpinner />;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <div
+      className={cn(
+        'relative flex h-screen overflow-hidden transition-colors duration-500',
+        isDarkTheme
+          ? 'bg-[#0A0E1A] text-gray-100'
+          : 'bg-[#F5F6FA] text-slate-900'
+      )}
+    >
+      {/* Background Effects */}
+      <div
+        className={cn(
+          'pointer-events-none fixed inset-0 -z-10 transition-opacity duration-700',
+          isDarkTheme
+            ? 'bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.12),transparent_55%)]'
+            : 'bg-[radial-gradient(circle_at_30%_20%,rgba(139,130,255,0.08),transparent_65%)]'
+        )}
+      />
+      <div
+        className={cn(
+          'pointer-events-none fixed inset-0 -z-10 transition-opacity duration-700',
+          isDarkTheme
+            ? 'bg-[radial-gradient(circle_at_70%_60%,rgba(139,92,246,0.12),transparent_55%)]'
+            : 'bg-[radial-gradient(circle_at_70%_60%,rgba(167,139,250,0.08),transparent_65%)]'
+        )}
+      />
+      
+      <Suspense fallback={null}>
+        <DarkSidebar 
+          isMobileOpen={isMobileSidebarOpen}
+          onMobileToggle={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+        />
+      </Suspense>
+      
+      <div className="relative z-10 flex flex-1 flex-col overflow-hidden">
+        <Suspense fallback={null}>
+          <DarkHeader onMenuClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} />
+        </Suspense>
+        
+        <main
+          className={cn(
+            'flex-1 overflow-y-auto transition-colors duration-500',
+            isDarkTheme ? 'bg-transparent' : 'bg-transparent'
+          )}
+        >
+          <div className="min-h-full w-full px-4 py-5 sm:px-6 sm:py-6 lg:px-8 xl:px-10 2xl:px-12">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+// Public Route (redirect to app if already logged in)
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (user) {
+    return <Navigate to="/app" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 function AppWithProviders() {
   const { user } = useAuth();
   
@@ -128,15 +216,14 @@ function AppRoutes() {
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
+        {/* Public Routes */}
         <Route path="/" element={
-          user ? (
-            <Navigate to="/dashboard" replace />
-          ) : (
+          <PublicRoute>
             <>
               <LandingPage />
               <AppDrawerButton onAuthClick={() => setShowAuth(true)} />
             </>
-          )
+          </PublicRoute>
         } />
         
         {/* Demo Routes - for development and testing */}
@@ -146,46 +233,48 @@ function AppRoutes() {
         <Route path="/demo/design-system" element={<DesignSystemDemo />} />
         
         {/* Auth Routes */}
-        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
-        <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <SignupPage />} />
-        <Route path="/forgot-password" element={user ? <Navigate to="/dashboard" replace /> : <ForgotPasswordPage />} />
-        <Route path="/auth/callback" element={<Navigate to="/dashboard" />} />
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+        <Route path="/auth/callback" element={<Navigate to="/app" replace />} />
         
         {/* Onboarding Routes */}
         <Route path="/onboarding" element={
           !user ? (
             <Navigate to="/login" replace />
           ) : profile?.profile_completed ? (
-            <Navigate to="/dashboard" replace />
+            <Navigate to="/app" replace />
           ) : (
             <OnboardingPage />
           )
         } />
         
-        {/* App Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            !user ? <Navigate to="/login" replace /> : <AppLayout />
-          }
-        >
-          <Route index element={<SmartDashboard />} />
-          <Route path="search" element={<ProgramSearchPage />} />
-          <Route path="search-new" element={<ProgramSearchPageNew />} />
-          <Route path="saved" element={<SavedPrograms />} />
-          <Route path="recommended" element={<RecommendedPrograms />} />
-          <Route path="assistant" element={<AIAssistant />} />
-          <Route path="applications" element={<Applications />} />
-          <Route path="documents" element={<Documents />} />
-          <Route path="resources" element={<Resources />} />
-          <Route path="community" element={<Community />} />
-          <Route path="profile" element={<ProfileSettings />} />
-          <Route path="calculator" element={<CostCalculator />} />
-            <Route path="settings" element={<Settings />} />
-        </Route>
+        {/* Protected App Routes with DarkSidebar Layout */}
+        {/* Dashboard as default landing page (industry standard) */}
+        <Route path="/app" element={<ProtectedRoute><FigmaDashboard /></ProtectedRoute>} />
+        
+        {/* Other protected routes */}
+        <Route path="/app/programs" element={<ProtectedRoute><ProgramSearchPage /></ProtectedRoute>} />
+        <Route path="/app/programs-new" element={<ProtectedRoute><ProgramSearchPageNew /></ProtectedRoute>} />
+        <Route path="/app/saved" element={<ProtectedRoute><SavedPrograms /></ProtectedRoute>} />
+        <Route path="/app/recommended" element={<ProtectedRoute><RecommendedPrograms /></ProtectedRoute>} />
+        <Route path="/app/applications" element={<ProtectedRoute><Applications /></ProtectedRoute>} />
+        <Route path="/app/documents" element={<ProtectedRoute><Documents /></ProtectedRoute>} />
+        <Route path="/app/resources" element={<ProtectedRoute><Resources /></ProtectedRoute>} />
+        <Route path="/app/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
+        <Route path="/app/calculator" element={<ProtectedRoute><CostCalculator /></ProtectedRoute>} />
+        <Route path="/app/assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
+        <Route path="/app/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
+        <Route path="/app/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/app/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
+
+        {/* Redirect old routes to new structure */}
+        <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+        <Route path="/app/search" element={<Navigate to="/app/programs" replace />} />
+        <Route path="/app/search-new" element={<Navigate to="/app/programs-new" replace />} />
         
         {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/app" replace />} />
         </Routes>
       </Suspense>
     </Router>

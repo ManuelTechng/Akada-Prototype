@@ -1,0 +1,272 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --font-sans: 'Open Sans', 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Open Sans', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Figma Design Tokens */
+  --figma-background: #ffffff;
+  --figma-foreground: #111827;
+  --figma-card: #ffffff;
+  --figma-card-foreground: #111827;
+  --figma-border: rgba(0, 0, 0, 0.1);
+  --figma-muted: #f3f4f6;
+  --figma-muted-foreground: #6b7280;
+  --figma-primary: #4f46e5;
+  --figma-primary-foreground: #ffffff;
+  --figma-secondary: #10b981;
+  --figma-secondary-foreground: #ffffff;
+  --figma-radius: 0.625rem;
+}
+
+.dark {
+  --figma-background: #0f172a;
+  --figma-foreground: #f8fafc;
+  --figma-card: rgba(16, 24, 40, 0.4);
+  --figma-card-foreground: #f8fafc;
+  --figma-border: rgba(255, 255, 255, 0.1);
+  --figma-muted: rgba(255, 255, 255, 0.05);
+  --figma-muted-foreground: #9ca3af;
+  --figma-primary: #818cf8;
+  --figma-primary-foreground: #0f172a;
+  --figma-secondary: #34d399;
+  --figma-secondary-foreground: #0f172a;
+}
+
+@layer base {
+  html, body, #root {
+    min-height: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    background-color: #F5F6FA;
+    /* CSS variables for react-select dark mode */
+    --select-bg: #ffffff;
+    --select-border: #d1d5db;
+    --select-text: #111827;
+    --select-hover: #f3f4f6;
+    --select-multi-bg: #e0e7ff;
+    --select-multi-text: #4f46e5;
+  }
+
+  .dark body {
+    background-color: #0A0E1A;
+    /* Dark mode variables for react-select */
+    --select-bg: #374151;
+    --select-border: #4b5563;
+    --select-text: #f3f4f6;
+    --select-hover: #4b5563;
+    --select-multi-bg: #312e81;
+    --select-multi-text: #c7d2fe;
+  }
+
+  body.darkMode {
+    background-color: #1a1a1a;
+    color: #f9f9f9;
+    --select-bg: #374151;
+    --select-border: #4b5563;
+    --select-text: #f3f4f6;
+    --select-hover: #4b5563;
+    --select-multi-bg: #312e81;
+    --select-multi-text: #c7d2fe;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-hover:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Custom progress bar styling */
+.progress-bar {
+  @apply h-2 bg-gray-200 rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full rounded-full transition-all duration-500 ease-out;
+}
+
+/* Ensure proper scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Glassmorphism shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+/* Grid layout for dashboard cards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+/* Figma Design Utility Classes */
+.figma-card {
+  @apply rounded-3xl border border-white/10 shadow-lg shadow-slate-200/40;
+  background: var(--figma-card) !important;
+  border-color: var(--figma-border) !important;
+  backdrop-filter: blur(12px);
+}
+
+.dark .figma-card {
+  background: rgba(16, 24, 40, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 28px 60px -28px rgba(7, 12, 28, 0.85);
+}
+
+.figma-card-content {
+  @apply p-6;
+}
+
+.figma-notification-card {
+  @apply p-4 rounded-lg border border-white/10 transition-colors hover:border-white/20;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .figma-notification-card {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.figma-button-primary {
+  @apply rounded-lg text-white text-sm font-medium transition-all;
+  background: var(--figma-primary);
+  color: var(--figma-primary-foreground);
+}
+
+.figma-button-secondary {
+  @apply rounded-lg text-sm font-medium transition-all;
+  background: var(--figma-secondary);
+  color: var(--figma-secondary-foreground);
+}
+
+.figma-text-primary {
+  color: var(--figma-foreground);
+}
+
+  .figma-text-secondary {
+    color: var(--figma-muted-foreground);
+  }
+
+  /* Open Sans Font Utilities */
+  .font-open-sans {
+    font-family: var(--font-sans);
+  }
+
+  .font-light {
+    font-weight: var(--font-weight-light);
+  }
+
+  .font-normal {
+    font-weight: var(--font-weight-normal);
+  }
+
+  .font-medium {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .font-semibold {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .font-bold {
+    font-weight: var(--font-weight-bold);
+  }
