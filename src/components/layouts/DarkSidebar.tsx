@@ -17,6 +17,7 @@ import { Button } from '../ui/button';
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../lib/utils';
 import darkMainLogo from '../../assets/430a52e73dc288723ed79d46ec10415bf74e2494.png';
 import darkMiniLogo from '../../assets/33a5db83050df89685f494eda5d3b2bfe7baef28.png';
@@ -48,12 +49,25 @@ interface DarkSidebarProps {
 export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { theme } = useTheme();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const isDarkTheme = theme === 'dark';
   const mainLogo = isDarkTheme ? darkMainLogo : lightMainLogo;
   const miniLogo = isDarkTheme ? darkMiniLogo : lightMiniLogo;
+
+  const handleLogout = async () => {
+    try {
+      console.log('DarkSidebar: Logout button clicked');
+      console.log('DarkSidebar: Calling signOut...');
+      await signOut();
+      console.log('DarkSidebar: signOut complete, navigating to login');
+      navigate('/login');
+    } catch (error) {
+      console.error('DarkSidebar: Error logging out:', error);
+    }
+  };
 
   const sidebarClasses = cn(
     'fixed lg:static inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 ease-in-out border-r backdrop-blur-xl lg:translate-x-0',
@@ -284,10 +298,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
           </Button>
           <Button
             variant="ghost"
-            onClick={() => {
-              // Add logout functionality here
-              console.log('Logout clicked');
-            }}
+            onClick={handleLogout}
             className={cn(
               'w-full transition-colors rounded-lg',
               isCollapsed ? 'justify-center h-12 w-12 p-0' : 'justify-start px-3',
