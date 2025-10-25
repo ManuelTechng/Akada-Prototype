@@ -12,7 +12,7 @@ import { cn } from './lib/utils';
 // Lazy load components for better performance
 const DarkSidebar = lazy(() => import('./components/layouts/DarkSidebar').then(m => ({ default: m.DarkSidebar })));
 const DarkHeader = lazy(() => import('./components/layouts/DarkHeader').then(m => ({ default: m.DarkHeader })));
-const ProgramSearchPage = lazy(() => import('./pages/ProgramSearchPageFixed'));
+const ProgramSearchPage = lazy(() => import('./pages/ProgramSearchPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const AppDrawerButton = lazy(() => import('./components/AppDrawerButton'));
 const FigmaDashboard = lazy(() => import('./components/dashboard/FigmaDashboard'));
@@ -28,7 +28,8 @@ const CostCalculator = lazy(() => import('./components/app/CostCalculator'));
 const SavedPrograms = lazy(() => import('./components/app/SavedPrograms'));
 const RecommendedPrograms = lazy(() => import('./components/app/RecommendedPrograms'));
 const AIAssistant = lazy(() => import('./components/app/AIAssistant'));
-const ProgramSearchPageNew = lazy(() => import('./pages/ProgramSearchPageNew'));
+const ProgramDetailPage = lazy(() => import('./pages/ProgramDetailPage'));
+const UniversityDetailPage = lazy(() => import('./pages/UniversityDetailPage'));
 const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
@@ -255,7 +256,8 @@ function AppRoutes() {
         
         {/* Other protected routes */}
         <Route path="/app/programs" element={<ProtectedRoute><ProgramSearchPage /></ProtectedRoute>} />
-        <Route path="/app/programs-new" element={<ProtectedRoute><ProgramSearchPageNew /></ProtectedRoute>} />
+        <Route path="/app/programs/:id" element={<ProtectedRoute><ProgramDetailPage /></ProtectedRoute>} />
+        <Route path="/app/institution/:slug" element={<ProtectedRoute><UniversityDetailPage /></ProtectedRoute>} />
         <Route path="/app/saved" element={<ProtectedRoute><SavedPrograms /></ProtectedRoute>} />
         <Route path="/app/recommended" element={<ProtectedRoute><RecommendedPrograms /></ProtectedRoute>} />
         <Route path="/app/applications" element={<ProtectedRoute><Applications /></ProtectedRoute>} />

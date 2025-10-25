@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm run dev)",
-      "Read(//c/Users/oyiny/OneDrive/2025/manueltech/Projects/Akada Modern UI Redesign/**)"
+      "Read(//c/Users/oyiny/OneDrive/2025/manueltech/Projects/Akada Modern UI Redesign/**)",
+      "Bash(npm install recharts)",
+      "Bash(mkdir -p \"c:\\Users\\oyiny\\OneDrive\\2025\\manueltech\\Projects\\Akada-Prototype\\src\\components\\cost-calculator\")"
     ],
     "deny": [],
     "ask": []

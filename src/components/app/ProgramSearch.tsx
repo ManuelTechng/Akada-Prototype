@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, MapPin, GraduationCap, DollarSign, Calendar, Star, Share2, X, ChevronDown, ChevronLeft } from 'lucide-react';
+import { Search, Filter, MapPin, Calendar, Star, Share2, ChevronLeft } from 'lucide-react';
 import { searchPrograms } from '../../lib/program';
 import { convertCurrency, formatCurrency, getCountryCurrency } from '../../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import type { Program } from '../../lib/types';
+import { supabase } from '../../lib/supabase';
 
 const ProgramSearch: React.FC = () => {
   const navigate = useNavigate();
@@ -15,11 +16,85 @@ const ProgramSearch: React.FC = () => {
     field: '',
     scholarshipsOnly: false
   });
-  const [showFilters, setShowFilters] = useState(false);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState('match');
   const [error, setError] = useState<string | null>(null);
+
+  // Dynamic filter options from database
+  const [countries, setCountries] = useState<Array<{ code: string; name: string }>>([]);
+  const [fields, setFields] = useState<string[]>([]);
+  const [degreeTypes, setDegreeTypes] = useState<string[]>([]);
+
+  // Load filter options from database
+  useEffect(() => {
+    const loadFilterOptions = async () => {
+      try {
+        console.log('🔄 Loading filter options from database...');
+
+        // Fetch ALL active countries (both origin and destination)
+        // Students can study anywhere: abroad, other African countries, or at home
+        const { data: allCountries } = await supabase
+          .from('countries')
+          .select('*')
+          .eq('is_active', true)
+          .order('name');
+
+        console.log('📍 Countries loaded:', allCountries?.length);
+
+        if (allCountries) {
+          setCountries(allCountries.map(c => ({
+            code: c.country_code,
+            name: c.name
+          })));
+        }
+
+        // Fetch programs and extract fields from names
+        const { data: programsData } = await supabase
+          .from('programs')
+          .select('name');
+
+        console.log('📚 Programs loaded:', programsData?.length);
+
+        if (programsData) {
+          // Extract field names from program names (e.g., "MSc Computer Science" -> "Computer Science")
+          const extractedFields = programsData
+            .map(p => {
+              const name = p.name || '';
+              // Remove degree prefixes
+              const cleaned = name.replace(/^(BSc|MSc|MA|MBA|PhD|Master|Bachelor|Doctor)\s+(of\s+)?(Science\s+in\s+|Arts\s+in\s+)?/i, '').trim();
+              return cleaned;
+            })
+            .filter(Boolean);
+
+          const uniqueFields = [...new Set(extractedFields)].sort();
+          console.log('🎓 Unique fields extracted:', uniqueFields.length, uniqueFields);
+          setFields(uniqueFields.slice(0, 20)); // Limit to top 20 unique fields
+        }
+
+        // Extract degree types from program names
+        if (programsData) {
+          const degreeMatches = programsData
+            .map(p => {
+              const name = p.name || '';
+              const match = name.match(/^(BSc|MSc|MA|MBA|PhD|Bachelor|Master|Doctor)/i);
+              return match ? match[1] : null;
+            })
+            .filter((degree): degree is string => degree !== null);
+
+          const uniqueDegrees = [...new Set(degreeMatches)].sort();
+          console.log('🎯 Degree types extracted:', uniqueDegrees);
+          setDegreeTypes(uniqueDegrees);
+        }
+
+        console.log('✅ Filter options loaded successfully');
+      } catch (error) {
+        console.error('❌ Error loading filter options:', error);
+      }
+    };
+
+    loadFilterOptions();
+  }, []);
 
   useEffect(() => {
     const fetchPrograms = async () => {
@@ -119,18 +194,20 @@ const ProgramSearch: React.FC = () => {
           </div>
         </div>
         
-        <div className="flex justify-between items-center p-4 pt-3 border-t border-gray-200 bg-gray-50">
-          <button className="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors">
+        <div className="flex justify-between items-center gap-3 p-4 pt-3 border-t border-gray-200 bg-gray-50">
+          <button
+            onClick={() => navigate(`/app/programs/${program.id}`)}
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
             View Details
           </button>
-          <div className="flex gap-3">
-            <button className="text-gray-400 hover:text-gray-600 transition-colors">
-              <Star className="h-5 w-5" />
-            </button>
-            <button className="text-gray-400 hover:text-gray-600 transition-colors">
-              <Share2 className="h-5 w-5" />
-            </button>
-          </div>
+          <button className="px-4 py-2 border border-gray-300 hover:border-gray-400 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+            <Star className="h-4 w-4" />
+            Save
+          </button>
+          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+            <Share2 className="h-5 w-5" />
+          </button>
         </div>
       </div>
     );
@@ -197,11 +274,11 @@ const ProgramSearch: React.FC = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">Any country</option>
-              <option value="USA">United States</option>
-              <option value="UK">United Kingdom</option>
-              <option value="Canada">Canada</option>
-              <option value="Australia">Australia</option>
-              <option value="Germany">Germany</option>
+              {countries.map(country => (
+                <option key={country.code} value={country.name}>
+                  {country.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -215,11 +292,11 @@ const ProgramSearch: React.FC = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">Any field</option>
-              <option value="cs">Computer Science</option>
-              <option value="ai">Artificial Intelligence</option>
-              <option value="data">Data Science</option>
-              <option value="cyber">Cybersecurity</option>
-              <option value="software">Software Engineering</option>
+              {fields.map(field => (
+                <option key={field} value={field}>
+                  {field}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -250,9 +327,11 @@ const ProgramSearch: React.FC = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="any">Any type</option>
-              <option value="masters">Master's</option>
-              <option value="phd">PhD</option>
-              <option value="certificate">Certificate</option>
+              {degreeTypes.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
           </div>
         </div>

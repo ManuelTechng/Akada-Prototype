@@ -169,7 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               // Add a timeout wrapper around profile fetch
               const profilePromise = getUserProfile(newSession.user.id);
               const timeoutPromise = new Promise<null>((_, reject) =>
-                setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 8000)
               );
               
               const profile = await Promise.race([profilePromise, timeoutPromise]);
