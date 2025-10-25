@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import { Heart, MapPin, Clock, Users, GraduationCap, Star, BookOpen, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, Clock, Users, GraduationCap, Star, BookOpen, AlertCircle } from 'lucide-react';
 import { formatProgramTuition } from '../../lib/utils';
 import { useIsMobile } from '../../hooks/useResponsive';
 import { useDarkMode } from '../../hooks/useDarkMode';
 import { useProgramTuition } from '../../hooks/useProgramTuition';
 import type { Program } from '../../lib/types';
+
+// Helper function to create slug from university name
+const createSlug = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .trim();
+};
 
 // Enhanced Program interface for better type safety
 export interface EnhancedProgram extends Program {
@@ -23,6 +34,7 @@ export interface EnhancedProgram extends Program {
   };
   duration?: string;
   specialization?: string;
+  university_id?: string;
 }
 
 interface ProgramCardProps {
@@ -123,6 +135,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const { isDark } = useDarkMode();
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Calculate smart currency display based on program country with real-time rates
@@ -212,7 +225,21 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
           </h3>
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-1">
             <GraduationCap className="h-4 w-4 mr-1 flex-shrink-0" />
-            <span className="truncate">{program.university || 'University not specified'}</span>
+            {program.university ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const slug = createSlug(program.university);
+                  navigate(`/app/institution/${slug}`);
+                }}
+                className="truncate text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors underline cursor-pointer font-medium"
+                title="View university details"
+              >
+                {program.university}
+              </button>
+            ) : (
+              <span className="truncate">University not specified</span>
+            )}
           </div>
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-500">
             <span className="mr-1">{getCountryFlag(program.country || '')}</span>
@@ -220,27 +247,6 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
             <span>{program.location || program.city || 'Location N/A'}, {program.country || 'Country N/A'}</span>
           </div>
         </div>
-
-        {/* Save/Bookmark Button */}
-        <button
-          onClick={handleSaveToggle}
-          onKeyDown={handleSaveKeyDown}
-          className={`
-            ml-3 p-2 rounded-full transition-all duration-200 flex-shrink-0
-            ${isSaved 
-              ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30' 
-              : 'bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-red-500'
-            }
-            focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800
-          `}
-          aria-label={isSaved ? 'Remove from saved programs' : 'Save program'}
-          title={isSaved ? 'Remove from saved' : 'Save program'}
-        >
-          <Heart 
-            className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`}
-            aria-hidden="true"
-          />
-        </button>
       </div>
 
       {/* Price Section - Prominent display with real-time indicators */}
@@ -402,9 +408,9 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
           {/* View Details Button */}
           {onViewDetails && (
-            <button 
+            <button
               onClick={() => onViewDetails(program.id)}
-              className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="text-xs bg-indigo-600 dark:bg-indigo-500 text-white px-3 py-1.5 rounded hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               aria-label={`View details for ${program.name}`}
             >
               View Details

@@ -1,486 +1,944 @@
-<!-- 034ce2b9-f938-4671-a768-5c00862257ff 0e0f7b4f-6db5-46b9-9fea-e999a7ff859a -->
-# Akada Pre-Deployment Plan
+<!-- 034ce2b9-f938-4671-a768-5c00862257ff 1393b72d-0c26-4a23-9b99-c6e5ac522be7 -->
+# Create Comprehensive PRD V2.0 - Separate File
 
 ## Overview
 
-Prepare Akada application for internal testing deployment on Netlify (via GitHub), addressing 2 critical blockers and setting up Phase 2 database enhancements.
-
-## Current Status: 70% Deployment-Ready
-
-**Critical Blockers Identified:**
-
-1. ❌ Empty programs database (only 22 entries, need 50+ minimum)
-2. ❌ Missing deployment configuration (netlify.toml)
-
-**Working Components:**
-
-- ✅ Authentication & user management
-- ✅ Dashboard & widgets
-- ✅ Profile management
-- ✅ Saved programs (125ms performance)
-- ✅ Document upload & AI review
-- ✅ Cost calculator with NGN support
-- ✅ AI chat assistant
+Create a new, consolidated PRD file that brings together all existing documentation and new feature specifications into one comprehensive document, without modifying existing files.
 
 ---
 
-## Phase 1: Critical Deployment Preparation (2-3 Days)
+## New File to Create
 
-### Step 1: Create Netlify Deployment Configuration
+**File**: `docs/AKADA_PRD_V2.0.md`
 
-**File to Create:** `netlify.toml` in project root
+**Size**: ~800-1,000 lines (manageable, actionable version)
 
-**Configuration Required:**
+**Format**: Markdown with clear sections, tables, and code blocks
 
-```toml
-[build]
-  command = "npm run build"
-  publish = "dist"
+---
 
-[build.environment]
-  NODE_VERSION = "18"
+## File Structure
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+### Table of Contents
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+```markdown
+# Akada Platform - Product Requirements Document V2.0
+
+## Table of Contents
+1. Executive Summary
+2. Current Implementation (Phase 1)
+3. Phase 2 Features (Post-Deployment)
+4. Phase 3 Features (Advanced)
+5. Database Architecture
+6. Technical Specifications
+7. Implementation Roadmap
+8. Success Metrics & KPIs
 ```
 
-**Environment Variables to Set in Netlify Dashboard:**
-
-- `VITE_SUPABASE_URL` (from your Supabase project)
-- `VITE_SUPABASE_ANON_KEY` (from your Supabase project)
-- `VITE_GEMINI_API_KEY` (or `VITE_OPENAI_API_KEY`)
-- `VITE_FIXER_API_KEY` (optional, for currency conversion)
-
-**GitHub Integration:**
-
-- Connect repository to Netlify
-- Netlify will auto-deploy on push to main/master branch
-- Set up branch deploys for preview environments
-
 ---
 
-### Step 2: Populate Programs Database
+## Content Breakdown by Section
 
-**Target:** Minimum 50 international programs for Nigerian students
+### 1. Executive Summary (50 lines)
 
-**Data Structure (from migrations):**
+- **Product Vision**: AI-powered education platform for Nigerian students
+- **Mission**: Democratize access to global education
+- **Current Status**: 70% deployment-ready, 22 programs in database
+- **Target Users**: Nigerian students aged 16-30, tech/non-tech programs
+- **Business Model**: Freemium (Free tier, Standard $5/month, Premium $10/month)
+- **Market Opportunity**: $5B market, 50K+ Nigerian students studying abroad annually
+- **Competitive Advantage**: Nigeria-first design, 3G-optimized, NGN-native, AI-powered
 
+### 2. Current Implementation - Phase 1 (150 lines)
+
+**Completed Features** (from AKADA_PLATFORM_DOCUMENTATION.md):
+
+#### Authentication & User Management
+
+- Email/password signup with email verification
+- Google OAuth integration
+- Password reset flow
+- User profiles with preferences
+- RLS policies for data security
+
+#### Dashboard & Analytics
+
+- Welcome card with user info
+- Quick stats (saved programs, applications, scholarships)
+- Profile completion tracking
+- Recent activities widget
+- Application timeline widget
+- Cost analysis widget
+- Quick actions (search, scholarships)
+
+#### Program Discovery & Search
+
+- Advanced filters (country, tuition, degree type, specialization, scholarships)
+- Sort options (relevance, tuition, deadline)
+- Program cards with save functionality
+- Search results with pagination
+- City/location filtering
+
+#### Document Management
+
+- Upload documents to Supabase Storage
+- AI-powered document review (essay, SOP feedback)
+- Document library with download
+- Status tracking (pending, reviewed, approved)
+- Dark mode support
+
+#### Cost Calculator (Basic)
+
+- Tuition fee calculation
+- Living expenses estimation
+- Health insurance costs
+- Application fees
+- Total cost projection in NGN
+- Multi-currency support (14 currencies)
+- 3-tier fallback system (API → localStorage → static rates)
+
+#### AI Chat Assistant
+
+- Real-time chat with Gemini/GPT
+- Context-aware responses
+- Chat history persistence
+- Program recommendation capability
+- Visa/application guidance
+
+#### Infrastructure
+
+- Dark/Light theme toggle
+- Multi-currency conversion system
+- Responsive design (mobile-first)
+- Connection health checks
+- Timeout protection (10s queries)
+- Error boundaries
+- Environment validation
+
+**Database Schema** (11 tables):
+
+- user_profiles
+- user_preferences  
+- programs
+- applications
+- documents
+- saved_programs
+- chat_logs
+- country_estimates
+- reminder_system
+- sessions
+- auth.users
+
+**Technology Stack**:
+
+- Frontend: React 18, TypeScript, Tailwind CSS, Vite
+- Backend: Supabase (Auth, Database, Storage)
+- AI: OpenAI GPT-4, Google Gemini
+- Deployment: Netlify (via GitHub)
+- Currency: Fixer.io API
+
+### 3. Phase 2 Features - Post-Deployment (250 lines)
+
+**Timeline**: 2 weeks post-launch
+
+**Priority**: High - Essential for production readiness
+
+#### A. PWA Implementation (Offline-First)
+
+**Objective**: Enable offline access and installable app experience
+
+**Service Worker Features**:
+
+- Cache-first strategy for static assets (HTML, CSS, JS, images)
+- Network-first for dynamic data (programs, user profiles)
+- Background sync for offline actions
+- Push notification handling (via chosen provider)
+- Periodic background sync for data freshness
+- Stale-while-revalidate for API responses
+
+**IndexedDB Offline Database**:
+
+```javascript
+// Schema
+{
+  programs: {
+    keyPath: 'id',
+    indexes: ['country', 'tuition_fee', 'specialization']
+  },
+  saved_programs: {
+    keyPath: 'id',
+    indexes: ['user_id', 'created_at']
+  },
+  user_profile: {
+    keyPath: 'user_id'
+  }
+}
+```
+
+**Offline Capabilities**:
+
+- Browse 5000+ cached programs
+- Search/filter programs offline
+- Save programs to queue (sync when online)
+- View saved programs
+- Access user profile
+- Offline indicator in UI
+
+**Install Experience**:
+
+- Smart prompt timing (2+ visits OR 5+ page views)
+- Dismissal tracking (don't re-prompt immediately)
+- Custom install UI for iOS
+- Install analytics
+- Post-install onboarding
+
+**Performance Targets**:
+
+- First Contentful Paint: <1.5s on 3G
+- Largest Contentful Paint: <2.5s on 3G
+- Time to Interactive: <3.5s on 3G
+- Cache hit rate: >70%
+- Offline functionality: 100% for core features
+
+**Implementation Files**:
+
+- `public/service-worker.js` (rewrite from placeholder)
+- `public/manifest.json` (app manifest)
+- `src/lib/offline-db.ts` (IndexedDB wrapper)
+- `src/lib/sync-queue.ts` (offline action queue)
+- `src/components/InstallPrompt.tsx` (PWA install UI)
+
+#### B. Enhanced School Details System
+
+**Objective**: Provide comprehensive university and program information
+
+**New Database Tables** (5 tables):
+
+1. **universities** (20+ fields):
 ```sql
-programs (
-  id uuid,
-  university text,
-  name text,
-  degree_type text,
-  country text,
-  tuition_fee numeric (in NGN),
-  specialization text,
-  location text,
-  city text,
-  duration text,
-  has_scholarships boolean,
-  scholarship_available boolean,
-  application_deadline date,
-  website text,
-  requirements text[],
-  entry_requirements text,
-  language_requirements text,
-  study_level text,
-  description text
-)
+CREATE TABLE universities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  country TEXT NOT NULL,
+  city TEXT,
+  type TEXT, -- public, private, technical
+  ranking_qs INTEGER,
+  ranking_times INTEGER,
+  acceptance_rate DECIMAL(5,2),
+  total_students INTEGER,
+  international_students INTEGER,
+  student_faculty_ratio DECIMAL(5,2),
+  description TEXT,
+  website TEXT,
+  logo_url TEXT,
+  campus_size TEXT,
+  founded_year INTEGER,
+  accreditations TEXT[],
+  notable_alumni TEXT[],
+  research_output TEXT,
+  industry_connections TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-**Program Distribution Strategy:**
-
-- **USA**: 15-20 programs (popular destination)
-- **UK**: 10-15 programs (Commonwealth ties)
-- **Canada**: 8-10 programs (immigration-friendly)
-- **Germany**: 5-7 programs (low tuition)
-- **Australia**: 5-7 programs (quality education)
-- **Netherlands/Ireland**: 5 programs (English-taught)
-
-**Specialization Mix:**
-
-- Computer Science/IT: 40%
-- Engineering: 20%
-- Business/MBA: 20%
-- Data Science/AI: 10%
-- Other (Design, Health): 10%
-
-**Tuition Range (in NGN):**
-
-- Budget-friendly: ₦5M - ₦15M (20%)
-- Mid-range: ₦15M - ₦30M (50%)
-- Premium: ₦30M - ₦50M (30%)
-
-**Data Entry Options:**
-
-1. **Manual Entry**: Use Supabase dashboard SQL editor
-2. **Bulk Import**: Create CSV and import via Supabase
-3. **Web Scraping**: Build script to extract from university websites
-4. **Use Template**: Copy/modify existing 22 programs
-
-**SQL Template for Bulk Insert:**
-
+2. **countries** (25+ fields):
 ```sql
-INSERT INTO programs (
-  university, name, degree_type, country, tuition_fee,
-  specialization, city, duration, has_scholarships, currency
-) VALUES
-('Stanford University', 'Master of Computer Science', 'Master''s', 'USA', 45000000, 'Computer Science', 'Stanford', '2 years', true, 'NGN'),
-('MIT', 'Master of Engineering', 'Master''s', 'USA', 52500000, 'Engineering', 'Cambridge', '2 years', true, 'NGN'),
--- ... add 48 more programs
+CREATE TABLE countries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  country_code VARCHAR(3) NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  region TEXT, -- North America, Europe, Asia, etc.
+  currency_code VARCHAR(3),
+  currency_symbol VARCHAR(5),
+  visa_type TEXT, -- study permit, student visa
+  visa_processing_time_days INTEGER,
+  visa_fee_usd DECIMAL(10,2),
+  requires_biometrics BOOLEAN,
+  requires_medical_exam BOOLEAN,
+  language_requirements TEXT, -- IELTS 6.5, TOEFL 90
+  work_permit_hours_per_week INTEGER,
+  post_study_work_permit_duration TEXT,
+  healthcare_system TEXT,
+  healthcare_cost_monthly_usd DECIMAL(10,2),
+  climate TEXT,
+  time_zone TEXT,
+  popular_cities TEXT[],
+  education_system_overview TEXT,
+  scholarships_available BOOLEAN,
+  avg_cost_of_living_monthly_usd DECIMAL(10,2),
+  safety_index DECIMAL(5,2),
+  quality_of_life_index DECIMAL(5,2),
+  internet_speed_mbps INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-**Verification After Import:**
-
+3. **cities** (15+ fields):
 ```sql
--- Check program count
-SELECT COUNT(*) FROM programs;
-
--- Verify country distribution
-SELECT country, COUNT(*) FROM programs GROUP BY country;
-
--- Check tuition range
-SELECT 
-  COUNT(CASE WHEN tuition_fee < 15000000 THEN 1 END) as budget,
-  COUNT(CASE WHEN tuition_fee BETWEEN 15000000 AND 30000000 THEN 1 END) as mid_range,
-  COUNT(CASE WHEN tuition_fee > 30000000 THEN 1 END) as premium
-FROM programs;
+CREATE TABLE cities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  country_code VARCHAR(3) REFERENCES countries(country_code),
+  tier TEXT NOT NULL, -- major, mid, small
+  population INTEGER,
+  latitude DECIMAL(10,7),
+  longitude DECIMAL(10,7),
+  accommodation_min_monthly_usd DECIMAL(10,2),
+  accommodation_max_monthly_usd DECIMAL(10,2),
+  food_monthly_usd DECIMAL(10,2),
+  transport_monthly_usd DECIMAL(10,2),
+  utilities_monthly_usd DECIMAL(10,2),
+  entertainment_monthly_usd DECIMAL(10,2),
+  climate TEXT,
+  public_transport_quality TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
----
-
-### Step 3: Pre-Deployment Testing
-
-**Local Production Build Test:**
-
-```bash
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Check build output
-ls -lh dist/
+4. **application_guides** (12+ fields):
+```sql
+CREATE TABLE application_guides (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  university_id UUID REFERENCES universities(id),
+  country_code VARCHAR(3) REFERENCES countries(country_code),
+  title TEXT NOT NULL,
+  steps JSONB NOT NULL, -- [{step: 1, title: "...", description: "..."}]
+  required_documents TEXT[],
+  application_fee_usd DECIMAL(10,2),
+  application_deadline_type TEXT, -- rolling, fixed
+  typical_response_time_weeks INTEGER,
+  tips TEXT[],
+  common_mistakes TEXT[],
+  additional_notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-**Test Checklist:**
+5. **scholarship_opportunities** (12+ fields):
+```sql
+CREATE TABLE scholarship_opportunities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  provider TEXT, -- university, government, private
+  amount_min_usd DECIMAL(10,2),
+  amount_max_usd DECIMAL(10,2),
+  coverage_type TEXT, -- full tuition, partial, living costs
+  eligible_countries TEXT[],
+  eligible_programs TEXT[],
+  requirements TEXT[],
+  application_deadline DATE,
+  website TEXT,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
-- [ ] Application builds without errors
-- [ ] No TypeScript compilation errors
-- [ ] Bundle size reasonable (<2MB total)
-- [ ] All assets properly referenced
-- [ ] Environment variables load correctly
 
-**Feature Testing (Local Production Build):**
+**New Pages**:
 
-- [ ] User signup/login flow
-- [ ] Dashboard loads with all widgets
-- [ ] Program search returns 50+ results
-- [ ] Filtering works (country, tuition, degree type)
-- [ ] Save/unsave programs
-- [ ] Document upload to Supabase
-- [ ] AI chat responds correctly
-- [ ] Profile settings save successfully
-- [ ] Cost calculator displays properly
-- [ ] Currency conversion works
-- [ ] Mobile responsive (DevTools)
-- [ ] No console errors
+1. **University Detail Page** (`/universities/:id`):
 
-**Performance Testing:**
+   - Tab 1: Overview (stats, description, rankings, campus)
+   - Tab 2: Programs & Courses (searchable program list)
+   - Tab 3: Location & Living Costs (city info, cost breakdown)
+   - Tab 4: Visa & Immigration (country requirements)
+   - Tab 5: How to Apply (step-by-step guide)
+   - Tab 6: Scholarships & Aid (available funding)
 
-- [ ] Run Lighthouse audit (target: >70 on mobile)
-- [ ] Test on simulated 3G network
-- [ ] Check Time to Interactive (<5s on 3G)
-- [ ] Verify lazy loading works
-- [ ] Check bundle splitting effectiveness
+2. **Enhanced Program Detail Page** (`/programs/:id`):
+
+   - Section 1: Program Overview (name, degree, duration, tuition)
+   - Section 2: Requirements (entry, language, standardized tests)
+   - Section 3: Tuition & Costs (with city/country context)
+   - Section 4: Location & University Context (embedded university info)
+   - Section 5: Application Process (timeline, documents)
+   - Section 6: Similar Programs (recommendations)
+
+**Migration Strategy**:
+
+- Extract universities from existing programs table
+- Populate countries table with visa/work permit data
+- Create cities from program locations
+- Manual/AI-assisted application guide creation
+- Seed scholarship database
+
+#### C. Multi-Country Cost Calculator Enhancement
+
+**Objective**: Provide accurate cost estimates for students from 10 African countries
+
+**From**: `cost-calculator-enhancement.plan.md` (397 lines)
+
+**New Database Tables** (4 tables):
+
+1. **african_countries**:
+```sql
+CREATE TABLE african_countries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  country_code VARCHAR(3) NOT NULL UNIQUE, -- ISO 3166-1 alpha-3
+  country_name VARCHAR(100) NOT NULL,
+  currency_code VARCHAR(3) NOT NULL,
+  currency_symbol VARCHAR(5),
+  flag_emoji VARCHAR(10),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+
+**Initial Data**: Nigeria (NGN), Ghana (GHS), Kenya (KES), South Africa (ZAR), Egypt (EGP), Uganda (UGX), Tanzania (TZS), Rwanda (RWF), Ethiopia (ETB), Morocco (MAD)
+
+2. **city_living_costs** (already designed above in cities table)
+
+3. **flight_routes**:
+```sql
+CREATE TABLE flight_routes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  origin_country_code VARCHAR(3) NOT NULL,
+  destination_country_code VARCHAR(3) NOT NULL,
+  avg_economy_cost DECIMAL(10,2) NOT NULL,
+  currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
+  peak_season_multiplier DECIMAL(4,2) DEFAULT 1.3,
+  budget_airline_available BOOLEAN DEFAULT false,
+  typical_layovers INTEGER DEFAULT 1,
+  avg_flight_duration_hours INTEGER,
+  last_updated TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(origin_country_code, destination_country_code)
+);
+```
+
+
+**Example Data**:
+
+- NGA → USA: ~$1200-1500
+- GHA → GBR: ~$800-1100  
+- KEN → CAN: ~$1000-1300
+
+4. **country_visa_requirements** (integrated into countries table above)
+
+**Enhanced Cost Categories**:
+
+1. **Pre-Arrival Costs** (one-time):
+
+   - Visa application fee
+   - Biometrics fee
+   - Medical examinations (TB test, vaccinations)
+   - Language proficiency tests (IELTS/TOEFL/PTE)
+   - Document attestation/notarization
+   - Background checks/police clearance
+   - Initial flight ticket
+
+2. **Initial Setup Costs** (one-time, first month):
+
+   - Security deposit (accommodation)
+   - Furniture & household items
+   - Initial groceries & essentials
+   - SIM card & utilities setup
+   - First semester textbooks
+   - Kitchen essentials
+   - Bedding & linens
+
+3. **Recurring Costs** (monthly/annual):
+
+   - Tuition fees (annual)
+   - Accommodation (monthly)
+   - Food & groceries (monthly)
+   - Local transport (monthly)
+   - Utilities (monthly)
+   - Phone & internet (monthly)
+   - Health insurance (annual)
+   - Entertainment (monthly)
+   - Annual return flights
+
+4. **Emergency Buffer**: 10% of total costs
+
+**New Features**:
+
+- Country selection: "Where are you applying from?"
+- City selection: "Which city?" (filtered by tier)
+- Flight cost calculator (origin → destination)
+- Multi-currency display (home currency + destination currency)
+- Visualizations: Pie chart, bar chart, payment timeline
+- Save & compare (up to 3 programs side-by-side)
+- PDF export with detailed breakdown
+
+**TypeScript Interface**:
+
+```typescript
+interface EnhancedCostBreakdown {
+  homeCountry: string // Country code
+  destinationCity: string
+  
+  // Pre-Departure (one-time)
+  visaFees: number
+  medicalExams: number
+  languageTests: number
+  documentAttestation: number
+  initialFlightTicket: number
+  
+  // Setup (one-time)
+  securityDeposit: number
+  furniture: number
+  initialGroceries: number
+  textbooks: number
+  
+  // Recurring (monthly)
+  tuition: number // annual
+  accommodation: number
+  food: number
+  transport: number
+  utilities: number
+  phoneInternet: number
+  healthInsurance: number // annual
+  
+  // Annual
+  annualReturnFlights: number
+  
+  // Buffer
+  emergencyFund: number // 10%
+  
+  // Totals
+  totalPreDeparture: number
+  totalSetup: number
+  totalFirstYear: number
+  totalPerYear: number
+}
+```
+
+### 4. Phase 3 Features - Advanced (200 lines)
+
+**Timeline**: 4-8 weeks post-Phase 2
+
+**Priority**: Medium - Scalability and automation
+
+#### A. AI-Powered Auto-Scraping Agent
+
+**Objective**: Automatically populate database when users search for schools not yet in system
+
+**Workflow** (10 steps):
+
+1. **User Action**: Searches "Stanford Computer Science Masters"
+2. **System Detection**: Program not found in database
+3. **Job Creation**: Creates scraping job (priority: high)
+4. **User Notification**: "We're adding Stanford to our database! We'll notify you when it's ready."
+5. **AI Agent Trigger**: Background worker picks up job
+6. **Scraping Process**:
+
+   - Visits Stanford official website
+   - Extracts programs, tuition, deadlines, requirements
+   - Validates data from 2+ sources (QS Rankings, official sites)
+   - Structures data according to schema
+
+7. **Quality Check**:
+
+   - AI calculates confidence score (0-100%)
+   - If >85%: Auto-approve and add to database
+   - If <85%: Queue for admin review
+
+8. **Data Added**: University + programs inserted into database
+9. **Application Guide Generation**: AI creates step-by-step guide
+10. **User Notification**: Push + Email + In-app "Stanford is now available! View 24 programs"
+
+**Architecture Components**:
+
+1. **Scraping Engine**: Playwright/Puppeteer for dynamic sites
+2. **AI Extraction**: GPT-4 Vision for PDFs, images, complex layouts
+3. **Data Validation**: Multi-source verification (require 2+ sources)
+4. **Structured Output**: JSON schema enforcement
+5. **Quality Scoring**: 0-100% confidence with detailed reasoning
+6. **Job Queue**: BullMQ for distributed processing
+7. **Retry Logic**: 3 attempts with exponential backoff
+8. **Rate Limiting**: Respects robots.txt, max 1 req/sec per domain
+
+**Data Sources Priority**:
+
+1. Official university websites (highest trust)
+2. Times Higher Education / QS Rankings
+3. Government education portals (UCAS, Common App)
+4. Trusted aggregators (Study.com, CollegeBoard)
+
+**Ethical & Legal Compliance**:
+
+- Respect robots.txt 100%
+- User-agent: "Akada-Bot/1.0 (+https://akada.com/bot)"
+- Rate limiting and politeness delays
+- No personal data scraping
+- Public data only
+- Legal review of practices
+
+**Admin Review Interface**:
+
+- Dashboard for pending jobs
+- Side-by-side comparison (scraped vs manual)
+- Approval/rejection workflow
+- Edit before approve
+- Feedback to AI for learning
+
+#### B. Self-Updating Database System
+
+**Objective**: Automatically refresh stale data to maintain accuracy
+
+**Update Schedules**:
+
+| Data Type | Frequency | Method |
+
+|-----------|-----------|--------|
+
+| Currency rates | Every 6 hours | Fixer.io API (already implemented) |
+
+| Program tuition | Monthly | AI agent + web scraping |
+
+| Application deadlines | Weekly | University websites |
+
+| Scholarship availability | Daily | Scholarship portals |
+
+| Cost of living | Quarterly | Numbeo API |
+
+| Visa requirements | On-demand | Government announcements |
+
+**Update Process** (7 steps):
+
+1. **Scheduled Trigger**: Supabase Edge Function (cron job)
+2. **AI Fetch**: Agent fetches latest data for all programs
+3. **Comparison**: Field-by-field diff with current database
+4. **Categorization**:
+
+   - Minor (<5% change): Auto-update
+   - Moderate (5-15%): Flag for review
+   - Major (>15% or structural): Require admin approval
+
+5. **Apply Updates**: With versioning and audit trail
+6. **User Notifications**:
+
+   - "Your saved program tuition increased by 10%"
+   - "Application deadline extended to March 2026"
+   - "New scholarship matching your profile"
+
+7. **Logging**: All changes in `database_update_logs` table
+
+**Change Detection**:
+
+- Hash-based: MD5 hash of critical fields
+- Field-level: Track which specific fields changed
+- Confidence scoring: AI determines if change is legitimate
+- Outlier detection: Flag unusual changes (e.g., tuition doubled)
+- Multi-source verification: Confirm major changes from 2+ sources
+
+**Data Quality Monitoring**:
+
+- Staleness tracking (how old is each field?)
+- Completeness score (% of fields populated)
+- Accuracy score (user feedback + verification)
+- Automated alerts for data degradation
+
+#### C. Comprehensive Notification System
+
+**Objective**: Keep users informed via multiple channels
+
+**Build vs Buy Decision**:
+
+- **Phase 1**: Use OneSignal (free tier: 10K users)
+- **Phase 2+**: Evaluate custom build if costs exceed $500/month
+- **Enterprise**: Migrate to AWS SNS for full control
+
+**Notification Types** (40+ across 7 categories):
+
+1. **Onboarding & Engagement** (6 types):
+
+   - Welcome message after signup
+   - Profile completion reminders
+   - Feature discovery tips
+   - Abandoned profile nudge
+   - App install prompt
+   - First search congratulations
+
+2. **Program Discovery** (8 types):
+
+   - New programs matching preferences
+   - Price changes on saved programs (>5%)
+   - School added after search request
+   - Similar program recommendations
+   - Deadline approaching (saved programs)
+   - Popular programs this week
+   - Programs in price range
+   - Late application opportunities
+
+3. **Application Management** (10 types):
+
+   - Deadline reminders (30, 14, 7, 3, 1 days)
+   - Application status updates
+   - Missing document alerts
+   - Interview invitations
+   - Application fee payment reminder
+   - Test score submission reminder
+   - Reference letter request
+   - Application submitted confirmation
+   - Multiple deadlines summary
+   - Overdue application warning
+
+4. **Financial Planning** (6 types):
+
+   - Currency rate change alert (>5%)
+   - Scholarship deadlines
+   - New scholarship matching profile
+   - Funding opportunities
+   - Cost estimate update
+   - Financial aid reminder
+
+5. **Community & Support** (5 types):
+
+   - New message from counselor
+   - Discussion reply
+   - Question answered
+   - Peer success story
+   - Study buddy request
+
+6. **System & Account** (7 types):
+
+   - Password reset
+   - Security alert (new device)
+   - Payment confirmation
+   - Subscription renewal
+   - Feature update
+   - Maintenance notice
+   - Account verification
+
+7. **AI & Automation** (6 types):
+
+   - Document review completed
+   - Essay feedback ready
+   - AI research results
+   - Personalized recommendation
+   - Application checklist generated
+   - School data update complete
+
+**Delivery Channels**:
+
+- **Push**: Instant, high priority (deadline <3 days, new school added)
+- **Email**: Detailed, transactional (weekly digest, document reviews)
+- **In-App**: Always visible, persistent (notification center)
+- **SMS**: Critical only (deadline 24h, payment failed)
+- **WhatsApp** (future): Conversational, rich media
+
+**User Preferences** (Granular Control):
+
+- By category: On/Off per category
+- By channel: On/Off per channel per category
+- By timing: Quiet hours (10pm-8am in user timezone)
+- Digest preference: Daily 9am / Weekly Monday 9am
+
+**Notification Template Example**:
+
+```json
+{
+  "id": "school_added",
+  "channels": ["push", "email", "in-app"],
+  "priority": "high",
+  "push": {
+    "title": "{{school_name}} is now available!",
+    "body": "We've added {{program_count}} programs. View them now.",
+    "action": "View Programs",
+    "url": "/universities/{{university_id}}"
+  },
+  "email": {
+    "subject": "Great news! {{school_name}} is now in our database",
+    "template": "school_added_email.html",
+    "cta": "Explore {{school_name}} Programs"
+  }
+}
+```
+
+### 5. Database Architecture (100 lines)
+
+**Complete ERD** (Entity Relationship Diagram - text-based)
+
+**Current Tables** (11):
+
+- user_profiles
+- user_preferences
+- programs
+- applications
+- documents
+- saved_programs
+- chat_logs
+- country_estimates
+- reminder_system
+- sessions
+- auth.users
+
+**Phase 2 Additions** (5):
+
+- universities
+- countries
+- cities
+- application_guides
+- scholarship_opportunities
+
+**Phase 3 Additions** (4):
+
+- african_countries
+- flight_routes
+- database_update_logs
+- notification_preferences
+
+**Cost Calculator Additions** (from plan - already covered above):
+
+- city_living_costs (integrated into cities)
+- country_visa_requirements (integrated into countries)
+
+**Total Tables**: 20+ tables
+
+**Key Relationships**:
+
+```
+universities (1) ←→ (many) programs
+countries (1) ←→ (many) cities
+universities (1) ←→ (many) application_guides
+countries (1) ←→ (many) application_guides
+programs (1) ←→ (many) saved_programs
+programs (1) ←→ (many) applications
+user_profiles (1) ←→ (many) saved_programs
+user_profiles (1) ←→ (many) applications
+user_profiles (1) ←→ (many) documents
+user_profiles (1) ←→ (1) user_preferences
+```
+
+**RLS Policies**: All tables have Row Level Security enabled
+
+**Indexes**: Performance indexes on foreign keys, search fields
+
+**Audit Trail**: `created_at`, `updated_at` on all tables
+
+### 6. Technical Specifications (100 lines)
+
+**Performance Requirements**:
+
+- Load time: <3s on 3G, <1.5s on 4G
+- API response: <200ms p95
+- Database queries: <150ms p95
+- Cache hit rate: >75%
+- Offline functionality: 100% for core features
+
+**Security**:
+
+- GDPR compliant
+- Data encryption (at rest, in transit)
+- RLS policies on all tables
+- Rate limiting (10 req/sec per user)
+- Input validation
+- XSS/CSRF protection
+- Content Security Policy
+
+**Accessibility**:
+
+- WCAG 2.1 AA compliance
+- Screen reader support
+- Keyboard navigation
+- High contrast mode
+- 4.5:1 color contrast
+- Focus indicators
+
+**Scalability Targets**:
+
+- Support 100K users
+- 10K programs in database
+- 1M searches/month
+- 99.9% uptime
+- Disaster recovery (RTO: 1h, RPO: 5min)
+
+### 7. Implementation Roadmap (50 lines)
+
+**Phase 1: MVP Deployment** (Current - 3 days)
+
+- Deploy to Netlify
+- Populate 50+ programs
+- Onboard 10-20 test users
+- Collect feedback
+
+**Phase 2: Enhanced Features** (Weeks 1-2 post-launch)
+
+- Week 1: PWA + Database schema enhancement
+- Week 2: School details pages + Multi-country cost calculator
+
+**Phase 3: Advanced Automation** (Weeks 3-8 post-Phase 2)
+
+- Weeks 3-4: AI auto-scraping agent
+- Weeks 5-6: Self-updating database
+- Weeks 7-8: Notification system
+
+**Phase 4: Expansion** (Months 3-6)
+
+- Multi-country expansion (10 African countries)
+- Community features
+- Premium tier features
+- Mobile native apps (leveraging PWA)
+
+### 8. Success Metrics & KPIs (50 lines)
+
+**User Metrics**:
+
+- User acquisition: 10K users in 6 months
+- Activation: 70% complete profile
+- Engagement: 5+ sessions/week for active users
+- Retention: 60% D30 retention
+- PWA install rate: 35%
+
+**Product Metrics**:
+
+- Program database: 10K programs in 12 months
+- Search success rate: >90%
+- Auto-scraping success: >85%
+- Data freshness: >95% updated monthly
+- Notification engagement: >30% open rate
+
+**Business Metrics**:
+
+- Premium conversion: 8% of active users
+- Revenue per user: $5-15/month
+- Customer acquisition cost: <$20
+- Lifetime value: >$150
+- Churn rate: <5% monthly
+
+**Technical Metrics**:
+
+- Page load time: <2s p95
+- API response time: <150ms p95
+- Uptime: >99.9%
+- Error rate: <0.1%
+- Cache hit rate: >75%
 
 ---
 
-### Step 4: Netlify Deployment Setup
+## Summary
 
-**Netlify Project Setup (via GitHub):**
+This PRD V2.0 consolidates:
 
-1. **Connect Repository:**
+✅ **Original MVP PRD** (src/prd.txt - 129 lines)
 
-   - Log into Netlify
-   - Click "Add new site" → "Import an existing project"
-   - Choose GitHub provider
-   - Select Akada-Prototype repository
-   - Authorize Netlify GitHub App
+✅ **Current Implementation** (AKADA_PLATFORM_DOCUMENTATION.md - 1,969 lines)
 
-2. **Configure Build Settings:**
+✅ **Cost Calculator Plan** (cost-calculator-enhancement.plan.md - 397 lines)
 
-   - Build command: `npm run build` (auto-detected)
-   - Publish directory: `dist` (auto-detected)
-   - Node version: 18 (set in netlify.toml)
+✅ **School Details Plan** (school-details-system.plan.md - 602 lines)
 
-3. **Set Environment Variables:**
+✅ **Deployment Plan** (akada-pre-deployment-readiness.plan.md - 506 lines)
 
-   - Navigate to Site settings → Environment variables
-   - Add all required VITE_* variables
-   - Mark sensitive variables as "Secret"
+🆕 **PWA Specifications**
 
-4. **Deploy Settings:**
+🆕 **AI Auto-Scraping Agent**
 
-   - Production branch: `main` (or `master`)
-   - Enable branch deploys for `UI-Update` branch
-   - Enable deploy previews for pull requests
+🆕 **Self-Updating Database**
 
-5. **Custom Domain (Optional):**
+🆕 **Notification System**
 
-   - Use Netlify subdomain: `akada.netlify.app`
-   - Or configure custom domain later
+**Total**: ~800-1,000 lines (manageable, actionable version)
 
-**First Deployment:**
+**Next Steps**:
 
-- Push netlify.toml to main branch
-- Netlify auto-triggers build
-- Monitor build logs for errors
-- Verify deployment URL works
-
-**Post-Deployment Verification:**
-
-- [ ] Site accessible at Netlify URL
-- [ ] All pages load correctly
-- [ ] Authentication works (signup → login)
-- [ ] Supabase connection active
-- [ ] Program search functional
-- [ ] No 404 errors for routes
-- [ ] Mobile view renders properly
-
----
-
-### Step 5: Quality Assurance & Bug Fixes
-
-**QA Testing Matrix:**
-
-| Feature | Desktop | Mobile | Status |
-
-|---------|---------|--------|--------|
-
-| Landing page | ⬜ | ⬜ | |
-
-| Signup/Login | ⬜ | ⬜ | |
-
-| Dashboard | ⬜ | ⬜ | |
-
-| Program search | ⬜ | ⬜ | |
-
-| Saved programs | ⬜ | ⬜ | |
-
-| Profile settings | ⬜ | ⬜ | |
-
-| Document upload | ⬜ | ⬜ | |
-
-| AI chat | ⬜ | ⬜ | |
-
-| Cost calculator | ⬜ | ⬜ | |
-
-**Bug Triage:**
-
-- **Critical**: Blocking user flows (fix immediately)
-- **High**: Significant UX issues (fix before launch)
-- **Medium**: Minor issues (fix in Phase 2)
-- **Low**: Nice-to-haves (backlog)
-
-**Common Issues to Check:**
-
-- [ ] CORS errors with Supabase
-- [ ] Environment variables not loading
-- [ ] Redirect issues (404s)
-- [ ] Authentication redirect loops
-- [ ] Slow API responses
-- [ ] Currency formatting errors
-- [ ] Mobile layout issues
-
----
-
-## Phase 2: Enhanced Database & Features (2 Weeks)
-
-### Overview
-
-Implement comprehensive school details system based on `school-details-system-d2dfea79.plan.md`
-
-**Major Components:**
-
-1. **Database Enhancement** (Week 1)
-
-   - Create universities table (centralized university data)
-   - Create countries table (comprehensive visa/cost info)
-   - Create cities table (city-specific living costs)
-   - Create application_guides table (step-by-step guides)
-   - Create scholarship_opportunities table
-   - Migrate existing programs to new schema
-
-2. **New Pages & Features** (Week 2)
-
-   - University detail page (`/universities/:id`) with tabbed interface
-   - Enhanced program detail page (`/programs/:id`)
-   - Scholarship listing & detail pages
-   - Application tracking dashboard (Task #9)
-   - Timeline builder (Task #11)
-
-3. **Infrastructure Improvements**
-
-   - Service worker implementation (offline mode)
-   - Image optimization pipeline
-   - Full 3G optimization
-   - Payment gateway integration (Task #13)
-   - Email reminder system (Task #14)
-
-**Dependencies:**
-
-- Phase 1 deployment successful
-- User feedback collected from initial testers
-- Database migration scripts prepared
-- UI/UX refinements based on testing
-
-**Detailed Plan:** See `school-details-system-d2dfea79.plan.md` for complete implementation spec
-
----
-
-## Deployment Timeline
-
-### Day 1: Configuration & Database
-
-- **Morning**: Create netlify.toml, commit to GitHub
-- **Afternoon**: Populate programs database (50+ entries)
-- **Evening**: Test production build locally
-
-### Day 2: Deployment & Initial Testing
-
-- **Morning**: Connect GitHub to Netlify, configure environment variables
-- **Afternoon**: First deployment, fix any build issues
-- **Evening**: Full QA testing on staging
-
-### Day 3: Launch & User Onboarding
-
-- **Morning**: Final verification, deploy to production
-- **Afternoon**: Onboard first 5-10 test users
-- **Evening**: Monitor for issues, collect initial feedback
-
----
-
-## Success Metrics
-
-**Phase 1 Success Criteria:**
-
-- [ ] Application deployed and publicly accessible
-- [ ] Zero critical bugs in production
-- [ ] All core features functional
-- [ ] 10-20 test users onboarded
-- [ ] Page load time <3s on 3G
-- [ ] Positive user feedback (>70% satisfaction)
-
-**Phase 2 Success Criteria:**
-
-- [ ] Comprehensive university/program pages live
-- [ ] Application tracking functional
-- [ ] Offline mode working
-- [ ] 50+ active users
-- [ ] Database schema enhanced
-- [ ] Performance improved (>80 Lighthouse score)
-
----
-
-## Risk Mitigation
-
-**Potential Risks:**
-
-1. **Build Failures on Netlify**
-
-   - Mitigation: Test build locally first, verify Node version compatibility
-
-2. **Supabase Rate Limiting**
-
-   - Mitigation: Monitor usage, implement caching, upgrade if needed
-
-3. **API Key Exposure**
-
-   - Mitigation: All keys in environment variables, .env in .gitignore
-
-4. **User Data Issues**
-
-   - Mitigation: Database backups enabled, RLS policies active
-
-5. **Poor Performance on 3G**
-
-   - Mitigation: Bundle optimization, lazy loading, CDN for assets
-
----
-
-## Post-Launch Monitoring
-
-**Metrics to Track:**
-
-- Daily active users
-- Program searches per user
-- Saved programs per user
-- Document uploads
-- Authentication failures
-- API error rates
-- Page load times
-- User feedback scores
-
-**Tools:**
-
-- Netlify Analytics (built-in)
-- Supabase Dashboard (database metrics)
-- Browser Console (error logging)
-- Google Lighthouse (performance audits)
-- User surveys (in-app or external)
-
-**Critical Alerts:**
-
-- Database connection failures
-- Supabase quota exceeded (75% threshold)
-- Build/deployment failures
-- Authentication error spike (>5% of requests)
-
----
-
-## Cost Estimates
-
-**Phase 1 (Internal Testing - 20 users):**
-
-- Netlify: Free tier (sufficient)
-- Supabase: Free tier (sufficient)
-- Gemini API: ~$10-20/month
-- **Total: ~$10-20/month**
-
-**Phase 2 (100+ users):**
-
-- Netlify Pro: $19/month (optional)
-- Supabase Pro: $25/month (recommended)
-- Gemini API: ~$100-200/month
-- CDN (Cloudflare): Free tier
-- **Total: ~$150-250/month**
-
----
-
-## Next Steps (Immediate Actions)
-
-1. **Create netlify.toml** (30 mins)
-2. **Populate programs database** (2-3 days)
-3. **Test production build locally** (1 hour)
-4. **Connect GitHub to Netlify** (30 mins)
-5. **Configure environment variables** (30 mins)
-6. **Deploy to staging** (1 hour)
-7. **QA testing** (4 hours)
-8. **Production deployment** (1 hour)
-9. **User onboarding** (ongoing)
+1. Create `docs/AKADA_PRD_V2.0.md` with all sections
+2. Commit to repository
+3. Use as single source of truth for Phases 2-4
+4. Expand to full 5,500-line PRD V3.0 after Phase 2 with real user feedback
 
 ### To-dos
 
