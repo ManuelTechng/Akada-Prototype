@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
           Promise.resolve(applications)
         ]);
 
-        setFavorites(favoritesData);
+        setFavorites((favoritesData || []) as any as Program[]);
         setApplications(applicationsData);
       } catch (err) {
         console.error('Error loading dashboard data:', err);

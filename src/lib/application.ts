@@ -92,7 +92,7 @@ export const getApplications = async (
     }
     
     console.log('Applications: Fetched', data?.length || 0, 'applications');
-    return data || [];
+    return (data || []) as Application[];
   } catch (error) {
     console.error('Applications: Error getting applications:', error);
     throw error;
@@ -132,7 +132,7 @@ export const getApplication = async (
     }
     
     console.log('Applications: Fetched application successfully', data);
-    return data;
+    return data as Application;
   } catch (error) {
     console.error('Applications: Error getting application:', error);
     throw error;
@@ -181,7 +181,7 @@ export const createApplication = async (
     }
     
     console.log('Applications: Created application successfully', data);
-    return data;
+    return data as Application;
   } catch (error) {
     console.error('Applications: Error creating application:', error);
     throw error;
@@ -231,7 +231,7 @@ export const updateApplication = async (
     }
     
     console.log('Applications: Updated application successfully', data);
-    return data;
+    return data as Application;
   } catch (error) {
     console.error('Applications: Error updating application:', error);
     throw error;
@@ -397,7 +397,7 @@ export const getUpcomingDeadlines = async (
     }
     
     console.log('Applications: Fetched', data?.length || 0, 'upcoming deadlines');
-    return data || [];
+    return (data || []) as Application[];
   } catch (error) {
     console.error('Applications: Error getting upcoming deadlines:', error);
     throw error;
@@ -433,7 +433,7 @@ export const getOverdueApplications = async (userId: string): Promise<Applicatio
     }
     
     console.log('Applications: Fetched', data?.length || 0, 'overdue applications');
-    return data || [];
+    return (data || []) as Application[];
   } catch (error) {
     console.error('Applications: Error getting overdue applications:', error);
     throw error;

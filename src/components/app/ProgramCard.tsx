@@ -19,21 +19,21 @@ const createSlug = (name: string): string => {
 
 // Enhanced Program interface for better type safety
 export interface EnhancedProgram extends Program {
-  city?: string;
+  city?: string | null;
   studentsEnrolled?: number;
   ranking?: number;
   imageUrl?: string;
   degreeLevel?: 'bachelor' | 'master' | 'phd';
   scholarshipAvailable?: boolean;
-  applicationFee?: number;
+  applicationFee?: number | null;
   requirementsDetails?: {
     gpa?: number;
     ielts?: number;
     toefl?: number;
     gre?: boolean;
   };
-  duration?: string;
-  specialization?: string;
+  duration?: string | null;
+  specialization?: string | null;
   university_id?: string;
 }
 

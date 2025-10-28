@@ -6,18 +6,18 @@ export interface ApplicationStatusUpdate {
   application_id: string
   old_status: string
   new_status: string
-  updated_by: 'user' | 'system' | 'university'
-  notes?: string
-  created_at: string
+  updated_by: string
+  notes?: string | null
+  created_at: string | null
 }
 
 export interface ApplicationStatusHistory {
   id: string
   application_id: string
   status: string
-  updated_by: 'user' | 'system' | 'university'
-  notes?: string
-  created_at: string
+  updated_by: string
+  notes?: string | null
+  created_at: string | null
 }
 
 export type ApplicationStatus = 
@@ -128,7 +128,7 @@ export const APPLICATION_STATUSES: Record<ApplicationStatus, {
 export async function updateApplicationStatus(
   applicationId: string,
   newStatus: ApplicationStatus,
-  updatedBy: 'user' | 'system' | 'university' = 'user',
+  updatedBy: 'user' | 'system' | 'university' | string = 'user',
   notes?: string
 ): Promise<boolean> {
   try {
@@ -211,7 +211,7 @@ export async function updateApplicationStatus(
 async function recordStatusHistory(
   applicationId: string,
   status: ApplicationStatus,
-  updatedBy: 'user' | 'system' | 'university',
+  updatedBy: 'user' | 'system' | 'university' | string,
   notes?: string
 ): Promise<void> {
   try {
@@ -257,7 +257,7 @@ export async function getApplicationStatusHistory(
       return []
     }
 
-    return data || []
+    return (data || []) as any as ApplicationStatusHistory[]
   } catch (error) {
     console.error('Error fetching status history:', error)
     return []
@@ -343,7 +343,7 @@ export async function getApplicationStatusStats(userId: string): Promise<Record<
 export async function bulkUpdateApplicationStatuses(
   applicationIds: string[],
   newStatus: ApplicationStatus,
-  updatedBy: 'user' | 'system' | 'university' = 'user',
+  updatedBy: 'user' | 'system' | 'university' | string = 'user',
   notes?: string
 ): Promise<{ success: string[]; failed: string[] }> {
   const results: { success: string[]; failed: string[] } = { success: [], failed: [] }

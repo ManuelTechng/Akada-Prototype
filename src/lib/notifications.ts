@@ -5,16 +5,16 @@ export interface Notification {
   user_id: string
   title: string
   message: string
-  type: 'info' | 'warning' | 'success' | 'error' | 'reminder'
-  category: 'application' | 'deadline' | 'program' | 'system' | 'general'
-  is_read: boolean
-  is_archived: boolean
-  action_url?: string
-  action_label?: string
-  metadata?: Record<string, any>
-  created_at: string
-  read_at?: string
-  expires_at?: string
+  type: 'info' | 'warning' | 'success' | 'error' | 'reminder' | string
+  category: 'application' | 'deadline' | 'program' | 'system' | 'general' | string
+  is_read: boolean | null
+  is_archived: boolean | null
+  action_url?: string | null
+  action_label?: string | null
+  metadata?: Record<string, any> | null
+  created_at: string | null
+  read_at?: string | null
+  expires_at?: string | null
 }
 
 export interface NotificationPreferences {
@@ -50,7 +50,7 @@ export async function createNotification(
       return null
     }
 
-    return data
+    return data as any as Notification
   } catch (error) {
     console.error('Error creating notification:', error)
     return null
@@ -94,7 +94,7 @@ export async function getUserNotifications(
       return []
     }
 
-    return data || []
+    return (data || []) as any as Notification[]
   } catch (error) {
     console.error('Error fetching notifications:', error)
     return []
@@ -405,7 +405,7 @@ export async function getNotificationPreferences(userId: string): Promise<Notifi
       return null
     }
 
-    return data?.notification_preferences || {
+    return (data?.notification_preferences as any as NotificationPreferences) || {
       email: true,
       push: true,
       deadline_reminders: true,

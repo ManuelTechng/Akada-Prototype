@@ -1,14 +1,15 @@
+// Chat functionality using Gemini AI
+// NOTE: chat_messages table structure needs to be verified and updated
+
 import { supabase } from './supabase';
 import { generateResponse, getAssistantResponse } from './gemini';
 
 export interface ChatMessage {
   id: string;
   user_id: string;
-  message: string;
-  response: string;
-  context?: string;
-  timestamp: string;
-  created_at: string;
+  content: string;
+  is_ai: boolean | null;
+  created_at: string | null;
 }
 
 /**
@@ -22,10 +23,10 @@ export const createChatAssistance = async (
 ): Promise<string> => {
   try {
     console.log('Chat: Creating Gemini AI assistance for user', userId);
-    
+
     // Use Gemini with context if provided
     let response: string;
-    
+
     if (context) {
       // Parse context for structured data
       const userContext = parseUserContext(context);
@@ -33,7 +34,7 @@ export const createChatAssistance = async (
     } else {
       response = await generateResponse(message);
     }
-    
+
     if (!response) {
       throw new Error('No response received from Gemini AI service');
     }
@@ -50,7 +51,7 @@ export const createChatAssistance = async (
     return response;
   } catch (error) {
     console.error('Chat: Error creating AI assistance:', error);
-    
+
     // Provide helpful fallback responses
     if (message.toLowerCase().includes('visa')) {
       return `I apologize, but I'm having trouble right now. For visa information, I recommend checking the official embassy websites for your target country. You can also visit the NYSC website for guidance on studying abroad as a Nigerian student.
@@ -64,10 +65,10 @@ Here are some key visa tips:
 
 Please try asking me again in a few minutes!`;
     }
-    
+
     if (message.toLowerCase().includes('scholarship')) {
       return `I'm currently experiencing issues, but here are some reliable scholarship resources for Nigerian students:
-      
+
 • **Commonwealth Scholarships** - For UK universities
 • **Chevening Scholarships** - UK government scholarships
 • **Fulbright Program** - For US universities
@@ -84,7 +85,7 @@ Please try asking me again in a few minutes!`;
 
 Please try asking me again in a few minutes!`;
     }
-    
+
     return `I apologize, but I'm having trouble processing your request right now. Please try again in a few minutes, or feel free to browse our program search to find universities that match your interests.`;
   }
 };
@@ -94,38 +95,39 @@ Please try asking me again in a few minutes!`;
  */
 const parseUserContext = (context: string) => {
   const userContext: any = {};
-  
+
   // Extract education level
   const educationMatch = context.match(/Education Level: ([^,\n]+)/i);
   if (educationMatch) {
     userContext.educationLevel = educationMatch[1].trim();
   }
-  
+
   // Extract field of study
   const fieldMatch = context.match(/studying ([^,\n]+)|Field of Study: ([^,\n]+)/i);
   if (fieldMatch) {
     userContext.fieldOfStudy = (fieldMatch[1] || fieldMatch[2]).trim();
   }
-  
+
   // Extract budget
   const budgetMatch = context.match(/Budget: ₦?([0-9,]+)|budget_range[": ]+([0-9,]+)/i);
   if (budgetMatch) {
     const budgetStr = (budgetMatch[1] || budgetMatch[2]).replace(/,/g, '');
     userContext.budget = parseInt(budgetStr);
   }
-  
+
   // Extract countries
   const countriesMatch = context.match(/Interested countries: ([^.\n]+)|countries[": ]+\[([^\]]+)\]/i);
   if (countriesMatch) {
     const countriesStr = countriesMatch[1] || countriesMatch[2];
     userContext.targetCountries = countriesStr.split(',').map(c => c.trim().replace(/["']/g, ''));
   }
-  
+
   return userContext;
 };
 
 /**
  * Log chat interaction for analytics and improvement
+ * Stores both user message and AI response in chat_messages table
  */
 const logChatInteraction = async (
   userId: string,
@@ -134,25 +136,30 @@ const logChatInteraction = async (
   context?: string
 ): Promise<void> => {
   try {
-    const { error } = await supabase
-      .from('chat_logs')
+    // Store user message
+    await supabase
+      .from('chat_messages')
       .insert({
         user_id: userId,
-        message: message,
-        response: response,
-        context: context,
-        timestamp: new Date().toISOString()
+        content: message,
+        is_ai: false,
+        created_at: new Date().toISOString()
       });
 
-    if (error) {
-      console.error('Chat: Failed to log chat interaction:', error);
-      throw error;
-    }
+    // Store AI response
+    await supabase
+      .from('chat_messages')
+      .insert({
+        user_id: userId,
+        content: response,
+        is_ai: true,
+        created_at: new Date().toISOString()
+      });
 
     console.log('Chat: Interaction logged successfully');
   } catch (error) {
     console.error('Chat: Error logging chat interaction:', error);
-    throw error;
+    // Don't throw - logging failures shouldn't break the chat
   }
 };
 
@@ -165,9 +172,9 @@ export const getChatHistory = async (
 ): Promise<ChatMessage[]> => {
   try {
     console.log('Chat: Fetching chat history for user', userId);
-    
+
     const { data, error } = await supabase
-      .from('chat_logs')
+      .from('chat_messages')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
@@ -182,7 +189,7 @@ export const getChatHistory = async (
     return data || [];
   } catch (error) {
     console.error('Chat: Failed to get chat history:', error);
-    throw error;
+    return [];
   }
 };
 
@@ -216,7 +223,7 @@ export const createContextualResponse = async (
   try {
     // Build context from user profile and preferences
     let context = '';
-    
+
     if (userProfile) {
       context += `User Profile: ${userProfile.education_level || 'Not specified'} level student`;
       if (userProfile.field_of_study) {
@@ -229,7 +236,7 @@ export const createContextualResponse = async (
         context += `, GPA: ${userProfile.gpa}`;
       }
     }
-    
+
     if (userPreferences) {
       context += `\nPreferences: `;
       if (userPreferences.goals) {
@@ -256,14 +263,14 @@ export const createContextualResponse = async (
  */
 export const getQuickResponse = (message: string): string | null => {
   const lowerMessage = message.toLowerCase();
-  
+
   if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
     return "Hello! I'm Akada AI, your study abroad assistant. I'm here to help Nigerian students with international education. What would you like to know about studying abroad?";
   }
-  
+
   if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
     return "You're very welcome! I'm glad I could help. Feel free to ask me anything else about studying abroad - whether it's about applications, visas, scholarships, or any other aspect of international education. Good luck with your studies! 🎓";
   }
-  
+
   return null;
 };

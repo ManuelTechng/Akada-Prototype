@@ -668,7 +668,7 @@ export const ApplicationTracker: React.FC = () => {
             *,
             programs!inner(*)
           `)
-          .eq('user_id', user?.id)
+          .eq('user_id', user?.id || '')
           .order('created_at', { ascending: false }),
 
         supabase
@@ -680,7 +680,7 @@ export const ApplicationTracker: React.FC = () => {
       if (applicationsResult.error) throw applicationsResult.error
       if (programsResult.error) throw programsResult.error
 
-      setApplications(applicationsResult.data || [])
+      setApplications((applicationsResult.data || []) as any as Application[])
       setPrograms(programsResult.data || [])
       setError(null)
     } catch (err) {
@@ -699,7 +699,7 @@ export const ApplicationTracker: React.FC = () => {
       const { error } = await supabase
         .from('applications')
         .insert({
-          user_id: user?.id,
+          user_id: user?.id || '',
           program_id: data.program_id,
           status: data.status,
           deadline: data.deadline,
@@ -755,7 +755,7 @@ export const ApplicationTracker: React.FC = () => {
         .from('applications')
         .delete()
         .eq('id', id)
-        .eq('user_id', user?.id)
+        .eq('user_id', user?.id || '')
 
       if (error) {
         console.error('Error deleting application:', error)

@@ -13,28 +13,28 @@ const OnboardingFlow: React.FC = () => {
   const [formData, setFormData] = useState({
     // Basic info (these should already exist from signup)
     full_name: '',
-    email: '',
+    email: '' as string | null,
     education_level: '',
-    
+
     // Academic info
-    current_university: '',
-    field_of_study: '',
+    current_university: '' as string | null,
+    field_of_study: '' as string | null,
     gpa: '',
-    
+
     // Contact info
-    phone_number: '',
-    
+    phone_number: '' as string | null,
+
     // Location info
-    address_line1: '',
-    address_line2: '',
-    city: '',
-    state_province: '',
-    postal_code: '',
-    country: '',
-    
+    address_line1: '' as string | null,
+    address_line2: '' as string | null,
+    city: '' as string | null,
+    state_province: '' as string | null,
+    postal_code: '' as string | null,
+    country: '' as string | null,
+
     // Personal info
-    date_of_birth: '',
-    bio: '',
+    date_of_birth: '' as string | null,
+    bio: '' as string | null,
     
     // Test scores
     test_scores: {
@@ -172,7 +172,7 @@ const OnboardingFlow: React.FC = () => {
         </label>
         <input
           type="tel"
-          value={formData.phone_number}
+          value={formData.phone_number || ''}
           onChange={(e) => setFormData({
             ...formData,
             phone_number: e.target.value
@@ -193,7 +193,7 @@ const OnboardingFlow: React.FC = () => {
         </label>
         <input
           type="text"
-          value={formData.current_university}
+          value={formData.current_university || ''}
           onChange={(e) => setFormData({
             ...formData,
             current_university: e.target.value
@@ -207,7 +207,7 @@ const OnboardingFlow: React.FC = () => {
         </label>
         <input
           type="text"
-          value={formData.field_of_study}
+          value={formData.field_of_study || ''}
           onChange={(e) => setFormData({
             ...formData,
             field_of_study: e.target.value
@@ -236,7 +236,7 @@ const OnboardingFlow: React.FC = () => {
           Brief Bio
         </label>
         <textarea
-          value={formData.bio}
+          value={formData.bio || ''}
           onChange={(e) => setFormData({
             ...formData,
             bio: e.target.value
@@ -479,7 +479,7 @@ const OnboardingFlow: React.FC = () => {
         </label>
         <input
           type="text"
-          value={formData.address_line1}
+          value={formData.address_line1 || ''}
           onChange={(e) => setFormData({
             ...formData,
             address_line1: e.target.value
@@ -495,7 +495,7 @@ const OnboardingFlow: React.FC = () => {
         </label>
         <input
           type="text"
-          value={formData.address_line2}
+          value={formData.address_line2 || ''}
           onChange={(e) => setFormData({
             ...formData,
             address_line2: e.target.value
@@ -512,7 +512,7 @@ const OnboardingFlow: React.FC = () => {
           </label>
           <input
             type="text"
-            value={formData.city}
+            value={formData.city || ''}
             onChange={(e) => setFormData({
               ...formData,
               city: e.target.value
@@ -527,7 +527,7 @@ const OnboardingFlow: React.FC = () => {
           </label>
           <input
             type="text"
-            value={formData.state_province}
+            value={formData.state_province || ''}
             onChange={(e) => setFormData({
               ...formData,
               state_province: e.target.value
@@ -544,7 +544,7 @@ const OnboardingFlow: React.FC = () => {
           </label>
           <input
             type="text"
-            value={formData.postal_code}
+            value={formData.postal_code || ''}
             onChange={(e) => setFormData({
               ...formData,
               postal_code: e.target.value
@@ -558,7 +558,7 @@ const OnboardingFlow: React.FC = () => {
             Country
           </label>
           <select
-            value={formData.country}
+            value={formData.country || ''}
             onChange={(e) => setFormData({
               ...formData,
               country: e.target.value

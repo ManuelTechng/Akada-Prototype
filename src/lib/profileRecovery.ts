@@ -7,7 +7,7 @@ export const ensureUserProfile = async (userId: string) => {
   try {
     // Check if profile exists
     const { data: existingProfile, error } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('*')
       .eq('id', userId)
       .single()
@@ -15,7 +15,7 @@ export const ensureUserProfile = async (userId: string) => {
     if (error && error.code === 'PGRST116') {
       // Profile doesn't exist, create a basic one
       const { data: newProfile, error: createError } = await supabase
-        .from('profiles')
+        .from('user_profiles')
         .insert({
           id: userId,
           full_name: '',

@@ -106,7 +106,7 @@ export function useProgramCurrency(programId: string, userId?: string): ProgramC
         tuition_conversion_rate: tuitionConversion?.exchangeRate,
         application_conversion_rate: applicationConversion?.exchangeRate,
         user_currency: userCurrency
-      };
+      } as any as ProgramWithCurrency;
 
       setProgram(enhancedProgram);
 
@@ -229,7 +229,7 @@ export function useProgramsCurrency(
           tuition_conversion_rate: tuitionConversion?.exchangeRate,
           application_conversion_rate: applicationConversion?.exchangeRate,
           user_currency: userCurrency
-        });
+        } as any as ProgramWithCurrency);
       }
 
       setPrograms(enhancedPrograms);

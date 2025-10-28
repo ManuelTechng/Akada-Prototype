@@ -178,16 +178,18 @@ export const useApplicationTimeline = () => {
 
       // Process applications by status and deadlines
       const upcoming = applications?.filter(app => {
-        const deadline = new Date(app.deadline)
+        if (!app.deadline) return false;
+        const deadline = new Date(app.deadline!)
         return deadline > now && deadline <= thirtyDaysFromNow && app.status !== 'submitted'
       }) || []
 
       const overdue = applications?.filter(app => {
-        const deadline = new Date(app.deadline)
+        if (!app.deadline) return false;
+        const deadline = new Date(app.deadline!)
         return deadline < now && app.status !== 'submitted' && app.status !== 'cancelled'
       }) || []
 
-      const completed = applications?.filter(app => 
+      const completed = applications?.filter(app =>
         ['submitted', 'accepted', 'rejected'].includes(app.status)
       ) || []
 
@@ -197,7 +199,8 @@ export const useApplicationTimeline = () => {
       // Count urgent applications (deadline within 7 days)
       const sevenDaysFromNow = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000))
       const urgentCount = applications?.filter(app => {
-        const deadline = new Date(app.deadline)
+        if (!app.deadline) return false;
+        const deadline = new Date(app.deadline!)
         return deadline > now && deadline <= sevenDaysFromNow && app.status !== 'submitted'
       }).length || 0
 
