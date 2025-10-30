@@ -152,7 +152,7 @@ export function ReminderWidget({ className }: ReminderWidgetProps) {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-sm">
-                        {reminder.data.name || 'Reminder'}
+                        {reminder.data?.name || 'Reminder'}
                       </span>
                       <Badge 
                         variant="outline" 
@@ -164,9 +164,9 @@ export function ReminderWidget({ className }: ReminderWidgetProps) {
                     <p className="text-xs text-muted-foreground">
                       {formatReminderTime(reminder.scheduled_for)}
                     </p>
-                    {reminder.data.description && (
+                    {reminder.data?.description && (
                       <p className="text-xs text-muted-foreground mt-1">
-                        {reminder.data.description}
+                        {reminder.data?.description}
                       </p>
                     )}
                   </div>

@@ -150,7 +150,7 @@ export async function getFlightRoutesWithCountries(
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any;
   } catch (error) {
     console.error('Error in getFlightRoutesWithCountries:', error);
     throw error;

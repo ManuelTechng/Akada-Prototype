@@ -256,7 +256,7 @@ export class DataConsistencyValidator {
       report.summary.totalUsers = allUserIds.size
 
       for (const userId of allUserIds) {
-        const profile = profileMap.get(userId)
+        const profile = profileMap.get(userId || '')
         const pref = prefMap.get(userId)
 
         if (profile && pref) {
@@ -273,7 +273,7 @@ export class DataConsistencyValidator {
             if (jsonbCountries !== structuredCountries) {
               report.summary.usersWithConflicts++
               report.conflicts.push({
-                userId,
+                userId: userId || '',
                 field: 'countries',
                 structuredValue: pref.countries,
                 jsonbValue: studyPrefs.countries,
@@ -290,7 +290,7 @@ export class DataConsistencyValidator {
             if (jsonbSpecs !== structuredSpecs) {
               report.summary.usersWithConflicts++
               report.conflicts.push({
-                userId,
+                userId: userId || '',
                 field: 'specializations',
                 structuredValue: pref.specializations,
                 jsonbValue: studyPrefs.specializations,
@@ -307,7 +307,7 @@ export class DataConsistencyValidator {
             if (jsonbBudget !== structuredBudget) {
               report.summary.usersWithConflicts++
               report.conflicts.push({
-                userId,
+                userId: userId || '',
                 field: 'budget',
                 structuredValue: structuredBudget,
                 jsonbValue: jsonbBudget,
@@ -385,7 +385,7 @@ export class DataConsistencyValidator {
           .single()
 
         if (profile) {
-          const studyPrefs = { ...profile.study_preferences }
+          const studyPrefs = { ...(profile.study_preferences as any) }
           
           // Update the conflicting field
           if (conflict.field === 'countries') {

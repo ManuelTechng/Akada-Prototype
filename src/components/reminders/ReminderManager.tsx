@@ -203,7 +203,7 @@ export function ReminderManager({ className }: ReminderManagerProps) {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Switch checked={rule.is_active} />
+                    <Switch checked={rule.is_active || false} />
                     <Button variant="ghost" size="sm">
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -248,12 +248,12 @@ export function ReminderManager({ className }: ReminderManagerProps) {
                       </Button>
                     </div>
                   </div>
-                  {reminder.data.name && (
+                  {reminder.data?.name && (
                     <p className="text-sm text-muted-foreground mt-2">
                       {reminder.data.name}
                     </p>
                   )}
-                  {reminder.data.description && (
+                  {reminder.data?.description && (
                     <p className="text-sm text-muted-foreground mt-1">
                       {reminder.data.description}
                     </p>

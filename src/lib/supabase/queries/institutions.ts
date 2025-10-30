@@ -130,7 +130,7 @@ export async function getInstitutionById(id: string): Promise<InstitutionWithDet
       throw error;
     }
 
-    return data;
+    return data as any;
   } catch (error) {
     console.error('Error in getInstitutionById:', error);
     throw error;
@@ -175,7 +175,7 @@ export async function getInstitutionPrograms(institutionId: string): Promise<Arr
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any;
   } catch (error) {
     console.error('Error in getInstitutionPrograms:', error);
     throw error;
@@ -235,7 +235,7 @@ export async function getInstitutionTestimonials(
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any;
   } catch (error) {
     console.error('Error in getInstitutionTestimonials:', error);
     throw error;
@@ -255,7 +255,7 @@ export async function searchInstitutions(filters: {
     let query = supabase
       .from('universities')
       .select('*')
-      .order('ranking_world', { ascending: true, nullsLast: true });
+      .order('ranking_world', { ascending: true, nullsFirst: false });
 
     // Apply text search filter
     if (filters.query) {
@@ -333,7 +333,7 @@ export async function getInstitutionsByCity(cityId: string): Promise<Institution
       .from('universities')
       .select('*')
       .eq('city_id', cityId)
-      .order('ranking_world', { ascending: true, nullsLast: true });
+      .order('ranking_world', { ascending: true, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching institutions by city:', error);
@@ -356,7 +356,7 @@ export async function getInstitutionsByCountry(countryCode: string): Promise<Ins
       .from('universities')
       .select('*')
       .eq('country_code', countryCode)
-      .order('ranking_world', { ascending: true, nullsLast: true });
+      .order('ranking_world', { ascending: true, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching institutions by country:', error);

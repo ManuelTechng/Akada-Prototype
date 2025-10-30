@@ -49,7 +49,7 @@ export async function getProgramScholarships(programId: string): Promise<Scholar
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in getProgramScholarships:', error);
     throw error;
@@ -87,7 +87,7 @@ export async function getInstitutionScholarships(institutionId: string): Promise
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in getInstitutionScholarships:', error);
     throw error;
@@ -124,7 +124,7 @@ export async function getAllInstitutionScholarships(institutionId: string): Prom
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in getAllInstitutionScholarships:', error);
     throw error;
@@ -209,7 +209,7 @@ export async function searchScholarships(filters: {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in searchScholarships:', error);
     throw error;
@@ -262,7 +262,7 @@ export async function getScholarshipsByType(
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in getScholarshipsByType:', error);
     throw error;
@@ -320,7 +320,7 @@ export async function getScholarshipsWithDeadlines(
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in getScholarshipsWithDeadlines:', error);
     throw error;
@@ -373,7 +373,7 @@ export async function getScholarshipsByCountry(
       throw error;
     }
 
-    return data || [];
+    return (data || []) as any as ScholarshipWithDetails[];
   } catch (error) {
     console.error('Error in getScholarshipsByCountry:', error);
     throw error;
