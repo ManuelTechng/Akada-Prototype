@@ -379,8 +379,8 @@ const ProgramSearchPageFixed: React.FC = () => {
           application_fee: program.application_fee.toString(),
           created_at: new Date().toISOString()
         }));
-        
-        setPrograms(mappedFallbackPrograms);
+
+        setPrograms(mappedFallbackPrograms as any as Program[]);
       } else if (err.message?.includes('timeout')) {
         console.log('⏰ Program search query timed out, showing fallback data');
         setError('Search is taking longer than expected. Showing sample programs.');
@@ -441,8 +441,8 @@ const ProgramSearchPageFixed: React.FC = () => {
           application_fee: program.application_fee.toString(),
           created_at: new Date().toISOString()
         }));
-        
-        setPrograms(mappedFallbackPrograms);
+
+        setPrograms(mappedFallbackPrograms as any as Program[]);
       } else {
         setError(err.message || 'Failed to fetch programs. Please try again.');
         setPrograms([]);

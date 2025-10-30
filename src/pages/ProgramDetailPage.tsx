@@ -85,7 +85,7 @@ const ProgramDetailPage: React.FC = () => {
           .single();
 
         if (programError) throw programError;
-        setProgram(programData);
+        setProgram(programData as any as Program);
 
         // Fetch university if university_id exists
         if (programData.university_id) {
@@ -94,7 +94,7 @@ const ProgramDetailPage: React.FC = () => {
             .select('*')
             .eq('id', programData.university_id)
             .single();
-          setUniversity(universityData);
+          setUniversity(universityData as any as University);
         }
 
         // Fetch country
@@ -103,7 +103,7 @@ const ProgramDetailPage: React.FC = () => {
           .select('*')
           .eq('country_code', programData.country)
           .single();
-        setCountry(countryData);
+        setCountry(countryData as any as Country);
 
         // Fetch city if city_id exists
         if (programData.city_id) {
@@ -112,7 +112,7 @@ const ProgramDetailPage: React.FC = () => {
             .select('*')
             .eq('id', programData.city_id)
             .single();
-          setCity(cityData);
+          setCity(cityData as any as City);
         }
       } catch (error) {
         console.error('Error fetching program details:', error);

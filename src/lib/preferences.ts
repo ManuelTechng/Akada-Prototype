@@ -133,8 +133,8 @@ export class UnifiedPreferenceService {
         goals: preferences?.goals || studyPrefs?.goals, // ADD JSONB fallback
         
         // Metadata
-        createdAt: preferences?.created_at,
-        updatedAt: preferences?.updated_at
+        createdAt: preferences?.created_at || undefined,
+        updatedAt: preferences?.updated_at || undefined
       }
 
       return unifiedPreferences
@@ -186,7 +186,7 @@ export class UnifiedPreferenceService {
         supabase
           .from('user_profiles')
           .update({
-            study_preferences: jsonbUpdate,
+            study_preferences: jsonbUpdate as any,
             updated_at: new Date().toISOString()
           })
           .eq('id', userId),
@@ -242,15 +242,15 @@ export class UnifiedPreferenceService {
             .eq('id', userId)
             .single();
           
-          const currentPrefs = currentProfile?.study_preferences || {};
-          
+          const currentPrefs = (currentProfile?.study_preferences as any) || {};
+
           await supabase
             .from('user_profiles')
             .update({
               study_preferences: {
                 ...currentPrefs,
                 ...additionalJsonbUpdate
-              },
+              } as any,
               updated_at: new Date().toISOString()
             })
             .eq('id', userId);
@@ -284,9 +284,9 @@ export class UnifiedPreferenceService {
         .rpc('get_recommended_programs', {
           user_countries: preferences.countries,
           user_specializations: preferences.specializations,
-          user_budget: preferences.budgetRange,
-          user_study_level: preferences.studyLevel,
-          needs_scholarship: preferences.scholarshipNeeded,
+          user_budget: preferences.budgetRange ?? 0,
+          user_study_level: preferences.studyLevel ?? '',
+          needs_scholarship: preferences.scholarshipNeeded ?? false,
           result_limit: limit
         })
 
@@ -328,9 +328,9 @@ export class UnifiedPreferenceService {
           program_id: programId,
           user_countries: userPreferences.countries,
           user_specializations: userPreferences.specializations,
-          user_budget: userPreferences.budgetRange,
-          user_study_level: userPreferences.studyLevel,
-          needs_scholarship: userPreferences.scholarshipNeeded
+          user_budget: userPreferences.budgetRange ?? 0,
+          user_study_level: userPreferences.studyLevel ?? '',
+          needs_scholarship: userPreferences.scholarshipNeeded ?? false
         })
 
       return matchScore || 0

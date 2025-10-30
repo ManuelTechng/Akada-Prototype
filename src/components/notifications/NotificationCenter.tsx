@@ -155,7 +155,7 @@ export function NotificationCenter({ className = '' }: NotificationCenterProps) 
                             </p>
                             <div className="mt-2 flex items-center space-x-2 text-xs text-gray-500">
                               <span>
-                                {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                                {notification.created_at && formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                               </span>
                               <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100">
                                 {notification.category}
