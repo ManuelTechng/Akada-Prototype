@@ -18,7 +18,8 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   GridIcon,
-  ListIcon
+  ListIcon,
+  ChevronDown
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
@@ -217,22 +218,25 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Program *
               </label>
-              <select
-                value={formData.program_id}
-                onChange={(e) => setFormData({ ...formData, program_id: e.target.value })}
-                className={cn(
-                  'w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white',
-                  errors.program_id ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                )}
-                disabled={!!application} // Can't change program for existing applications
-              >
-                <option value="">Select a program</option>
-                {programs.map(program => (
-                  <option key={program.id} value={program.id}>
-                    {program.name} - {program.university}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.program_id}
+                  onChange={(e) => setFormData({ ...formData, program_id: e.target.value })}
+                  className={cn(
+                    'w-full appearance-none pl-3 pr-10 py-2 border rounded-md dark:bg-gray-700 dark:text-white',
+                    errors.program_id ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                  )}
+                  disabled={!!application} // Can't change program for existing applications
+                >
+                  <option value="">Select a program</option>
+                  {programs.map(program => (
+                    <option key={program.id} value={program.id}>
+                      {program.name} - {program.university}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
               {errors.program_id && (
                 <p className="mt-1 text-sm text-red-600">{errors.program_id}</p>
               )}
@@ -243,19 +247,22 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Status
               </label>
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-              >
-                <option value="planning">Planning</option>
-                <option value="in-progress">In Progress</option>
-                <option value="submitted">Submitted</option>
-                <option value="in-review">In Review</option>
-                <option value="accepted">Accepted</option>
-                <option value="rejected">Rejected</option>
-                <option value="deferred">Deferred</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
+                  className="w-full appearance-none pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="planning">Planning</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="in-review">In Review</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="deferred">Deferred</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
             </div>
 
             {/* Deadline */}
@@ -607,20 +614,23 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         >
           Edit
         </button>
-        
-        <select
-          value={application.status}
-          onChange={(e) => onStatusChange(application.id, e.target.value as Application['status'])}
-          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-        >
-          <option value="planning">Planning</option>
-          <option value="in-progress">In Progress</option>
-          <option value="submitted">Submitted</option>
-          <option value="in-review">In Review</option>
-          <option value="accepted">Accepted</option>
-          <option value="rejected">Rejected</option>
-          <option value="deferred">Deferred</option>
-        </select>
+
+        <div className="relative">
+          <select
+            value={application.status}
+            onChange={(e) => onStatusChange(application.id, e.target.value as Application['status'])}
+            className="appearance-none pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+          >
+            <option value="planning">Planning</option>
+            <option value="in-progress">In Progress</option>
+            <option value="submitted">Submitted</option>
+            <option value="in-review">In Review</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+            <option value="deferred">Deferred</option>
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+        </div>
       </div>
     </div>
   )
@@ -945,37 +955,43 @@ export const ApplicationTracker: React.FC = () => {
             {/* Filters Row */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {/* Status Filter */}
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
-                className="flex-1 sm:flex-none sm:min-w-[140px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
-              >
-                <option value="all">All Status</option>
-                <option value="planning">Planning</option>
-                <option value="in-progress">In Progress</option>
-                <option value="submitted">Submitted</option>
-                <option value="in-review">In Review</option>
-                <option value="accepted">Accepted</option>
-                <option value="rejected">Rejected</option>
-                <option value="deferred">Deferred</option>
-              </select>
+              <div className="relative flex-1 sm:flex-none sm:min-w-[140px]">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
+                  className="w-full appearance-none pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
+                >
+                  <option value="all">All Status</option>
+                  <option value="planning">Planning</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="in-review">In Review</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="deferred">Deferred</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
 
               {/* Sort Filter */}
-              <select
-                value={`${sortField}-${sortOrder}`}
-                onChange={(e) => {
-                  const [field, order] = e.target.value.split('-')
-                  setSortField(field as SortField)
-                  setSortOrder(order as SortOrder)
-                }}
-                className="flex-1 sm:flex-none sm:min-w-[160px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
-              >
-                <option value="deadline-asc">Deadline (Soon)</option>
-                <option value="deadline-desc">Deadline (Late)</option>
-                <option value="created_at-desc">Recently Added</option>
-                <option value="university-asc">University A-Z</option>
-                <option value="status-asc">Status</option>
-              </select>
+              <div className="relative flex-1 sm:flex-none sm:min-w-[160px]">
+                <select
+                  value={`${sortField}-${sortOrder}`}
+                  onChange={(e) => {
+                    const [field, order] = e.target.value.split('-')
+                    setSortField(field as SortField)
+                    setSortOrder(order as SortOrder)
+                  }}
+                  className="w-full appearance-none pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
+                >
+                  <option value="deadline-asc">Deadline (Soon)</option>
+                  <option value="deadline-desc">Deadline (Late)</option>
+                  <option value="created_at-desc">Recently Added</option>
+                  <option value="university-asc">University A-Z</option>
+                  <option value="status-asc">Status</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
 
               {/* View Mode Toggle */}
               <div className="flex items-center justify-center sm:justify-start space-x-1 bg-gray-100 dark:bg-gray-700 rounded-md p-1 sm:ml-auto">

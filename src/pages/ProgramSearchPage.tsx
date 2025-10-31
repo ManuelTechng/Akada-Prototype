@@ -571,56 +571,65 @@ const ProgramSearchPageFixed: React.FC = () => {
           <label htmlFor="filter-country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Country
           </label>
-          <select
-            id="filter-country"
-            value={filters.country}
-            onChange={(e) => handleFilterChange('country', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="">Any country</option>
-            {countries.map(country => (
-              <option key={country.code} value={country.name}>
-                {country.name}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="filter-country"
+              value={filters.country}
+              onChange={(e) => handleFilterChange('country', e.target.value)}
+              className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            >
+              <option value="">Any country</option>
+              {countries.map(country => (
+                <option key={country.code} value={country.name}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+          </div>
         </div>
 
         <div>
           <label htmlFor="filter-degree" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Degree Type
           </label>
-          <select
-            id="filter-degree"
-            value={filters.degreeType}
-            onChange={(e) => handleFilterChange('degreeType', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="">Any type</option>
-            {degreeTypes.map(type => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="filter-degree"
+              value={filters.degreeType}
+              onChange={(e) => handleFilterChange('degreeType', e.target.value)}
+              className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            >
+              <option value="">Any type</option>
+              {degreeTypes.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+          </div>
         </div>
 
         <div>
           <label htmlFor="filter-tuition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Tuition Range (USD/year)
           </label>
-          <select
-            id="filter-tuition"
-            value={filters.maxTuition}
-            onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="any">Any range</option>
-            <option value="5000">Under $5,000</option>
-            <option value="20000">$5,000 - $20,000</option>
-            <option value="40000">$20,000 - $40,000</option>
-            <option value="100000">$40,000+</option>
-          </select>
+          <div className="relative">
+            <select
+              id="filter-tuition"
+              value={filters.maxTuition}
+              onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
+              className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            >
+              <option value="any">Any range</option>
+              <option value="5000">Under $5,000</option>
+              <option value="20000">$5,000 - $20,000</option>
+              <option value="40000">$20,000 - $40,000</option>
+              <option value="100000">$40,000+</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+          </div>
         </div>
 
         {showAdvancedFilters && (
@@ -629,38 +638,44 @@ const ProgramSearchPageFixed: React.FC = () => {
               <label htmlFor="filter-field" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field of Study
               </label>
-              <select
-                id="filter-field"
-                value={filters.field}
-                onChange={(e) => handleFilterChange('field', e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              >
-                <option value="">Any field</option>
-                {fields.map(field => (
-                  <option key={field} value={field}>
-                    {field}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="filter-field"
+                  value={filters.field}
+                  onChange={(e) => handleFilterChange('field', e.target.value)}
+                  className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="">Any field</option>
+                  {fields.map(field => (
+                    <option key={field} value={field}>
+                      {field}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
             </div>
 
             <div>
               <label htmlFor="filter-institution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Institution Type
               </label>
-              <select
-                id="filter-institution"
-                value={filters.institutionType}
-                onChange={(e) => handleFilterChange('institutionType', e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              >
-                <option value="">Any type</option>
-                {institutionTypes.map(type => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="filter-institution"
+                  value={filters.institutionType}
+                  onChange={(e) => handleFilterChange('institutionType', e.target.value)}
+                  className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="">Any type</option>
+                  {institutionTypes.map(type => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -815,17 +830,20 @@ const ProgramSearchPageFixed: React.FC = () => {
               
               <div className="flex gap-3 items-center">
                 <span className="text-sm text-gray-500 hidden sm:inline-block">Sort by:</span>
-                <select
-                  aria-label="Sort programs"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                >
-                  <option value="match">Best Match</option>
-                  <option value="deadline">Deadline (Soonest)</option>
-                  <option value="tuition-low">Tuition (Low to High)</option>
-                  <option value="tuition-high">Tuition (High to Low)</option>
-                </select>
+                <div className="relative">
+                  <select
+                    aria-label="Sort programs"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="match">Best Match</option>
+                    <option value="deadline">Deadline (Soonest)</option>
+                    <option value="tuition-low">Tuition (Low to High)</option>
+                    <option value="tuition-high">Tuition (High to Low)</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+                </div>
               </div>
             </div>
           </div>

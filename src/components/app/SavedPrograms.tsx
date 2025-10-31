@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { 
-  BookmarkIcon, 
-  Search, 
-  Grid3X3, 
-  List, 
-  Trash2, 
+import {
+  BookmarkIcon,
+  Search,
+  Grid3X3,
+  List,
+  Trash2,
   SortAsc,
   SortDesc,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  ChevronDown
 } from 'lucide-react'
 import { useSavedProgramsContext } from '../../contexts/SavedProgramsContext'
 import { useNavigate } from 'react-router-dom'
@@ -232,32 +233,38 @@ const SavedPrograms: React.FC = () => {
               {/* Filters & Controls */}
               <div className="flex items-center gap-3">
                 {/* Country Filter */}
-                <select
-                  aria-label="Filter saved programs by country"
-                  value={filterCountry}
-                  onChange={(e) => setFilterCountry(e.target.value)}
-                  className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                >
-                  <option value="">All Countries</option>
-                  {countries.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    aria-label="Filter saved programs by country"
+                    value={filterCountry}
+                    onChange={(e) => setFilterCountry(e.target.value)}
+                    className="appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  >
+                    <option value="">All Countries</option>
+                    {countries.map(country => (
+                      <option key={country} value={country}>{country}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+                </div>
 
                 {/* Sort */}
                 <div className="flex items-center gap-1">
-                  <select
-                    aria-label="Sort saved programs"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
-                    className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                  >
-                    <option value="date">Date Saved</option>
-                    <option value="name">Program Name</option>
-                    <option value="cost">Tuition Cost</option>
-                    <option value="deadline">Deadline</option>
-                  </select>
-                  
+                  <div className="relative">
+                    <select
+                      aria-label="Sort saved programs"
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    >
+                      <option value="date">Date Saved</option>
+                      <option value="name">Program Name</option>
+                      <option value="cost">Tuition Cost</option>
+                      <option value="deadline">Deadline</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+                  </div>
+
                   <button
                     aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}

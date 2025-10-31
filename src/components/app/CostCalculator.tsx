@@ -15,7 +15,8 @@ import {
   Briefcase,
   Search,
   GraduationCap,
-  X
+  X,
+  ChevronDown
 } from 'lucide-react';
 import { flightCostService } from '../../lib/flights/service';
 import { getCityInfo } from '../../lib/supabase/queries/locations';
@@ -398,35 +399,41 @@ const CostCalculator: React.FC<CostCalculatorProps> = ({
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Home Country
             </label>
-            <select
-              value={homeCountry}
-              onChange={(e) => setHomeCountry(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="NGA">Nigeria (NGN)</option>
-              <option value="GHA">Ghana (GHS)</option>
-              <option value="KEN">Kenya (KES)</option>
-              <option value="ZAF">South Africa (ZAR)</option>
-              <option value="EGY">Egypt (EGP)</option>
-            </select>
+            <div className="relative">
+              <select
+                value={homeCountry}
+                onChange={(e) => setHomeCountry(e.target.value)}
+                className="w-full appearance-none pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="NGA">Nigeria (NGN)</option>
+                <option value="GHA">Ghana (GHS)</option>
+                <option value="KEN">Kenya (KES)</option>
+                <option value="ZAF">South Africa (ZAR)</option>
+                <option value="EGY">Egypt (EGP)</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Destination Country
             </label>
-            <select
-              value={destCountry}
-              onChange={(e) => setDestCountry(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500"
-              disabled={!!selectedProgram}
-            >
-              <option value="USA">United States</option>
-              <option value="CAN">Canada</option>
-              <option value="GBR">United Kingdom</option>
-              <option value="AUS">Australia</option>
-              <option value="DEU">Germany</option>
-            </select>
+            <div className="relative">
+              <select
+                value={destCountry}
+                onChange={(e) => setDestCountry(e.target.value)}
+                className="w-full appearance-none pl-3 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500"
+                disabled={!!selectedProgram}
+              >
+                <option value="USA">United States</option>
+                <option value="CAN">Canada</option>
+                <option value="GBR">United Kingdom</option>
+                <option value="AUS">Australia</option>
+                <option value="DEU">Germany</option>
+              </select>
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+            </div>
             {selectedProgram && (
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Auto-populated from selected program
