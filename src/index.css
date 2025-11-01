@@ -18,39 +18,39 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* HSL Color System */
-  --background: 0 0% 99.2157%;
-  --foreground: 0 0% 0%;
-  --card: 0 0% 99.2157%;
-  --card-foreground: 0 0% 0%;
-  --popover: 0 0% 98.8235%;
-  --popover-foreground: 0 0% 0%;
-  --primary: 257.9412 100% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 214.2857 24.1379% 94.3137%;
-  --secondary-foreground: 0 0% 3.1373%;
-  --muted: 0 0% 96.0784%;
-  --muted-foreground: 0 0% 32.1569%;
-  --accent: 221.3793 100% 94.3137%;
-  --accent-foreground: 216.3158 76% 49.0196%;
-  --destructive: 358.4416 74.7573% 59.6078%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 240 17.0732% 91.9608%;
-  --input: 0 0% 92.1569%;
-  --ring: 0 0% 0%;
-  --chart-1: 148.0952 53.3898% 53.7255%;
-  --chart-2: 257.9412 100% 60%;
-  --chart-3: 24.8571 98.1308% 58.0392%;
-  --chart-4: 217.0787 76.7241% 54.5098%;
-  --chart-5: 0 0% 45.4902%;
-  --sidebar: 210 42.8571% 97.2549%;
-  --sidebar-foreground: 0 0% 0%;
-  --sidebar-primary: 0 0% 0%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 0 0% 92.1569%;
-  --sidebar-accent-foreground: 0 0% 0%;
-  --sidebar-border: 0 0% 92.1569%;
-  --sidebar-ring: 0 0% 0%;
+  /* HSL Color System - Akada Theme (Light Mode) */
+  --background: 0 0% 99.22%;           /* #fdfdfd */
+  --foreground: 0 0% 0%;               /* #000000 */
+  --card: 0 0% 99.22%;                 /* #fdfdfd */
+  --card-foreground: 0 0% 0%;          /* #000000 */
+  --popover: 0 0% 98.82%;              /* #fcfcfc */
+  --popover-foreground: 0 0% 0%;       /* #000000 */
+  --primary: 261 100% 60%;             /* #7033ff */
+  --primary-foreground: 0 0% 100%;     /* #ffffff */
+  --secondary: 216 24% 94%;            /* #edf0f4 */
+  --secondary-foreground: 0 0% 3%;     /* #080808 */
+  --muted: 0 0% 96%;                   /* #f5f5f5 */
+  --muted-foreground: 0 0% 32%;        /* #525252 */
+  --accent: 223 100% 94%;              /* #e2ebff */
+  --accent-foreground: 216 76% 49%;    /* #1e69dc */
+  --destructive: 357 72% 60%;          /* #e54b4f */
+  --destructive-foreground: 0 0% 100%; /* #ffffff */
+  --border: 240 10% 91%;               /* #e7e7ee */
+  --input: 0 0% 92%;                   /* #ebebeb */
+  --ring: 0 0% 0%;                     /* #000000 */
+  --chart-1: 145 54% 54%;
+  --chart-2: 261 100% 60%;
+  --chart-3: 25 98% 58%;
+  --chart-4: 217 77% 55%;
+  --chart-5: 0 0% 45%;
+  --sidebar: 211 50% 97%;              /* #f5f8fb */
+  --sidebar-foreground: 0 0% 0%;       /* #000000 */
+  --sidebar-primary: 0 0% 0%;          /* #000000 */
+  --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+  --sidebar-accent: 0 0% 92%;          /* #ebebeb */
+  --sidebar-accent-foreground: 0 0% 0%; /* #000000 */
+  --sidebar-border: 0 0% 92%;          /* #ebebeb */
+  --sidebar-ring: 0 0% 0%;             /* #000000 */
   --radius: 1.4rem;
   --shadow-x: 0px;
   --shadow-y: 2px;
@@ -71,38 +71,39 @@
 }
 
 .dark {
-  --background: 225 7.1429% 10.9804%;
-  --foreground: 0 0% 94.1176%;
-  --card: 228.0000 6.8493% 14.3137%;
-  --card-foreground: 0 0% 94.1176%;
-  --popover: 228.0000 6.8493% 14.3137%;
-  --popover-foreground: 0 0% 94.1176%;
-  --primary: 257.6687 100% 68.0392%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 226.6667 9.6774% 18.2353%;
-  --secondary-foreground: 0 0% 94.1176%;
-  --muted: 226.6667 9.6774% 18.2353%;
-  --muted-foreground: 0 0% 62.7451%;
-  --accent: 217.2414 32.5843% 17.4510%;
-  --accent-foreground: 208.2090 100.0000% 73.7255%;
-  --destructive: 0 90.6040% 70.7843%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 222.8571 6.4220% 21.3725%;
-  --input: 222.8571 6.4220% 21.3725%;
-  --ring: 257.6687 100% 68.0392%;
-  --chart-1: 141.8919 69.1589% 58.0392%;
-  --chart-2: 257.6687 100% 68.0392%;
-  --chart-3: 0 93.5484% 81.7647%;
-  --chart-4: 217.5484 87.5706% 65.2941%;
-  --chart-5: 0 0% 62.7451%;
-  --sidebar: 240 4.3478% 9.0196%;
-  --sidebar-foreground: 0 0% 94.1176%;
-  --sidebar-primary: 257.6687 100% 68.0392%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 226.6667 9.6774% 18.2353%;
-  --sidebar-accent-foreground: 257.6687 100% 68.0392%;
-  --sidebar-border: 222.8571 6.4220% 21.3725%;
-  --sidebar-ring: 257.6687 100% 68.0392%;
+  /* HSL Color System - Akada Theme (Dark Mode) */
+  --background: 220 12% 11%;           /* #1a1b1e */
+  --foreground: 0 0% 94%;              /* #f0f0f0 */
+  --card: 221 8% 14%;                  /* #222327 */
+  --card-foreground: 0 0% 94%;         /* #f0f0f0 */
+  --popover: 221 8% 14%;               /* #222327 */
+  --popover-foreground: 0 0% 94%;      /* #f0f0f0 */
+  --primary: 261 100% 68%;             /* #8c5cff */
+  --primary-foreground: 0 0% 100%;     /* #ffffff */
+  --secondary: 225 10% 18%;            /* #2a2c33 */
+  --secondary-foreground: 0 0% 94%;    /* #f0f0f0 */
+  --muted: 225 10% 18%;                /* #2a2c33 */
+  --muted-foreground: 0 0% 63%;        /* #a0a0a0 */
+  --accent: 216 33% 17%;               /* #1e293b */
+  --accent-foreground: 208 100% 73%;   /* #79c0ff */
+  --destructive: 0 91% 71%;            /* #f87171 */
+  --destructive-foreground: 0 0% 100%; /* #ffffff */
+  --border: 222 9% 20%;                /* #33353a */
+  --input: 222 9% 20%;                 /* #33353a */
+  --ring: 261 100% 68%;                /* #8c5cff */
+  --chart-1: 142 69% 58%;
+  --chart-2: 261 100% 68%;
+  --chart-3: 0 91% 71%;
+  --chart-4: 217 88% 65%;
+  --chart-5: 0 0% 63%;
+  --sidebar: 240 11% 9%;               /* #161618 */
+  --sidebar-foreground: 0 0% 94%;      /* #f0f0f0 */
+  --sidebar-primary: 261 100% 68%;     /* #8c5cff */
+  --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+  --sidebar-accent: 225 10% 18%;       /* #2a2c33 */
+  --sidebar-accent-foreground: 261 100% 68%; /* #8c5cff */
+  --sidebar-border: 222 9% 20%;        /* #33353a */
+  --sidebar-ring: 261 100% 68%;        /* #8c5cff */
 }
 
 @layer base {
@@ -117,36 +118,38 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     position: relative;
-    background-color: #F5F6FA;
-    /* CSS variables for react-select dark mode */
-    --select-bg: #ffffff;
-    --select-border: #d1d5db;
-    --select-text: #111827;
-    --select-hover: #f3f4f6;
-    --select-multi-bg: #e0e7ff;
-    --select-multi-text: #4f46e5;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    /* CSS variables for react-select light mode */
+    --select-bg: hsl(var(--background));
+    --select-border: hsl(var(--border));
+    --select-text: hsl(var(--foreground));
+    --select-hover: hsl(var(--accent));
+    --select-multi-bg: hsl(var(--primary) / 0.1);
+    --select-multi-text: hsl(var(--primary));
   }
 
   .dark body {
-    background-color: #0A0E1A;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     /* Dark mode variables for react-select */
-    --select-bg: #374151;
-    --select-border: #4b5563;
-    --select-text: #f3f4f6;
-    --select-hover: #4b5563;
-    --select-multi-bg: #312e81;
-    --select-multi-text: #c7d2fe;
+    --select-bg: hsl(var(--background));
+    --select-border: hsl(var(--border));
+    --select-text: hsl(var(--foreground));
+    --select-hover: hsl(var(--accent));
+    --select-multi-bg: hsl(var(--primary) / 0.2);
+    --select-multi-text: hsl(var(--primary-foreground));
   }
 
   body.darkMode {
-    background-color: #1a1a1a;
-    color: #f9f9f9;
-    --select-bg: #374151;
-    --select-border: #4b5563;
-    --select-text: #f3f4f6;
-    --select-hover: #4b5563;
-    --select-multi-bg: #312e81;
-    --select-multi-text: #c7d2fe;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    --select-bg: hsl(var(--background));
+    --select-border: hsl(var(--border));
+    --select-text: hsl(var(--foreground));
+    --select-hover: hsl(var(--accent));
+    --select-multi-bg: hsl(var(--primary) / 0.2);
+    --select-multi-text: hsl(var(--primary-foreground));
   }
 
   h1, h2, h3, h4, h5, h6 {
