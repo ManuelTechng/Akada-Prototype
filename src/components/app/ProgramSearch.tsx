@@ -146,66 +146,66 @@ const ProgramSearch: React.FC = () => {
     const ngnAmount = convertCurrency(localAmount, countryCurrency, 'NGN');
 
     return (
-      <div key={program.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
+      <div key={program.id} className="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-all duration-300">
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">
             <div className="min-w-0">
-              <h3 className="font-heading font-semibold text-lg text-gray-800 break-words">{program.name}</h3>
-              <p className="font-sans text-gray-600 break-words">{program.university}</p>
+              <h3 className="font-heading font-semibold text-lg text-foreground break-words">{program.name}</h3>
+              <p className="font-sans text-muted-foreground break-words">{program.university}</p>
             </div>
-            <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium flex-shrink-0">
+            <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-xs font-medium flex-shrink-0">
               92% Match
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
               <span className="truncate">{program.country}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-indigo-600 font-medium truncate">
+              <span className="text-sm text-primary font-medium truncate">
                 {formatCurrency(localAmount, countryCurrency)}/year
               </span>
-              <span className="text-xs text-gray-500 truncate">
+              <span className="text-xs text-muted-foreground truncate">
                 ≈ {formatCurrency(ngnAmount, 'NGN')}/year
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
               <span className="truncate">Sept 2025</span>
             </div>
           </div>
-          
+
           <div className="flex flex-wrap gap-2 mb-4">
             {['Computer Science', 'AI', 'Machine Learning'].map((tag, idx) => (
               <span
                 key={idx}
-                className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
+                className="bg-muted text-foreground px-2 py-1 rounded-full text-xs"
               >
                 {tag}
               </span>
             ))}
             {program.has_scholarships && (
-              <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full text-xs">
+              <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs">
                 Scholarships Available
               </span>
             )}
           </div>
         </div>
-        
-        <div className="flex justify-between items-center gap-3 p-4 pt-3 border-t border-gray-200 bg-gray-50">
+
+        <div className="flex justify-between items-center gap-3 p-4 pt-3 border-t border-border bg-muted/50">
           <button
             onClick={() => navigate(`/app/programs/${program.id}`)}
-            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             View Details
           </button>
-          <button className="px-4 py-2 border border-gray-300 hover:border-gray-400 text-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+          <button className="px-4 py-2 border border-input hover:border-primary text-foreground rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
             <Star className="h-4 w-4" />
             Save
           </button>
-          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors">
             <Share2 className="h-5 w-5" />
           </button>
         </div>
@@ -218,14 +218,14 @@ const ProgramSearch: React.FC = () => {
       {/* Search Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2 font-heading">Find Your Program</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl font-bold text-foreground mb-2 font-heading">Find Your Program</h1>
+          <p className="text-muted-foreground">
             Discover programs that match your profile and preferences
           </p>
         </div>
         <button
           onClick={() => navigate('/dashboard')}
-          className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 self-start"
+          className="text-primary hover:text-primary/80 font-medium flex items-center gap-2 self-start"
         >
           <ChevronLeft className="h-5 w-5" />
           Back to Dashboard
@@ -235,28 +235,28 @@ const ProgramSearch: React.FC = () => {
       {/* Search Bar */}
       <div className="relative mb-6">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-muted-foreground" />
         </div>
         <input
           type="text"
           placeholder="Search programs, universities, or countries..."
-          className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          className="block w-full pl-10 pr-3 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-4 sm:p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Filter className="h-5 w-5 text-indigo-600" />
-            <h2 className="font-heading font-semibold">Filters</h2>
+            <Filter className="h-5 w-5 text-primary" />
+            <h2 className="font-heading font-semibold text-foreground">Filters</h2>
           </div>
           {Object.values(filters).some(Boolean) && (
             <button
               onClick={clearFilters}
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="text-sm text-muted-foreground hover:text-foreground"
             >
               Clear all
             </button>
@@ -265,13 +265,13 @@ const ProgramSearch: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Country
             </label>
             <select
               value={filters.country}
               onChange={(e) => handleFilterChange('country', e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full border border-input rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
             >
               <option value="">Any country</option>
               {countries.map(country => (
@@ -283,13 +283,13 @@ const ProgramSearch: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Field of Study
             </label>
             <select
               value={filters.field}
               onChange={(e) => handleFilterChange('field', e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full border border-input rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
             >
               <option value="">Any field</option>
               {fields.map(field => (
@@ -301,13 +301,13 @@ const ProgramSearch: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Tuition Range
             </label>
             <select
               value={filters.maxTuition}
               onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full border border-input rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
             >
               <option value="any">Any range</option>
               <option value="5000">Under $5,000/year</option>
@@ -318,13 +318,13 @@ const ProgramSearch: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Degree Type
             </label>
             <select
               value={filters.degreeType}
               onChange={(e) => handleFilterChange('degreeType', e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full border border-input rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
             >
               <option value="any">Any type</option>
               {degreeTypes.map(type => (
@@ -340,19 +340,19 @@ const ProgramSearch: React.FC = () => {
       {/* Results */}
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          <h2 className="font-heading font-semibold">
+          <h2 className="font-heading font-semibold text-foreground">
             {loading ? (
-              <span className="text-gray-500">Searching...</span>
+              <span className="text-muted-foreground">Searching...</span>
             ) : error ? (
-              <span className="text-red-600">{error}</span>
+              <span className="text-destructive">{error}</span>
             ) : (
               `${programs.length} Programs Found`
             )}
           </h2>
-          <select 
-            value={sortBy} 
+          <select
+            value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="border border-input rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
           >
             <option value="match">Sort by: Match</option>
             <option value="deadline">Sort by: Deadline</option>
@@ -364,12 +364,12 @@ const ProgramSearch: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-6">
           {loading ? (
             <div className="col-span-2 text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Searching for programs...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <p className="mt-4 text-muted-foreground">Searching for programs...</p>
             </div>
           ) : programs.length === 0 ? (
             <div className="col-span-2 text-center py-12">
-              <p className="text-gray-600">No programs found matching your criteria.</p>
+              <p className="text-muted-foreground">No programs found matching your criteria.</p>
             </div>
           ) : (
             programs.map(program => renderProgram(program))
