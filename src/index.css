@@ -262,17 +262,17 @@ body {
   }
 }
 
-/* Figma Design Utility Classes */
+/* Figma Design Utility Classes - Updated to HSL Color System */
 .figma-card {
-  @apply rounded-3xl border border-white/10 shadow-lg shadow-slate-200/40;
-  background: var(--figma-card) !important;
-  border-color: var(--figma-border) !important;
+  @apply rounded-3xl border shadow-lg;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
   backdrop-filter: blur(12px);
 }
 
 .dark .figma-card {
-  background: rgba(16, 24, 40, 0.4) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
   box-shadow: 0 28px 60px -28px rgba(7, 12, 28, 0.85);
 }
 
@@ -281,33 +281,38 @@ body {
 }
 
 .figma-notification-card {
-  @apply p-4 rounded-lg border border-white/10 transition-colors hover:border-white/20;
-  background: rgba(255, 255, 255, 0.05);
+  @apply p-4 rounded-lg border transition-colors;
+  background: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+
+.figma-notification-card:hover {
+  border-color: hsl(var(--border) / 0.6);
 }
 
 .dark .figma-notification-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: hsl(var(--muted));
 }
 
 .figma-button-primary {
-  @apply rounded-lg text-white text-sm font-medium transition-all;
-  background: var(--figma-primary);
-  color: var(--figma-primary-foreground);
+  @apply rounded-lg text-sm font-medium transition-all;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
 }
 
 .figma-button-secondary {
   @apply rounded-lg text-sm font-medium transition-all;
-  background: var(--figma-secondary);
-  color: var(--figma-secondary-foreground);
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
 }
 
 .figma-text-primary {
-  color: var(--figma-foreground);
+  color: hsl(var(--foreground));
 }
 
-  .figma-text-secondary {
-    color: var(--figma-muted-foreground);
-  }
+.figma-text-secondary {
+  color: hsl(var(--muted-foreground));
+}
 
   /* Open Sans Font Utilities */
   .font-open-sans {
