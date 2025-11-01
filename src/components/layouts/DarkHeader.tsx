@@ -63,12 +63,7 @@ export function DarkHeader({ onMenuClick }: DarkHeaderProps) {
 
   return (
     <header
-      className={cn(
-        'relative z-[80] flex h-20 sm:h-24 items-center justify-between border-b px-4 lg:px-8 backdrop-blur-xl transition-colors duration-300',
-        isDarkTheme
-          ? 'bg-gray-900/40 border-white/5'
-          : 'bg-white/90 border-slate-200 shadow-sm supports-[backdrop-filter]:bg-white/80'
-      )}
+      className="relative z-[80] flex h-20 sm:h-24 items-center justify-between border-b px-4 lg:px-8 backdrop-blur-xl transition-colors duration-300 bg-background/80 border-border shadow-sm"
     >
       <div className="flex items-center gap-4 lg:gap-6">
         {/* Mobile Menu Button */}
@@ -76,31 +71,16 @@ export function DarkHeader({ onMenuClick }: DarkHeaderProps) {
           variant="ghost"
           size="icon"
           onClick={onMenuClick}
-          className={cn(
-            'lg:hidden transition-colors',
-            isDarkTheme
-              ? 'text-gray-400 hover:text-white hover:bg-white/10'
-              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-          )}
+          className="lg:hidden transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
         >
           <Menu className="w-5 h-5" />
         </Button>
 
         <div className="flex flex-col justify-center">
-          <h1
-            className={cn(
-              'text-lg sm:text-2xl font-semibold tracking-tight transition-colors',
-              isDarkTheme ? 'text-white' : 'text-slate-900'
-            )}
-          >
+          <h1 className="text-lg sm:text-2xl font-semibold tracking-tight transition-colors text-foreground">
             {pageTitle}
           </h1>
-          <p
-            className={cn(
-              'hidden text-xs sm:text-sm transition-colors sm:block',
-              isDarkTheme ? 'text-gray-500' : 'text-slate-500'
-            )}
-          >
+          <p className="hidden text-xs sm:text-sm transition-colors sm:block text-muted-foreground">
             {todayLabel}
           </p>
         </div>
@@ -109,24 +89,14 @@ export function DarkHeader({ onMenuClick }: DarkHeaderProps) {
       <div className="flex items-center gap-2 lg:gap-4">
         {/* Desktop Search */}
         <div className="relative hidden lg:block">
-          <Search
-            className={cn(
-              'absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform pointer-events-none',
-              isDarkTheme ? 'text-gray-500' : 'text-slate-400'
-            )}
-          />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform pointer-events-none text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search programs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleSearchKeyDown}
-            className={cn(
-              'w-80 pl-10 pr-3 transition-colors duration-300',
-              isDarkTheme
-                ? 'border-white/10 bg-white/5 text-white placeholder:text-gray-500'
-                : 'border-slate-200 bg-white text-slate-800 placeholder:text-slate-400'
-            )}
+            className="w-80 pl-10 pr-3 transition-colors duration-300"
           />
         </div>
 
@@ -135,12 +105,7 @@ export function DarkHeader({ onMenuClick }: DarkHeaderProps) {
           variant="ghost"
           size="icon"
           onClick={() => navigate('/app/programs')}
-          className={cn(
-            'lg:hidden transition-colors',
-            isDarkTheme
-              ? 'text-gray-400 hover:text-white'
-              : 'text-slate-500 hover:text-slate-900'
-          )}
+          className="lg:hidden transition-colors text-muted-foreground hover:text-foreground"
         >
           <Search className="w-5 h-5" />
         </Button>

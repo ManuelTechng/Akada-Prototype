@@ -71,11 +71,9 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
 
   const sidebarClasses = cn(
     'fixed lg:static inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 ease-in-out border-r backdrop-blur-xl lg:translate-x-0',
-  isCollapsed ? 'w-24' : 'w-72',
+    isCollapsed ? 'w-24' : 'w-72',
     isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
-    theme === 'dark'
-      ? 'bg-gray-900/60 border-white/10'
-      : 'bg-white/80 border-gray-200 shadow-lg supports-[backdrop-filter]:bg-white/60'
+    'bg-sidebar border-sidebar-border shadow-lg'
   );
 
   const activeButtonClasses = (isActive: boolean) =>
@@ -83,24 +81,16 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
       'w-full transition-colors rounded-lg',
       isCollapsed ? 'justify-center px-2 h-12' : 'justify-start px-3',
       isActive
-        ? theme === 'dark'
-          ? 'bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30'
-          : 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200'
-        : theme === 'dark'
-        ? 'text-gray-400 hover:text-white hover:bg-white/5'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+        ? 'bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80'
+        : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
     );
 
   const secondaryButtonClasses = (isActive: boolean) =>
     cn(
       'w-full justify-start rounded-lg transition-colors',
       isActive
-        ? theme === 'dark'
-          ? 'bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30'
-          : 'bg-indigo-100 text-indigo-600 hover:bg-indigo-200'
-        : theme === 'dark'
-        ? 'text-gray-400 hover:text-white hover:bg-white/5'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+        ? 'bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80'
+        : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
     );
 
   return (
@@ -118,9 +108,8 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
         {/* Logo & Toggle */}
         <div
           className={cn(
-            'p-6 flex items-center border-b transition-colors',
-            isCollapsed ? 'justify-center flex-col gap-4' : 'justify-between',
-            theme === 'dark' ? 'border-white/10' : 'border-gray-200'
+            'p-6 flex items-center border-b transition-colors border-sidebar-border',
+            isCollapsed ? 'justify-center flex-col gap-4' : 'justify-between'
           )}
         >
         {!isCollapsed ? (
@@ -133,12 +122,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
                 setIsCollapsed(!isCollapsed);
                 onMobileToggle?.();
               }}
-              className={cn(
-                'hover:bg-transparent',
-                theme === 'dark'
-                  ? 'text-gray-400 hover:text-white'
-                  : 'text-slate-500 hover:text-slate-900'
-              )}
+              className="hover:bg-transparent text-sidebar-foreground/70 hover:text-sidebar-foreground"
             >
               <Menu className="w-5 h-5" />
             </Button>
@@ -153,12 +137,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
                 setIsCollapsed(!isCollapsed);
                 onMobileToggle?.();
               }}
-              className={cn(
-                'hover:bg-transparent',
-                theme === 'dark'
-                  ? 'text-gray-400 hover:text-white'
-                  : 'text-slate-500 hover:text-slate-900'
-              )}
+              className="hover:bg-transparent text-sidebar-foreground/70 hover:text-sidebar-foreground"
             >
               <Menu className="w-5 h-5" />
             </Button>
@@ -186,18 +165,10 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
                 title={isCollapsed ? item.label : undefined}
               >
                 <item.icon
-                  className={cn(
-                    isCollapsed ? 'w-5 h-5 shrink-0' : 'w-4 h-4 mr-3',
-                    isActive && theme !== 'dark' ? 'text-indigo-600' : undefined
-                  )}
+                  className={isCollapsed ? 'w-5 h-5 shrink-0' : 'w-4 h-4 mr-3'}
                 />
                 {!isCollapsed && (
-                  <span
-                    className={cn(
-                      'truncate',
-                      theme === 'dark' ? 'text-sm' : 'text-sm font-medium'
-                    )}
-                  >
+                  <span className="truncate text-sm">
                     {item.label}
                   </span>
                 )}
@@ -208,7 +179,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
 
         {!isCollapsed && (
           <div className="mb-2">
-            <p className={cn('px-3 py-2 text-xs uppercase tracking-wider transition-colors', theme === 'dark' ? 'text-gray-500' : 'text-slate-500')}>Tools</p>
+            <p className="px-3 py-2 text-xs uppercase tracking-wider transition-colors text-sidebar-foreground/50">Tools</p>
           </div>
         )}
 
@@ -228,18 +199,10 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
                 title={isCollapsed ? item.label : undefined}
               >
                 <item.icon
-                  className={cn(
-                    isCollapsed ? 'w-5 h-5 shrink-0' : 'w-4 h-4 mr-3',
-                    isActive && theme !== 'dark' ? 'text-indigo-600' : undefined
-                  )}
+                  className={isCollapsed ? 'w-5 h-5 shrink-0' : 'w-4 h-4 mr-3'}
                 />
                 {!isCollapsed && (
-                  <span
-                    className={cn(
-                      'truncate',
-                      theme === 'dark' ? 'text-sm' : 'text-sm font-medium'
-                    )}
-                  >
+                  <span className="truncate text-sm">
                     {item.label}
                   </span>
                 )}
@@ -250,7 +213,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
       </nav>
 
       {/* Dark Mode Toggle */}
-      <div className="px-4 py-3 border-t border-white/5">
+      <div className="px-4 py-3 border-t border-sidebar-border">
         <div
           className={cn(
             'flex items-center gap-3 p-3 rounded-lg transition-colors',
@@ -260,16 +223,11 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
           {!isCollapsed && (
             <div className="flex items-center gap-2">
               {isDarkTheme ? (
-                <Moon className="w-4 h-4 text-gray-300" />
+                <Moon className="w-4 h-4 text-sidebar-foreground/70" />
               ) : (
                 <Sun className="w-4 h-4 text-amber-500" />
               )}
-              <span
-                className={cn(
-                  'text-sm font-medium transition-colors',
-                  isDarkTheme ? 'text-gray-200' : 'text-slate-700'
-                )}
-              >
+              <span className="text-sm font-medium transition-colors text-sidebar-foreground">
                 {isDarkTheme ? 'Dark' : 'Light'} Mode
               </span>
             </div>
@@ -287,9 +245,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
             className={cn(
               'w-full transition-colors rounded-lg',
               isCollapsed ? 'justify-center h-12 w-12 p-0' : 'justify-start px-3',
-              theme === 'dark'
-                ? 'text-gray-300 hover:text-white hover:bg-white/5'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
             )}
             title={isCollapsed ? 'Settings' : undefined}
           >
@@ -302,9 +258,7 @@ export function DarkSidebar({ isMobileOpen = false, onMobileToggle }: DarkSideba
             className={cn(
               'w-full transition-colors rounded-lg',
               isCollapsed ? 'justify-center h-12 w-12 p-0' : 'justify-start px-3',
-              theme === 'dark'
-                ? 'text-gray-300 hover:text-white hover:bg-white/5'
-                : 'text-slate-600 hover:text-red-600 hover:bg-red-50'
+              'text-sidebar-foreground/70 hover:text-destructive hover:bg-destructive/10'
             )}
             title={isCollapsed ? 'Log out' : undefined}
           >
