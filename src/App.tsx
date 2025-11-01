@@ -91,6 +91,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   const isDarkTheme = theme === 'dark';
 
+  // Debug logging for tab visibility changes
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (import.meta.env.DEV) {
+        console.log('[Debug] Tab visibility changed:', document.hidden ? 'hidden' : 'visible');
+        console.log('[Debug] Timestamp:', new Date().toISOString());
+        console.log('[Debug] Loading state:', loading);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [loading]);
+
   if (loading && !initialized) {
     return <LoadingSpinner />;
   }
