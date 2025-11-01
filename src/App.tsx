@@ -114,14 +114,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div
-      className={cn(
-        'relative flex h-screen overflow-hidden transition-colors duration-500',
-        isDarkTheme
-          ? 'bg-[#0A0E1A] text-gray-100'
-          : 'bg-[#F5F6FA] text-slate-900'
-      )}
-    >
+    <div className="relative flex h-screen overflow-hidden transition-colors duration-500 bg-background text-foreground">
       {/* Background Effects */}
       <div
         className={cn(
