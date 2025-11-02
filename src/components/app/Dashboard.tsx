@@ -99,8 +99,8 @@ const Dashboard: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -110,11 +110,11 @@ const Dashboard: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <p className="text-red-600 mb-4">{error}</p>
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <p className="text-destructive mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
           >
             Retry
           </button>
@@ -130,7 +130,7 @@ const Dashboard: React.FC = () => {
       deadline: "2025-08-01",
       match: 94,
       requirements: ["IELTS: 7.0+", "GPA: 3.4+"],
-      color: "bg-purple-500"
+      color: "bg-chart-5"
     },
     {
       name: "MSc Machine Learning",
@@ -138,7 +138,7 @@ const Dashboard: React.FC = () => {
       deadline: "2025-07-30",
       match: 91,
       requirements: ["GRE: 315+", "IELTS: 6.5+"],
-      color: "bg-blue-500"
+      color: "bg-chart-2"
     },
     {
       name: "MSc Cloud Computing",
@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
       deadline: "2025-06-30",
       match: 89,
       requirements: ["IELTS: 6.5+", "Work Experience"],
-      color: "bg-indigo-500"
+      color: "bg-primary"
     },
     {
       name: "MSc Robotics",
@@ -154,7 +154,7 @@ const Dashboard: React.FC = () => {
       deadline: "2025-09-15",
       match: 87,
       requirements: ["GRE: 320+", "Research Background"],
-      color: "bg-cyan-500"
+      color: "bg-chart-4"
     }
   ];
 
@@ -200,10 +200,10 @@ const Dashboard: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white font-heading">
+            <h1 className="text-2xl font-semibold text-foreground font-heading">
               Welcome back, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Student'}!
             </h1>
-            <p className="text-gray-500 dark:text-gray-400">Track your applications and stay on top of deadlines</p>
+            <p className="text-muted-foreground">Track your applications and stay on top of deadlines</p>
           </div>
           <TokenizedButton 
             variant="primary" 
@@ -243,8 +243,8 @@ const Dashboard: React.FC = () => {
         {/* Program Recommendations */}
         <div className="mb-8 overflow-hidden">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold font-heading text-gray-900 dark:text-white">Recommended Programs</h2>
-            <button className="text-indigo-600 dark:text-indigo-400 text-sm hover:text-indigo-700 dark:hover:text-indigo-300">
+            <h2 className="text-lg font-semibold font-heading text-foreground">Recommended Programs</h2>
+            <button className="text-primary text-sm hover:text-primary/80">
               View All
             </button>
           </div>
@@ -282,28 +282,28 @@ const Dashboard: React.FC = () => {
         {/* Application Progress */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
           {applications2.map((app) => (
-            <div key={app.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div key={app.id} className="bg-card rounded-xl shadow-sm border border-border p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="font-heading font-semibold break-words text-gray-900 dark:text-white">{app.program}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm break-words">{app.university}</p>
+                  <h3 className="font-heading font-semibold break-words text-foreground">{app.program}</h3>
+                  <p className="text-muted-foreground text-sm break-words">{app.university}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline">Due: {app.deadline}</span>
-                  <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                  <span className="text-sm text-muted-foreground hidden sm:inline">Due: {app.deadline}</span>
+                  <button className="text-muted-foreground hover:text-foreground">
                     <MoreVertical className="h-5 w-5" />
                   </button>
                 </div>
               </div>
-              
+
               <div className="mb-4">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-700 dark:text-gray-300">Application Progress</span>
-                  <span className="text-gray-900 dark:text-white font-medium">{app.progress}%</span>
+                  <span className="text-foreground">Application Progress</span>
+                  <span className="text-foreground font-medium">{app.progress}%</span>
                 </div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
-                  <div 
-                    className="h-2 bg-indigo-600 rounded-full transition-all duration-500"
+                <div className="h-2 bg-secondary rounded-full">
+                  <div
+                    className="h-2 bg-primary rounded-full transition-all duration-500"
                     style={{ width: `${app.progress}%` }}
                   ></div>
                 </div>
@@ -313,9 +313,9 @@ const Dashboard: React.FC = () => {
                 {app.steps.slice(0, 3).map((step, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      step.completed 
-                        ? 'bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400' 
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+                      step.completed
+                        ? 'bg-chart-1/10 text-chart-1'
+                        : 'bg-muted text-muted-foreground'
                     }`}>
                       {step.completed ? (
                         <CheckCircle className="h-4 w-4" />
@@ -324,16 +324,16 @@ const Dashboard: React.FC = () => {
                       )}
                     </div>
                     <span className={`text-sm ${
-                      step.completed 
-                        ? 'text-gray-400 dark:text-gray-500 line-through' 
-                        : 'text-gray-700 dark:text-gray-300'
+                      step.completed
+                        ? 'text-muted-foreground line-through'
+                        : 'text-foreground'
                     }`}>
                       {step.name}
                     </span>
                   </div>
                 ))}
                 {app.steps.length > 3 && (
-                  <button className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+                  <button className="text-sm text-primary font-medium">
                     +{app.steps.length - 3} more steps
                   </button>
                 )}
@@ -343,41 +343,41 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Favorites - Added mb-20 for extra space at bottom */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-20">
-          <h2 className="text-lg font-semibold mb-6 font-heading text-gray-900 dark:text-white">Saved Programs</h2>
+        <div className="bg-card rounded-xl shadow-sm border border-border p-4 sm:p-6 mb-20">
+          <h2 className="text-lg font-semibold mb-6 font-heading text-foreground">Saved Programs</h2>
           <div className="space-y-4">
             {favorites.length > 0 ? (
               favorites.map((program, index) => (
                 <div
                   key={program.id}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                  className="bg-card border border-border rounded-lg p-4"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <GripVertical className="h-5 w-5 text-gray-400 dark:text-gray-500 cursor-move flex-shrink-0" />
+                        <GripVertical className="h-5 w-5 text-muted-foreground cursor-move flex-shrink-0" />
                         <div>
-                          <h3 className="font-heading font-medium truncate text-gray-900 dark:text-white">{program.name}</h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{program.university}</p>
+                          <h3 className="font-heading font-medium truncate text-foreground">{program.name}</h3>
+                          <p className="text-sm text-muted-foreground truncate">{program.university}</p>
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {program.requirements && program.requirements.map((req: string, i: number) => (
-                          <span key={i} className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-full text-xs">
+                          <span key={i} className="bg-muted text-muted-foreground px-2 py-1 rounded-full text-xs">
                             {req}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <div className="bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-1 rounded-full text-xs">
+                      <div className="bg-chart-1/10 text-chart-1 px-2 py-1 rounded-full text-xs">
                         {program.match}% Match
                       </div>
                       <div className="flex gap-2">
-                        <button className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
+                        <button className="text-muted-foreground hover:text-foreground">
                           <Share2 className="h-4 w-4" />
                         </button>
-                        <button className="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400">
+                        <button className="text-muted-foreground hover:text-destructive">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
@@ -387,8 +387,8 @@ const Dashboard: React.FC = () => {
               ))
             ) : (
               <div className="text-center py-8">
-                <BookOpen className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400 mb-4">No saved programs yet</p>
+                <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground mb-4">No saved programs yet</p>
                 <TokenizedButton variant="primary">
                   Browse Programs
                 </TokenizedButton>
