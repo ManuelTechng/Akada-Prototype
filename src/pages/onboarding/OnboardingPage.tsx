@@ -309,19 +309,19 @@ const OnboardingPage: React.FC = () => {
   const renderEducationStep = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900">Educational Background</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="text-lg font-medium text-foreground">Educational Background</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
           Tell us about your educational history to help us match you with suitable programs.
         </p>
       </div>
 
       <div>
-        <label htmlFor="current_university" className="block text-sm font-medium text-gray-700">
-          Current/Previous University <span className="text-red-500">*</span>
+        <label htmlFor="current_university" className="block text-sm font-medium text-foreground">
+          Current/Previous University <span className="text-destructive">*</span>
         </label>
         <div className="mt-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <School className="h-5 w-5 text-gray-400" />
+            <School className="h-5 w-5 text-muted-foreground" />
           </div>
           <input
             type="text"
@@ -329,22 +329,22 @@ const OnboardingPage: React.FC = () => {
             name="current_university"
             value={formData.current_university}
             onChange={handleInputChange}
-            className={`block w-full pl-10 pr-3 py-2 border ${hasError('current_university') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`block w-full pl-10 pr-3 py-2 border ${hasError('current_university') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., University of Lagos"
           />
         </div>
         {hasError('current_university') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('current_university')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('current_university')}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="field_of_study" className="block text-sm font-medium text-gray-700">
-          Field of Study <span className="text-red-500">*</span>
+        <label htmlFor="field_of_study" className="block text-sm font-medium text-foreground">
+          Field of Study <span className="text-destructive">*</span>
         </label>
         <div className="mt-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <BookOpen className="h-5 w-5 text-gray-400" />
+            <BookOpen className="h-5 w-5 text-muted-foreground" />
           </div>
           <input
             type="text"
@@ -352,17 +352,17 @@ const OnboardingPage: React.FC = () => {
             name="field_of_study"
             value={formData.field_of_study}
             onChange={handleInputChange}
-            className={`block w-full pl-10 pr-3 py-2 border ${hasError('field_of_study') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`block w-full pl-10 pr-3 py-2 border ${hasError('field_of_study') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., Computer Science"
           />
         </div>
         {hasError('field_of_study') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('field_of_study')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('field_of_study')}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="gpa" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="gpa" className="block text-sm font-medium text-foreground">
           GPA (on 4.0 scale)
         </label>
         <input
@@ -371,13 +371,13 @@ const OnboardingPage: React.FC = () => {
           name="gpa"
           value={formData.gpa}
           onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('gpa') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+          className={`mt-1 block w-full py-2 px-3 border ${hasError('gpa') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
           placeholder="e.g., 3.5"
         />
         {hasError('gpa') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('gpa')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('gpa')}</p>
         )}
-        <p className="mt-1 text-xs text-gray-500">Optional. Leave blank if not applicable.</p>
+        <p className="mt-1 text-xs text-muted-foreground">Optional. Leave blank if not applicable.</p>
       </div>
     </div>
   );
@@ -385,15 +385,15 @@ const OnboardingPage: React.FC = () => {
   const renderTestScoresStep = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900">Test Scores</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="text-lg font-medium text-foreground">Test Scores</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
           Add your standardized test scores if available. These help us match you with programs where you meet the requirements.
         </p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="test_scores.ielts" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="test_scores.ielts" className="block text-sm font-medium text-foreground">
             IELTS Score (if applicable)
           </label>
           <input
@@ -402,16 +402,16 @@ const OnboardingPage: React.FC = () => {
             name="test_scores.ielts"
             value={formData.test_scores.ielts}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.ielts') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.ielts') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., 7.5"
           />
           {hasError('test_scores.ielts') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('test_scores.ielts')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('test_scores.ielts')}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="test_scores.toefl" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="test_scores.toefl" className="block text-sm font-medium text-foreground">
             TOEFL Score (if applicable)
           </label>
           <input
@@ -420,19 +420,19 @@ const OnboardingPage: React.FC = () => {
             name="test_scores.toefl"
             value={formData.test_scores.toefl}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.toefl') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.toefl') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., 100"
           />
           {hasError('test_scores.toefl') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('test_scores.toefl')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('test_scores.toefl')}</p>
           )}
         </div>
 
-        <div className="border-t border-gray-200 pt-4 mt-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">GRE Scores (if applicable)</h4>
+        <div className="border-t border-border pt-4 mt-4">
+          <h4 className="text-sm font-medium text-foreground mb-3">GRE Scores (if applicable)</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="test_scores.gre.verbal" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="test_scores.gre.verbal" className="block text-sm font-medium text-foreground">
                 GRE Verbal
               </label>
               <input
@@ -441,15 +441,15 @@ const OnboardingPage: React.FC = () => {
                 name="test_scores.gre.verbal"
                 value={formData.test_scores.gre.verbal}
                 onChange={handleInputChange}
-                className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.gre.verbal') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+                className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.gre.verbal') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
                 placeholder="e.g., 155"
               />
               {hasError('test_scores.gre.verbal') && (
-                <p className="mt-1 text-sm text-red-600">{getErrorMessage('test_scores.gre.verbal')}</p>
+                <p className="mt-1 text-sm text-destructive">{getErrorMessage('test_scores.gre.verbal')}</p>
               )}
             </div>
             <div>
-              <label htmlFor="test_scores.gre.quantitative" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="test_scores.gre.quantitative" className="block text-sm font-medium text-foreground">
                 GRE Quantitative
               </label>
               <input
@@ -458,15 +458,15 @@ const OnboardingPage: React.FC = () => {
                 name="test_scores.gre.quantitative"
                 value={formData.test_scores.gre.quantitative}
                 onChange={handleInputChange}
-                className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.gre.quantitative') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+                className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.gre.quantitative') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
                 placeholder="e.g., 160"
               />
               {hasError('test_scores.gre.quantitative') && (
-                <p className="mt-1 text-sm text-red-600">{getErrorMessage('test_scores.gre.quantitative')}</p>
+                <p className="mt-1 text-sm text-destructive">{getErrorMessage('test_scores.gre.quantitative')}</p>
               )}
             </div>
             <div>
-              <label htmlFor="test_scores.gre.analytical" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="test_scores.gre.analytical" className="block text-sm font-medium text-foreground">
                 GRE Analytical Writing
               </label>
               <input
@@ -475,18 +475,18 @@ const OnboardingPage: React.FC = () => {
                 name="test_scores.gre.analytical"
                 value={formData.test_scores.gre.analytical}
                 onChange={handleInputChange}
-                className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.gre.analytical') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+                className={`mt-1 block w-full py-2 px-3 border ${hasError('test_scores.gre.analytical') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
                 placeholder="e.g., 4.5"
               />
               {hasError('test_scores.gre.analytical') && (
-                <p className="mt-1 text-sm text-red-600">{getErrorMessage('test_scores.gre.analytical')}</p>
+                <p className="mt-1 text-sm text-destructive">{getErrorMessage('test_scores.gre.analytical')}</p>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 text-sm text-indigo-700 mt-4">
+      <div className="bg-accent border border-border rounded-lg p-4 text-sm text-accent-foreground mt-4">
         <p>
           <strong>Note:</strong> You can skip this section if you haven't taken these tests yet. You can always update your scores later.
         </p>
@@ -497,19 +497,19 @@ const OnboardingPage: React.FC = () => {
   const renderStudyPreferencesStep = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900">Study Preferences</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="text-lg font-medium text-foreground">Study Preferences</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
           Tell us about your preferred study destinations and program types.
         </p>
       </div>
 
       <div>
-        <label htmlFor="study_preferences.countries" className="block text-sm font-medium text-gray-700">
-          Preferred Countries <span className="text-red-500">*</span>
+        <label htmlFor="study_preferences.countries" className="block text-sm font-medium text-foreground">
+          Preferred Countries <span className="text-destructive">*</span>
         </label>
         <div className="mt-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MapPin className="h-5 w-5 text-gray-400" />
+            <MapPin className="h-5 w-5 text-muted-foreground" />
           </div>
           <select
             id="study_preferences.countries"
@@ -517,7 +517,7 @@ const OnboardingPage: React.FC = () => {
             multiple
             value={formData.study_preferences.countries}
             onChange={handleMultiSelectChange}
-            className={`block w-full pl-10 pr-3 py-2 border ${hasError('study_preferences.countries') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm h-32 md:h-40`}
+            className={`block w-full pl-10 pr-3 py-2 border ${hasError('study_preferences.countries') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm h-32 md:h-40 bg-background text-foreground`}
           >
             <option value="Nigeria">Nigeria</option>
             <option value="USA">United States</option>
@@ -536,14 +536,14 @@ const OnboardingPage: React.FC = () => {
           </select>
         </div>
         {hasError('study_preferences.countries') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('study_preferences.countries')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('study_preferences.countries')}</p>
         )}
-        <p className="mt-1 text-xs text-gray-500">Hold Ctrl/Cmd to select multiple countries</p>
+        <p className="mt-1 text-xs text-muted-foreground">Hold Ctrl/Cmd to select multiple countries</p>
       </div>
 
       <div>
-        <label htmlFor="study_preferences.program_type" className="block text-sm font-medium text-gray-700">
-          Program Types <span className="text-red-500">*</span>
+        <label htmlFor="study_preferences.program_type" className="block text-sm font-medium text-foreground">
+          Program Types <span className="text-destructive">*</span>
         </label>
         <select
           id="study_preferences.program_type"
@@ -551,7 +551,7 @@ const OnboardingPage: React.FC = () => {
           multiple
           value={formData.study_preferences.program_type}
           onChange={handleMultiSelectChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('study_preferences.program_type') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm h-28`}
+          className={`mt-1 block w-full py-2 px-3 border ${hasError('study_preferences.program_type') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm h-28 bg-background text-foreground`}
         >
           <option value="Masters">Master's</option>
           <option value="PhD">PhD</option>
@@ -560,9 +560,9 @@ const OnboardingPage: React.FC = () => {
           <option value="Professional">Professional Degree</option>
         </select>
         {hasError('study_preferences.program_type') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('study_preferences.program_type')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('study_preferences.program_type')}</p>
         )}
-        <p className="mt-1 text-xs text-gray-500">Hold Ctrl/Cmd to select multiple program types</p>
+        <p className="mt-1 text-xs text-muted-foreground">Hold Ctrl/Cmd to select multiple program types</p>
       </div>
     </div>
   );
@@ -570,26 +570,26 @@ const OnboardingPage: React.FC = () => {
   const renderBudgetStep = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900">Budget & Timeline</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="text-lg font-medium text-foreground">Budget & Timeline</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
           Help us understand your budget constraints and timeline for beginning your studies.
         </p>
       </div>
 
       <div>
-        <label htmlFor="study_preferences.max_tuition" className="block text-sm font-medium text-gray-700">
-          Maximum Annual Tuition Budget <span className="text-red-500">*</span>
+        <label htmlFor="study_preferences.max_tuition" className="block text-sm font-medium text-foreground">
+          Maximum Annual Tuition Budget <span className="text-destructive">*</span>
         </label>
         <div className="mt-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <DollarSign className="h-5 w-5 text-gray-400" />
+            <DollarSign className="h-5 w-5 text-muted-foreground" />
           </div>
           <select
             id="study_preferences.max_tuition"
             name="study_preferences.max_tuition"
             value={formData.study_preferences.max_tuition}
             onChange={handleInputChange}
-            className={`block w-full pl-10 pr-3 py-2 border ${hasError('study_preferences.max_tuition') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`block w-full pl-10 pr-3 py-2 border ${hasError('study_preferences.max_tuition') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
           >
             <option value="">Select your budget</option>
             <option value="5000">Less than $5,000 USD</option>
@@ -603,25 +603,25 @@ const OnboardingPage: React.FC = () => {
           </select>
         </div>
         {hasError('study_preferences.max_tuition') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('study_preferences.max_tuition')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('study_preferences.max_tuition')}</p>
         )}
-        <p className="mt-1 text-xs text-gray-500">This helps us filter programs within your financial reach</p>
+        <p className="mt-1 text-xs text-muted-foreground">This helps us filter programs within your financial reach</p>
       </div>
 
       <div>
-        <label htmlFor="study_preferences.start_date" className="block text-sm font-medium text-gray-700">
-          Preferred Start Date <span className="text-red-500">*</span>
+        <label htmlFor="study_preferences.start_date" className="block text-sm font-medium text-foreground">
+          Preferred Start Date <span className="text-destructive">*</span>
         </label>
         <div className="mt-1 relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Calendar className="h-5 w-5 text-gray-400" />
+            <Calendar className="h-5 w-5 text-muted-foreground" />
           </div>
           <select
             id="study_preferences.start_date"
             name="study_preferences.start_date"
             value={formData.study_preferences.start_date}
             onChange={handleInputChange}
-            className={`block w-full pl-10 pr-3 py-2 border ${hasError('study_preferences.start_date') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`block w-full pl-10 pr-3 py-2 border ${hasError('study_preferences.start_date') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
           >
             <option value="">Select preferred start date</option>
             <option value="Fall 2024">Fall 2024</option>
@@ -633,11 +633,11 @@ const OnboardingPage: React.FC = () => {
           </select>
         </div>
         {hasError('study_preferences.start_date') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('study_preferences.start_date')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('study_preferences.start_date')}</p>
         )}
       </div>
 
-      <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 text-sm text-amber-700 mt-6">
+      <div className="bg-muted border border-border rounded-lg p-4 text-sm text-foreground mt-6">
         <div className="font-medium mb-1">Did you know?</div>
         <p>
           Many universities in countries like Germany and Norway have minimal or no tuition fees for international students.
@@ -650,15 +650,15 @@ const OnboardingPage: React.FC = () => {
   const renderPersonalInfoStep = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium text-gray-900">Personal Information</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="text-lg font-medium text-foreground">Personal Information</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
           Tell us how to contact you and where you're currently located.
         </p>
       </div>
 
       <div>
-        <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
-          Phone Number <span className="text-red-500">*</span>
+        <label htmlFor="phone_number" className="block text-sm font-medium text-foreground">
+          Phone Number <span className="text-destructive">*</span>
         </label>
         <input
           type="tel"
@@ -666,18 +666,18 @@ const OnboardingPage: React.FC = () => {
           name="phone_number"
           value={formData.phone_number}
           onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('phone_number') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+          className={`mt-1 block w-full py-2 px-3 border ${hasError('phone_number') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
           placeholder="e.g., +234 801 234 5678"
         />
         {hasError('phone_number') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('phone_number')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('phone_number')}</p>
         )}
       </div>
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="address_line1" className="block text-sm font-medium text-gray-700">
-            Address Line 1 <span className="text-red-500">*</span>
+          <label htmlFor="address_line1" className="block text-sm font-medium text-foreground">
+            Address Line 1 <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
@@ -685,16 +685,16 @@ const OnboardingPage: React.FC = () => {
             name="address_line1"
             value={formData.address_line1}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('address_line1') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('address_line1') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="Street address, P.O. box, etc."
           />
           {hasError('address_line1') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('address_line1')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('address_line1')}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="address_line2" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="address_line2" className="block text-sm font-medium text-foreground">
             Address Line 2
           </label>
           <input
@@ -703,19 +703,19 @@ const OnboardingPage: React.FC = () => {
             name="address_line2"
             value={formData.address_line2}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('address_line2') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('address_line2') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="Apartment, suite, unit, building, floor, etc."
           />
           {hasError('address_line2') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('address_line2')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('address_line2')}</p>
           )}
-          <p className="mt-1 text-xs text-gray-500">Optional</p>
+          <p className="mt-1 text-xs text-muted-foreground">Optional</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="city" className="block text-sm font-medium text-foreground">
             City <span className="text-red-500">*</span>
           </label>
           <input
@@ -724,16 +724,16 @@ const OnboardingPage: React.FC = () => {
             name="city"
             value={formData.city}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('city') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('city') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., Lagos"
           />
           {hasError('city') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('city')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('city')}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="state_province" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="state_province" className="block text-sm font-medium text-foreground">
             State/Province <span className="text-red-500">*</span>
           </label>
           <input
@@ -742,18 +742,18 @@ const OnboardingPage: React.FC = () => {
             name="state_province"
             value={formData.state_province}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('state_province') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('state_province') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., Lagos State"
           />
           {hasError('state_province') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('state_province')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('state_province')}</p>
           )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="postal_code" className="block text-sm font-medium text-foreground">
             Postal/Zip Code <span className="text-red-500">*</span>
           </label>
           <input
@@ -762,16 +762,16 @@ const OnboardingPage: React.FC = () => {
             name="postal_code"
             value={formData.postal_code}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('postal_code') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('postal_code') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
             placeholder="e.g., 100001"
           />
           {hasError('postal_code') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('postal_code')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('postal_code')}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="country" className="block text-sm font-medium text-foreground">
             Country <span className="text-red-500">*</span>
           </label>
           <select
@@ -779,7 +779,7 @@ const OnboardingPage: React.FC = () => {
             name="country"
             value={formData.country}
             onChange={handleInputChange}
-            className={`mt-1 block w-full py-2 px-3 border ${hasError('country') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+            className={`mt-1 block w-full py-2 px-3 border ${hasError('country') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
           >
             <option value="">Select a country</option>
             <option value="Nigeria">Nigeria</option>
@@ -797,13 +797,13 @@ const OnboardingPage: React.FC = () => {
             <option value="Japan">Japan</option>
           </select>
           {hasError('country') && (
-            <p className="mt-1 text-sm text-red-600">{getErrorMessage('country')}</p>
+            <p className="mt-1 text-sm text-destructive">{getErrorMessage('country')}</p>
           )}
         </div>
       </div>
 
       <div>
-        <label htmlFor="date_of_birth" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="date_of_birth" className="block text-sm font-medium text-foreground">
           Date of Birth
         </label>
         <input
@@ -812,16 +812,16 @@ const OnboardingPage: React.FC = () => {
           name="date_of_birth"
           value={formData.date_of_birth}
           onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('date_of_birth') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+          className={`mt-1 block w-full py-2 px-3 border ${hasError('date_of_birth') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
         />
         {hasError('date_of_birth') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('date_of_birth')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('date_of_birth')}</p>
         )}
-        <p className="mt-1 text-xs text-gray-500">Optional</p>
+        <p className="mt-1 text-xs text-muted-foreground">Optional</p>
       </div>
 
       <div>
-        <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="bio" className="block text-sm font-medium text-foreground">
           Bio / Personal Statement
         </label>
         <textarea
@@ -830,24 +830,24 @@ const OnboardingPage: React.FC = () => {
           rows={4}
           value={formData.bio}
           onChange={handleInputChange}
-          className={`mt-1 block w-full py-2 px-3 border ${hasError('bio') ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'} rounded-md shadow-sm sm:text-sm`}
+          className={`mt-1 block w-full py-2 px-3 border ${hasError('bio') ? 'border-destructive focus:ring-destructive focus:border-destructive' : 'border-input focus:ring-primary focus:border-primary'} rounded-md shadow-sm sm:text-sm bg-background text-foreground`}
           placeholder="Tell us a bit about yourself..."
         />
         {hasError('bio') && (
-          <p className="mt-1 text-sm text-red-600">{getErrorMessage('bio')}</p>
+          <p className="mt-1 text-sm text-destructive">{getErrorMessage('bio')}</p>
         )}
-        <p className="mt-1 text-xs text-gray-500">Optional</p>
+        <p className="mt-1 text-xs text-muted-foreground">Optional</p>
       </div>
     </div>
   );
   
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-muted py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <GraduationCap className="mx-auto h-12 w-12 text-indigo-600" />
-          <h2 className="mt-4 text-3xl font-extrabold text-gray-900">Welcome to Akada</h2>
-          <p className="mt-2 text-gray-600">
+          <GraduationCap className="mx-auto h-12 w-12 text-primary" />
+          <h2 className="mt-4 text-3xl font-extrabold text-foreground">Welcome to Akada</h2>
+          <p className="mt-2 text-muted-foreground">
             Let's set up your profile to help you find the perfect academic programs.
           </p>
         </div>
@@ -855,9 +855,9 @@ const OnboardingPage: React.FC = () => {
         {/* Progress bar */}
         <div className="mb-10">
           <div className="relative">
-            <div className="overflow-hidden h-2 flex rounded-full bg-gray-200">
-              <div 
-                className="transition-all duration-500 ease-out h-full bg-indigo-600 rounded-full"
+            <div className="overflow-hidden h-2 flex rounded-full bg-secondary">
+              <div
+                className="transition-all duration-500 ease-out h-full bg-primary rounded-full"
                 style={{ width: `${(step / totalSteps) * 100}%` }}
               ></div>
             </div>
@@ -865,9 +865,9 @@ const OnboardingPage: React.FC = () => {
               {Array.from({ length: totalSteps }).map((_, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    step > index + 1 ? 'border-indigo-600 bg-indigo-600 text-white' : 
-                    step === index + 1 ? 'border-indigo-600 text-indigo-600' : 
-                    'border-gray-300 text-gray-500'
+                    step > index + 1 ? 'border-primary bg-primary text-primary-foreground' :
+                    step === index + 1 ? 'border-primary text-primary' :
+                    'border-border text-muted-foreground'
                   }`}>
                     {step > index + 1 ? (
                       <Check className="h-3 w-3" />
@@ -883,22 +883,22 @@ const OnboardingPage: React.FC = () => {
         
         {/* Debug information in development */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="mb-4 p-3 bg-gray-800 text-white rounded-md text-sm font-mono overflow-x-auto">
+          <div className="mb-4 p-3 bg-muted border border-border text-foreground rounded-md text-sm font-mono overflow-x-auto">
             <div>Current Step: {step}</div>
             <div>Validation Errors: {JSON.stringify(validationErrors, null, 2)}</div>
           </div>
         )}
-        
+
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md flex items-start gap-2">
+          <div className="mb-6 bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md flex items-start gap-2">
             <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
-        
+
         {/* If there are validation errors, show a summary */}
         {Object.keys(validationErrors).length > 0 && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+          <div className="mb-6 bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md">
             <h4 className="font-medium flex items-center mb-2">
               <AlertCircle className="h-5 w-5 mr-2" />
               Please fix the following errors:
@@ -910,8 +910,8 @@ const OnboardingPage: React.FC = () => {
             </ul>
           </div>
         )}
-        
-        <div className="bg-white shadow overflow-hidden sm:rounded-md">
+
+        <div className="bg-card shadow overflow-hidden sm:rounded-md border border-border">
           <div className="px-4 py-5 sm:p-6">
             <form onSubmit={step === totalSteps ? handleSubmit : e => { e.preventDefault(); nextStep(); }}>
               {step === 1 && renderEducationStep()}
@@ -919,8 +919,8 @@ const OnboardingPage: React.FC = () => {
               {step === 3 && renderStudyPreferencesStep()}
               {step === 4 && renderBudgetStep()}
               {step === 5 && renderPersonalInfoStep()}
-              
-              <div className="flex justify-between mt-8 pt-5 border-t border-gray-200">
+
+              <div className="flex justify-between mt-8 pt-5 border-t border-border">
                 <div className="flex justify-between w-full">
                   <button
                     type="button"
@@ -928,7 +928,7 @@ const OnboardingPage: React.FC = () => {
                     disabled={step === 1 || loading}
                     className={`${
                       step === 1 ? 'invisible' : ''
-                    } inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                    } inline-flex items-center px-4 py-2 border border-input shadow-sm text-sm font-medium rounded-md text-foreground bg-background hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
                       loading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
@@ -937,7 +937,7 @@ const OnboardingPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                    className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
                       loading ? 'opacity-70 cursor-not-allowed' : ''
                     }`}
                   >
@@ -953,12 +953,12 @@ const OnboardingPage: React.FC = () => {
             </form>
           </div>
         </div>
-        
-        <div className="mt-4 text-center text-sm text-gray-500">
+
+        <div className="mt-4 text-center text-sm text-muted-foreground">
           <p>
             Step {step} of {totalSteps}: {
-              step === 1 ? 'Educational Background' : 
-              step === 2 ? 'Test Scores' : 
+              step === 1 ? 'Educational Background' :
+              step === 2 ? 'Test Scores' :
               step === 3 ? 'Study Preferences' :
               step === 4 ? 'Budget & Timeline' :
               'Personal Information'
