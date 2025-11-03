@@ -46,9 +46,9 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
         }
 
         const colorMap = {
-          high: 'text-red-600 dark:text-red-400',
-          medium: 'text-orange-600 dark:text-orange-400', 
-          low: 'text-green-600 dark:text-green-400'
+          high: 'text-destructive',
+          medium: 'text-chart-3',
+          low: 'text-chart-1'
         }
 
         return {
@@ -73,10 +73,10 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
 
   // Get affordability status
   const getAffordabilityStatus = (budgetUtilization: number) => {
-    if (budgetUtilization <= 70) return { text: 'Well within budget', color: 'text-green-600 dark:text-green-400' }
-    if (budgetUtilization <= 90) return { text: 'Approaching limit', color: 'text-yellow-600 dark:text-yellow-400' }
-    if (budgetUtilization <= 100) return { text: 'At budget limit', color: 'text-orange-600 dark:text-orange-400' }
-    return { text: 'Over budget', color: 'text-red-600 dark:text-red-400' }
+    if (budgetUtilization <= 70) return { text: 'Well within budget', color: 'text-chart-1' }
+    if (budgetUtilization <= 90) return { text: 'Approaching limit', color: 'text-chart-3' }
+    if (budgetUtilization <= 100) return { text: 'At budget limit', color: 'text-chart-3' }
+    return { text: 'Over budget', color: 'text-destructive' }
   }
 
   // Calculate cost breakdown
@@ -101,19 +101,19 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
         category: 'Tuition',
         amount: avgTuition,
         percentage: total > 0 ? (avgTuition / total) * 100 : 0,
-        color: '#4f46e5'
+        color: 'hsl(var(--chart-2))'
       },
       {
         category: 'Living Costs',
         amount: avgLiving,
         percentage: total > 0 ? (avgLiving / total) * 100 : 0,
-        color: '#10b981'
+        color: 'hsl(var(--chart-1))'
       },
       {
         category: 'Visa Fees',
         amount: avgVisa,
         percentage: total > 0 ? (avgVisa / total) * 100 : 0,
-        color: '#f59e0b'
+        color: 'hsl(var(--chart-3))'
       }
     ].filter(item => item.amount > 0)
   }
@@ -125,20 +125,20 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
   if (!costData?.budgetAnalysis) {
     return (
       <div className={cn(
-        "bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6",
+        "bg-card rounded-lg border border-border p-4 sm:p-6",
         className
       )}>
         <div className="text-center py-8">
-          <DollarSignIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          <DollarSignIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">
             No Cost Data Available
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
+          <p className="text-muted-foreground mb-4">
             Save some programs and set your budget to see cost analysis
           </p>
           <button
             onClick={() => navigate('/dashboard/search')}
-            className="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
           >
             Search Programs
           </button>
@@ -153,21 +153,21 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
   const costBreakdown = getCostBreakdown()
 
   return (
-    <div 
+    <div
       className={cn(
-        "bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 space-y-6",
-        "transition-all duration-300 hover:shadow-md",
+        "bg-card rounded-lg border border-border p-4 sm:p-6 space-y-6",
+        "transition-all duration-300 hover:shadow-sm",
         className
       )}
     >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <BarChart3Icon className="w-5 h-5 text-indigo-600" />
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <BarChart3Icon className="w-5 h-5 text-primary" />
             Cost Analysis
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Budget utilization and breakdown
           </p>
         </div>
@@ -193,32 +193,32 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
           <div className="flex-1 space-y-3">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="text-sm font-medium text-foreground">
                   Budget Utilization
                 </span>
                 <span className={cn("text-sm font-medium", affordabilityStatus.color)}>
                   {Math.round(budgetAnalysis.budgetUtilization)}%
                 </span>
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">
+              <div className="text-xs text-muted-foreground">
                 {formatNGN(budgetAnalysis.averageProgramCost, { compact: true })} of {formatNGN(budgetAnalysis.totalBudget, { compact: true })}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                <div className="text-2xl font-bold text-chart-1">
                   {budgetAnalysis.affordablePrograms}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-muted-foreground">
                   Affordable Programs
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                <div className="text-2xl font-bold text-chart-3">
                   {scholarshipOpportunities.length}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-muted-foreground">
                   With Scholarships
                 </div>
               </div>
@@ -229,11 +229,11 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
         {/* Affordability Status */}
         <div className={cn(
           "p-3 rounded-md border text-center",
-          budgetAnalysis.budgetUtilization <= 70 
-            ? "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800"
+          budgetAnalysis.budgetUtilization <= 70
+            ? "bg-chart-1/10 border-chart-1"
             : budgetAnalysis.budgetUtilization <= 100
-            ? "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800"
-            : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800"
+            ? "bg-chart-3/10 border-chart-3"
+            : "bg-destructive/10 border-destructive"
         )}>
           <div className={cn("font-medium", affordabilityStatus.color)}>
             {affordabilityStatus.text}
@@ -244,7 +244,7 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
       {/* Cost Breakdown */}
       {costBreakdown.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <h4 className="text-sm font-medium text-foreground">
             Average Cost Breakdown
           </h4>
           <div className="space-y-2">
@@ -255,15 +255,15 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-muted-foreground">
                     {item.category}
                   </span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium text-gray-900 dark:text-white">
+                  <div className="text-sm font-medium text-foreground">
                     {formatNGN(item.amount, { compact: true, decimals: 0 })}
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-xs text-muted-foreground">
                     {Math.round(item.percentage)}%
                   </div>
                 </div>
@@ -276,24 +276,24 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
       {/* Quick Insights */}
       {insights.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <h4 className="text-sm font-medium text-foreground">
             Smart Insights
           </h4>
           <div className="space-y-2">
             {insights.slice(0, 2).map((insight, index) => (
               <div 
                 key={index}
-                className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600"
+                className="p-3 bg-muted/50 rounded-md border border-border"
               >
                 <div className="flex items-start space-x-2">
                   <div className={insight.color}>
                     {insight.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-foreground">
                       {insight.message}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {insight.suggestion}
                     </p>
                   </div>
@@ -305,10 +305,10 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
       )}
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
         <button
           onClick={() => navigate('/programs/search')}
-          className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+          className="flex-1 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
         >
           <BarChart3Icon className="w-4 h-4" />
           <span>View Cost Comparison</span>
@@ -317,7 +317,7 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
         {scholarshipOpportunities.length > 0 && (
           <button
             onClick={() => navigate('/dashboard/search')}
-            className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+            className="flex-1 bg-chart-1 text-primary-foreground px-4 py-2 rounded-md hover:bg-chart-1/90 transition-colors flex items-center justify-center gap-2"
           >
             <TrophyIcon className="w-4 h-4" />
             <span>View Scholarships</span>
@@ -327,15 +327,15 @@ export const CostAnalysisWidget: React.FC<{ className?: string }> = ({ className
 
       {/* Nigerian-specific savings tip */}
       {budgetAnalysis.budgetUtilization > 100 && (
-        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border border-blue-200 dark:border-blue-800">
+        <div className="mt-4 p-3 bg-chart-2/10 rounded-md border border-chart-2">
           <div className="flex items-start space-x-2">
-            <InfoIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+            <InfoIcon className="w-5 h-5 text-chart-2 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+              <p className="text-sm font-medium text-chart-2">
                 💡 Savings Tip for Nigerian Students
               </p>
-              <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                Consider programs in Germany or Canada - they offer quality education at 30-40% lower costs. 
+              <p className="text-xs text-chart-2 mt-1">
+                Consider programs in Germany or Canada - they offer quality education at 30-40% lower costs.
                 Save ₦{formatNGN((budgetAnalysis.averageProgramCost - budgetAnalysis.totalBudget) / 24, { decimals: 0, includeSymbol: false })}/month for 2 years to bridge the gap.
               </p>
             </div>
