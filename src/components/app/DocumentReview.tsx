@@ -146,7 +146,7 @@ const DocumentReview: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="max-w-7xl mx-auto space-y-8 pb-20">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <button 

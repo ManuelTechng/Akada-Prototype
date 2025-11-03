@@ -287,7 +287,7 @@ const CostCalculator: React.FC<CostCalculatorProps> = ({
   ];
 
   return (
-    <div className={`max-w-5xl mx-auto ${className}`}>
+    <div className={`max-w-7xl mx-auto ${className}`}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
           <Calculator className="w-6 h-6 mr-3" />
