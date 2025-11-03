@@ -529,7 +529,7 @@ const ProgramSearchPageFixed: React.FC = () => {
   };
 
   const getFilterSection = () => (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
+    <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sliders className="h-5 w-5 text-indigo-600" />
@@ -746,13 +746,13 @@ const ProgramSearchPageFixed: React.FC = () => {
               <span>Back to Dashboard</span>
             </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Find Your Program</h1>
-          <p className="text-gray-600 dark:text-gray-400">Discover programs that match your profile and preferences</p>
+          <h1 className="text-2xl font-bold text-foreground">Find Your Program</h1>
+          <p className="text-muted-foreground">Discover programs that match your profile and preferences</p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={() => navigate('/app/calculator')} 
-            className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
+            className="bg-card border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-muted dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
           >
             <Calculator className="h-5 w-5" />
             <span className="hidden sm:inline">Cost Calculator</span>
@@ -768,7 +768,7 @@ const ProgramSearchPageFixed: React.FC = () => {
         <input
           type="text"
           placeholder="Search for programs, universities, or keywords..."
-          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 shadow-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-card shadow-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -781,14 +781,14 @@ const ProgramSearchPageFixed: React.FC = () => {
           {getFilterSection()}
           
           {/* Tools section */}
-          <div className="bg-indigo-600 dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
+          <div className="bg-primary dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
             <h2 className="font-semibold mb-4 text-lg">Need Help Finding Programs?</h2>
             <p className="text-indigo-100 mb-4">
               Our AI assistant can help you discover programs that match your profile, preferences, and career goals.
             </p>
             <button 
               onClick={() => navigate('/app/assistant')}
-              className="w-full bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 mb-4"
+              className="w-full bg-card text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 mb-4"
             >
               <Search className="h-5 w-5" />
               Get Personalized Suggestions
@@ -806,7 +806,7 @@ const ProgramSearchPageFixed: React.FC = () => {
         {/* Results area */}
         <div className="lg:col-span-2 xl:col-span-3 space-y-6">
           {/* Results header */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+          <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
@@ -850,17 +850,17 @@ const ProgramSearchPageFixed: React.FC = () => {
 
           {/* Results grid */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
+            <div className="flex flex-col items-center justify-center bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
               <div className="animate-spin h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Searching for programs that match your criteria...</p>
+              <p className="text-muted-foreground">Searching for programs that match your criteria...</p>
             </div>
           ) : error ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+            <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
               <div className="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">Unable to Load Programs</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+              <p className="text-muted-foreground mb-4">{error}</p>
               <div className="space-y-2">
                 <p className="text-sm text-gray-500 dark:text-gray-400">This might be due to:</p>
                 <ul className="text-sm text-gray-500 dark:text-gray-400 text-left inline-block">
@@ -871,14 +871,14 @@ const ProgramSearchPageFixed: React.FC = () => {
               </div>
               <button 
                 onClick={searchPrograms}
-                className="mt-4 bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                className="mt-4 bg-primary dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-primary/90 dark:hover:bg-primary transition-colors"
               >
                 Try Again
               </button>
             </div>
           ) : programs.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
-              <div className="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+              <div className="bg-muted dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Search className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-medium text-gray-900 mb-2">No Programs Found</h3>
@@ -887,7 +887,7 @@ const ProgramSearchPageFixed: React.FC = () => {
               </p>
               <button 
                 onClick={clearAllFilters}
-                className="bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                className="bg-primary dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-primary/90 dark:hover:bg-primary transition-colors"
               >
                 Clear All Filters
               </button>
