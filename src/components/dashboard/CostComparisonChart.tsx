@@ -56,16 +56,16 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
   const [showScholarshipAdjusted, setShowScholarshipAdjusted] = useState(false)
   const [selectedPrograms, setSelectedPrograms] = useState<string[]>([])
 
-  // Color palette for charts (Akada brand colors)
+  // Color palette for charts (Akada HSL semantic colors)
   const chartColors = [
-    '#4f46e5', // Primary indigo
-    '#10b981', // Green
-    '#f59e0b', // Orange
-    '#ef4444', // Red
-    '#8b5cf6', // Purple
-    '#06b6d4', // Cyan
-    '#84cc16', // Lime
-    '#f97316'  // Orange-red
+    'hsl(var(--chart-2))', // Primary purple
+    'hsl(var(--chart-1))', // Green
+    'hsl(var(--chart-3))', // Orange
+    'hsl(var(--destructive))', // Red
+    'hsl(var(--chart-4))', // Purple
+    'hsl(var(--chart-5))', // Cyan
+    'hsl(var(--chart-1))', // Lime (green variant)
+    'hsl(var(--chart-3))'  // Orange-red (orange variant)
   ]
 
   // Prepare chart data based on view mode
@@ -110,26 +110,26 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
     const data = payload[0].payload
 
     return (
-      <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+      <div className="bg-card p-3 rounded-lg shadow-sm border border-border">
+        <h4 className="font-semibold text-foreground mb-2">
           {label || data.name || data.country}
         </h4>
         
         {viewMode === 'breakdown' && (
           <div className="space-y-1">
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Tuition:</span>
+              <span className="text-muted-foreground">Tuition:</span>
               <span className="font-medium">{formatCurrency(data.tuition)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Living:</span>
+              <span className="text-muted-foreground">Living:</span>
               <span className="font-medium">{formatCurrency(data.living)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Visa:</span>
+              <span className="text-muted-foreground">Visa:</span>
               <span className="font-medium">{formatCurrency(data.visa)}</span>
             </div>
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-1 mt-1">
+            <div className="border-t border-border pt-1 mt-1">
               <div className="flex justify-between font-semibold">
                 <span>Total:</span>
                 <span>{formatCurrency(data.total)}</span>
@@ -141,15 +141,15 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
         {viewMode === 'country' && (
           <div className="space-y-1">
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Avg Total:</span>
+              <span className="text-muted-foreground">Avg Total:</span>
               <span className="font-medium">{formatCurrency(data.averageTotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Programs:</span>
+              <span className="text-muted-foreground">Programs:</span>
               <span className="font-medium">{data.programCount}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Scholarships:</span>
+              <span className="text-muted-foreground">Scholarships:</span>
               <span className="font-medium">{data.scholarshipPrograms}</span>
             </div>
           </div>
@@ -158,14 +158,14 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
         {viewMode === 'scholarship' && (
           <div className="space-y-1">
             <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Original:</span>
+              <span className="text-muted-foreground">Original:</span>
               <span className="font-medium">{formatCurrency(data.originalTotal)}</span>
             </div>
-            <div className="flex justify-between text-green-600 dark:text-green-400">
+            <div className="flex justify-between text-chart-1">
               <span>Savings:</span>
               <span className="font-medium">-{formatCurrency(data.savings)}</span>
             </div>
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-1 mt-1">
+            <div className="border-t border-border pt-1 mt-1">
               <div className="flex justify-between font-semibold">
                 <span>Final Cost:</span>
                 <span>{formatCurrency(data.adjustedTotal)}</span>
@@ -178,8 +178,8 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
           <div className={cn(
             "text-xs mt-2 px-2 py-1 rounded",
             data.affordable 
-              ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
-              : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
+              ? "bg-chart-1/10 text-chart-1"
+              : "bg-destructive/10 text-destructive"
           )}>
             {data.affordable ? '✅ Within Budget' : '⚠️ Over Budget'}
           </div>
@@ -253,7 +253,7 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
   const renderChart = () => {
     if (chartData.length === 0) {
       return (
-        <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
           <div className="text-center">
             <BarChart3Icon className="w-12 h-12 mx-auto mb-2 opacity-50" />
             <p>No data available for visualization</p>
@@ -312,13 +312,13 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
                 tickFormatter={(value) => formatNGN(value, { compact: true, includeSymbol: false })}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Line 
-                type="monotone" 
+              <Line
+                type="monotone"
                 dataKey={viewMode === 'scholarship' ? 'adjustedTotal' : viewMode === 'country' ? 'averageTotal' : 'total'}
-                stroke="#4f46e5"
+                stroke="hsl(var(--chart-2))"
                 strokeWidth={3}
-                dot={{ fill: '#4f46e5', strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6, stroke: '#4f46e5', strokeWidth: 2 }}
+                dot={{ fill: 'hsl(var(--chart-2))', strokeWidth: 2, r: 4 }}
+                activeDot={{ r: 6, stroke: 'hsl(var(--chart-2))', strokeWidth: 2 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -345,20 +345,20 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
               
               {viewMode === 'breakdown' ? (
                 <>
-                  <Bar dataKey="tuition" stackId="cost" fill="#4f46e5" name="Tuition" />
-                  <Bar dataKey="living" stackId="cost" fill="#10b981" name="Living" />
-                  <Bar dataKey="visa" stackId="cost" fill="#f59e0b" name="Visa" />
-                  <Bar dataKey="application" stackId="cost" fill="#ef4444" name="Application" />
+                  <Bar dataKey="tuition" stackId="cost" fill="hsl(var(--chart-2))" name="Tuition" />
+                  <Bar dataKey="living" stackId="cost" fill="hsl(var(--chart-1))" name="Living" />
+                  <Bar dataKey="visa" stackId="cost" fill="hsl(var(--chart-3))" name="Visa" />
+                  <Bar dataKey="application" stackId="cost" fill="hsl(var(--destructive))" name="Application" />
                 </>
               ) : viewMode === 'scholarship' ? (
                 <>
-                  <Bar dataKey="originalTotal" fill="#ef4444" name="Original Cost" />
-                  <Bar dataKey="adjustedTotal" fill="#10b981" name="With Scholarship" />
+                  <Bar dataKey="originalTotal" fill="hsl(var(--destructive))" name="Original Cost" />
+                  <Bar dataKey="adjustedTotal" fill="hsl(var(--chart-1))" name="With Scholarship" />
                 </>
               ) : (
-                <Bar 
+                <Bar
                   dataKey={viewMode === 'country' ? 'averageTotal' : 'total'}
-                  fill="#4f46e5"
+                  fill="hsl(var(--chart-2))"
                   name="Total Cost"
                 />
               )}
@@ -375,10 +375,10 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
   if (error) {
     return (
       <div className={cn(
-        "bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6",
+        "bg-card rounded-lg border border-border p-6",
         className
       )}>
-        <div className="text-center text-red-600 dark:text-red-400">
+        <div className="text-center text-destructive">
           <p>Error loading cost data: {error}</p>
         </div>
       </div>
@@ -387,17 +387,17 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
 
   return (
     <div className={cn(
-      "bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6",
+      "bg-card rounded-lg border border-border p-4 sm:p-6",
       className
     )}>
       {/* Header with controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <BarChart3Icon className="w-5 h-5 text-indigo-600" />
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <BarChart3Icon className="w-5 h-5 text-primary" />
             Cost Comparison
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Interactive cost analysis across programs and countries
           </p>
         </div>
@@ -406,14 +406,14 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
         <div className="flex items-center space-x-2">
           <button
             onClick={() => handleExport({ format: 'png', title: 'Cost Analysis Chart', includeData: false })}
-            className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
+            className="px-3 py-2 text-sm bg-muted text-foreground rounded-md hover:bg-muted/80 transition-colors flex items-center gap-2"
           >
             <DownloadIcon className="w-4 h-4" />
             PNG
           </button>
           <button
             onClick={() => handleExport({ format: 'pdf', title: 'Cost Analysis Report', includeData: true })}
-            className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
+            className="px-3 py-2 text-sm bg-muted text-foreground rounded-md hover:bg-muted/80 transition-colors flex items-center gap-2"
           >
             <DownloadIcon className="w-4 h-4" />
             PDF
@@ -425,10 +425,10 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {/* Chart Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Chart Type
           </label>
-          <div className="flex rounded-md border border-gray-300 dark:border-gray-600">
+          <div className="flex rounded-md border border-border">
             {[
               { type: 'bar' as ChartType, icon: BarChart3Icon, label: 'Bar' },
               { type: 'pie' as ChartType, icon: PieChartIcon, label: 'Pie' },
@@ -440,8 +440,8 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
                 className={cn(
                   "flex-1 px-3 py-2 text-sm font-medium transition-colors flex items-center justify-center gap-1",
                   chartType === type
-                    ? "bg-indigo-600 text-white"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card text-foreground hover:bg-muted"
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -453,13 +453,13 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
 
         {/* View Mode */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             View Mode
           </label>
           <select
             value={viewMode}
             onChange={(e) => setViewMode(e.target.value as ViewMode)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+            className="w-full px-3 py-2 border border-border rounded-md bg-white dark:bg-gray-700 text-foreground text-sm"
           >
             <option value="total">Total Cost</option>
             <option value="breakdown">Cost Breakdown</option>
@@ -470,10 +470,10 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
 
         {/* Quick Stats */}
         <div className="space-y-1">
-          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="text-sm font-medium text-foreground">
             Quick Stats
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+          <div className="text-xs text-muted-foreground space-y-1">
             <div>Programs: {costBreakdowns.length}</div>
             <div>Countries: {countryComparisons.length}</div>
             <div>Avg Cost: {formatNGN(costBreakdowns.reduce((sum, item) => sum + item.total, 0) / (costBreakdowns.length || 1), { compact: true })}</div>
@@ -488,8 +488,8 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
 
       {/* Insights */}
       {getCostInsights().length > 0 && (
-        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+        <div className="mt-6 pt-4 border-t border-border">
+          <h4 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
             <InfoIcon className="w-4 h-4" />
             Cost Insights
           </h4>
@@ -497,20 +497,20 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
             {getCostInsights().slice(0, 4).map((insight, index) => (
               <div 
                 key={index}
-                className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600"
+                className="p-3 bg-muted/50 rounded-md border border-border"
               >
                 <div className="flex items-start space-x-2">
-                  <div className="text-indigo-600 dark:text-indigo-400 mt-0.5">
+                  <div className="text-primary dark:text-indigo-400 mt-0.5">
                     {insight.type === 'cost_breakdown' && <DollarSignIcon className="w-4 h-4" />}
                     {insight.type === 'country_comparison' && <GlobeIcon className="w-4 h-4" />}
                     {insight.type === 'scholarships' && <TrophyIcon className="w-4 h-4" />}
                     {insight.type === 'budget_efficient' && <TrendingUpIcon className="w-4 h-4" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-foreground">
                       {insight.message}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {insight.detail}
                     </p>
                   </div>
@@ -522,7 +522,7 @@ export const CostComparisonChart: React.FC<{ className?: string }> = ({ classNam
       )}
 
       {/* Mobile optimization note */}
-      <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
+      <div className="mt-4 text-xs text-muted-foreground text-center">
         💡 Tip: Use two fingers to zoom on charts for better detail viewing on mobile
       </div>
     </div>
