@@ -127,8 +127,8 @@ export const ProgramRecommendationsWidget: React.FC<{ className?: string }> = ({
       </div>
 
       {/* Recommendations Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {topMatches.slice(0, 4).map((program: Program, index: number) => {
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {topMatches.slice(0, 3).map((program: Program, index: number) => {
           const matchPercentage = calculateMatchPercentage(program, index)
           const matchBadgeColor = getMatchBadgeColor(matchPercentage)
 

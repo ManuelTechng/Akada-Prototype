@@ -40,16 +40,16 @@ export default function FigmaDashboard() {
           <RecentActivitiesWidget />
         </div>
 
+        {/* Program Recommendations */}
+        <div className="grid grid-cols-1">
+          <ProgramRecommendationsWidget />
+        </div>
+
         {/* Application Timeline | Cost Analysis | Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
           <ApplicationWidget />
           <CostAnalysisWidget />
           <QuickActionsWidget />
-        </div>
-
-        {/* Program Recommendations */}
-        <div className="grid grid-cols-1">
-          <ProgramRecommendationsWidget />
         </div>
 
         {/* Footer */}
