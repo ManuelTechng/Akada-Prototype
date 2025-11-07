@@ -91,6 +91,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   const isDarkTheme = theme === 'dark';
 
+  // Debug logging for tab visibility changes
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (import.meta.env.DEV) {
+        console.log('[Debug] Tab visibility changed:', document.hidden ? 'hidden' : 'visible');
+        console.log('[Debug] Timestamp:', new Date().toISOString());
+        console.log('[Debug] Loading state:', loading);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [loading]);
+
   if (loading && !initialized) {
     return <LoadingSpinner />;
   }
@@ -100,14 +114,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div
-      className={cn(
-        'relative flex h-screen overflow-hidden transition-colors duration-500',
-        isDarkTheme
-          ? 'bg-[#0A0E1A] text-gray-100'
-          : 'bg-[#F5F6FA] text-slate-900'
-      )}
-    >
+    <div className="relative flex h-screen overflow-hidden transition-colors duration-500 bg-background text-foreground">
       {/* Background Effects */}
       <div
         className={cn(
@@ -196,7 +203,7 @@ function AppRoutes() {
   if (loading && !initialized) {
     console.log("AppRoutes: Showing loading UI");
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex items-center justify-center h-screen bg-background">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading...</p>

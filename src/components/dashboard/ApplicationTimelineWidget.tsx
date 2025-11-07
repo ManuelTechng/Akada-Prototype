@@ -67,39 +67,39 @@ const getUrgencyLevel = (daysLeft: number, status: string) => {
 const getStatusConfig = (status: string) => {
   const configs = {
     planning: { 
-      color: 'bg-gray-500', 
-      textColor: 'text-gray-700 dark:text-gray-300',
-      bgColor: 'bg-gray-50 dark:bg-gray-800',
+      color: 'bg-muted0', 
+      textColor: 'text-foreground ',
+      bgColor: 'bg-muted ',
       label: 'Planning' 
     },
     submitted: { 
-      color: 'bg-blue-500', 
-      textColor: 'text-blue-700 dark:text-blue-300',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+      color: 'bg-chart-2', 
+      textColor: 'text-chart-2',
+      bgColor: 'bg-chart-2/10',
       label: 'Submitted' 
     },
     'in-review': { 
-      color: 'bg-yellow-500', 
-      textColor: 'text-yellow-700 dark:text-yellow-300',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+      color: 'bg-chart-3', 
+      textColor: 'text-chart-3',
+      bgColor: 'bg-chart-3/10',
       label: 'In Review' 
     },
     accepted: { 
       color: 'bg-green-500', 
       textColor: 'text-green-700 dark:text-green-300',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
+      bgColor: 'bg-chart-1/10',
       label: 'Accepted' 
     },
     rejected: { 
       color: 'bg-red-500', 
       textColor: 'text-red-700 dark:text-red-300',
-      bgColor: 'bg-red-50 dark:bg-red-900/20',
+      bgColor: 'bg-destructive/10',
       label: 'Rejected' 
     },
     deferred: { 
-      color: 'bg-orange-500', 
-      textColor: 'text-orange-700 dark:text-orange-300',
-      bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+      color: 'bg-chart-3', 
+      textColor: 'text-chart-3',
+      bgColor: 'bg-chart-3/10',
       label: 'Deferred' 
     }
   }
@@ -115,7 +115,7 @@ const getUrgencyConfig = (urgencyLevel: string) => {
     overdue: {
       borderColor: 'border-red-300 dark:border-red-600',
       bgColor: 'bg-red-50 dark:bg-red-900/10',
-      iconColor: 'text-red-600 dark:text-red-400',
+      iconColor: 'text-destructive',
       badgeColor: 'bg-red-500 text-white',
       label: 'OVERDUE',
       icon: AlertTriangleIcon,
@@ -123,27 +123,27 @@ const getUrgencyConfig = (urgencyLevel: string) => {
     },
     urgent: {
       borderColor: 'border-orange-300 dark:border-orange-600',
-      bgColor: 'bg-orange-50 dark:bg-orange-900/10',
-      iconColor: 'text-orange-600 dark:text-orange-400',
-      badgeColor: 'bg-orange-500 text-white',
+      bgColor: 'bg-chart-3/10',
+      iconColor: 'text-chart-3',
+      badgeColor: 'bg-chart-3 text-white',
       label: 'URGENT',
       icon: ClockIcon,
       priority: 3
     },
     upcoming: {
       borderColor: 'border-yellow-300 dark:border-yellow-600',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/10',
-      iconColor: 'text-yellow-600 dark:text-yellow-400',
-      badgeColor: 'bg-yellow-500 text-white',
+      bgColor: 'bg-chart-3/10',
+      iconColor: 'text-chart-3',
+      badgeColor: 'bg-chart-3 text-white',
       label: 'UPCOMING',
       icon: CalendarIcon,
       priority: 2
     },
     future: {
-      borderColor: 'border-gray-200 dark:border-gray-700',
-      bgColor: 'bg-white dark:bg-gray-800',
-      iconColor: 'text-gray-500 dark:text-gray-400',
-      badgeColor: 'bg-gray-500 text-white',
+      borderColor: 'border-border',
+      bgColor: 'bg-card',
+      iconColor: 'text-muted-foreground',
+      badgeColor: 'bg-muted0 text-white',
       label: 'SCHEDULED',
       icon: CalendarIcon,
       priority: 1
@@ -151,7 +151,7 @@ const getUrgencyConfig = (urgencyLevel: string) => {
     completed: {
       borderColor: 'border-green-200 dark:border-green-700',
       bgColor: 'bg-green-50 dark:bg-green-900/10',
-      iconColor: 'text-green-600 dark:text-green-400',
+      iconColor: 'text-chart-1',
       badgeColor: 'bg-green-500 text-white',
       label: 'COMPLETED',
       icon: CheckCircleIcon,
@@ -244,7 +244,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline, className }) 
   return (
     <div className={cn(
       'flex items-center space-x-1 text-sm font-medium',
-      isUrgent ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400',
+      isUrgent ? 'text-destructive' : 'text-muted-foreground',
       className
     )}>
       <ClockIcon className={cn(
@@ -312,13 +312,13 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <h4 className={cn(
-            'font-semibold text-gray-900 dark:text-white truncate',
+            'font-semibold text-foreground truncate',
             isCompact ? 'text-sm' : 'text-base'
           )}>
             {program.name}
           </h4>
           <p className={cn(
-            'text-gray-600 dark:text-gray-400 truncate',
+            'text-muted-foreground truncate',
             isCompact ? 'text-xs' : 'text-sm'
           )}>
             {program.university}, {program.country}
@@ -339,7 +339,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       {/* Timeline info */}
       <div className="flex items-center justify-between text-sm">
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400">
+          <div className="flex items-center space-x-1 text-muted-foreground">
             <CalendarIcon className="w-4 h-4" />
             <span>Due: {formatNigerianDate(application.deadline)}</span>
           </div>
@@ -351,7 +351,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
       {/* Application fee (if available) */}
       {program.application_fee && (
-        <div className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="text-sm text-muted-foreground">
           Application fee: {formatNGN(program.application_fee)}
         </div>
       )}
@@ -359,16 +359,16 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       {/* Time remaining display */}
       <div className={cn(
         'text-sm font-medium',
-        urgencyLevel === 'overdue' ? 'text-red-600 dark:text-red-400' :
-        urgencyLevel === 'urgent' ? 'text-orange-600 dark:text-orange-400' :
-        'text-gray-600 dark:text-gray-400'
+        urgencyLevel === 'overdue' ? 'text-destructive' :
+        urgencyLevel === 'urgent' ? 'text-chart-3' :
+        'text-muted-foreground'
       )}>
         {formatTimeUntilDeadline(daysLeft)}
       </div>
 
       {/* Notes (if any) */}
       {application.notes && !isCompact && (
-        <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded p-2">
+        <div className="text-sm text-muted-foreground bg-muted  rounded p-2">
           <strong>Notes:</strong> {application.notes}
         </div>
       )}
@@ -379,8 +379,8 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           onClick={() => onViewDetails(application.id)}
           className={cn(
             'inline-flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium',
-            'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
-            'hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors',
+            'bg-muted  text-foreground ',
+            'hover:bg-muted  transition-colors',
             isCompact && 'px-2 py-1 text-xs'
           )}
         >
@@ -395,7 +395,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
               'inline-flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium',
               urgencyLevel === 'urgent' || urgencyLevel === 'overdue' 
                 ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white',
+                : 'bg-primary hover:bg-primary/90 text-white',
               'transition-colors',
               isCompact && 'px-2 py-1 text-xs'
             )}
@@ -410,7 +410,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
             onClick={() => onSetReminder(application.id)}
             className={cn(
               'inline-flex items-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium',
-              'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300',
+              'bg-yellow-100 dark:bg-yellow-900/20 text-chart-3',
               'hover:bg-yellow-200 dark:hover:bg-yellow-900/30 transition-colors',
               isCompact && 'px-2 py-1 text-xs'
             )}
@@ -430,20 +430,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
 const EmptyState: React.FC<{ onBrowsePrograms: () => void }> = ({ onBrowsePrograms }) => (
   <div className="text-center py-12 px-4">
-    <div className="mx-auto w-24 h-24 mb-4 text-gray-400 dark:text-gray-600">
+    <div className="mx-auto w-24 h-24 mb-4 text-muted-foreground ">
       <BookOpenIcon className="w-full h-full" />
     </div>
-    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+    <h3 className="text-lg font-semibold text-foreground mb-2">
       Start Your Journey!
     </h3>
-    <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
+    <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
       Track your applications and never miss a deadline. Begin by saving programs that interest you.
     </p>
     <button
       onClick={onBrowsePrograms}
       className={cn(
         'inline-flex items-center space-x-2 px-6 py-3 rounded-md font-medium',
-        'bg-indigo-600 text-white hover:bg-indigo-700',
+        'bg-primary text-white hover:bg-primary/90',
         'transition-colors duration-200'
       )}
     >
@@ -453,20 +453,20 @@ const EmptyState: React.FC<{ onBrowsePrograms: () => void }> = ({ onBrowseProgra
     
     {/* Quick tips */}
     <div className="mt-8 text-left max-w-md mx-auto">
-      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+      <h4 className="text-sm font-semibold text-foreground  mb-3">
         Getting Started Tips:
       </h4>
-      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+      <ul className="space-y-2 text-sm text-muted-foreground">
         <li className="flex items-start space-x-2">
-          <span className="text-indigo-500 mt-0.5">•</span>
+          <span className="text-primary mt-0.5">•</span>
           <span>Save programs that match your interests and budget</span>
         </li>
         <li className="flex items-start space-x-2">
-          <span className="text-indigo-500 mt-0.5">•</span>
+          <span className="text-primary mt-0.5">•</span>
           <span>Set realistic deadlines to stay organized</span>
         </li>
         <li className="flex items-start space-x-2">
-          <span className="text-indigo-500 mt-0.5">•</span>
+          <span className="text-primary mt-0.5">•</span>
           <span>Apply early to increase your chances of acceptance</span>
         </li>
       </ul>
@@ -576,19 +576,19 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
   if (error) {
     return (
       <div className={cn(
-        'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-center',
+        'bg-card rounded-lg border border-border p-6 text-center',
         className
       )}>
         <XCircleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        <h3 className="text-lg font-semibold text-foreground mb-2">
           Failed to Load Timeline
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
+        <p className="text-muted-foreground mb-4">
           {error}
         </p>
         <button
           onClick={handleRefresh}
-          className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+          className="inline-flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
         >
           <RefreshCwIcon className="w-4 h-4" />
           <span>Try Again</span>
@@ -600,15 +600,15 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
   // Main widget content
   return (
     <div className={cn(
-      'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 space-y-4',
+      'bg-card rounded-lg border border-border p-4 sm:p-6 space-y-4',
       'transition-all duration-300 hover:shadow-md',
       className
     )}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <CalendarIcon className="w-5 h-5 text-indigo-500" />
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <CalendarIcon className="w-5 h-5 text-primary" />
             <span>Application Timeline</span>
             {timelineData?.urgentCount !== undefined && timelineData.urgentCount > 0 && (
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
@@ -616,7 +616,7 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
               </span>
             )}
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Track deadlines and never miss an opportunity
           </p>
         </div>
@@ -624,8 +624,8 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
           onClick={handleRefresh}
           disabled={isRefreshing}
           className={cn(
-            'p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
-            'hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors',
+            'p-2 rounded-md text-muted-foreground hover:text-foreground',
+            'hover:bg-muted dark:hover:bg-gray-700 transition-colors',
             isRefreshing && 'animate-spin'
           )}
           title="Refresh timeline"
@@ -636,7 +636,7 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
 
       {/* View mode tabs */}
       {processedApplications.length > 0 && (
-        <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+        <div className="flex items-center space-x-1 bg-muted  p-1 rounded-lg">
           {[
             { key: 'all', label: 'All', count: processedApplications.length },
             { key: 'urgent', label: 'Urgent', count: processedApplications.filter(app => app.urgencyLevel === 'urgent' || app.urgencyLevel === 'overdue').length },
@@ -648,8 +648,8 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
               className={cn(
                 'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                 viewMode === tab.key
-                  ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-card text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               {tab.label}
@@ -657,8 +657,8 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
                 <span className={cn(
                   'ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs',
                   viewMode === tab.key
-                    ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400'
-                    : 'bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-400'
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-muted text-muted-foreground'
                 )}>
                   {tab.count}
                 </span>
@@ -677,16 +677,16 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
               className={cn(
                 'p-3 rounded-md border-l-4 text-sm',
                 insight.priority === 'high' ? 'border-red-500 bg-red-50 dark:bg-red-900/10' :
-                insight.priority === 'medium' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/10' :
-                'border-blue-500 bg-blue-50 dark:bg-blue-900/10'
+                insight.priority === 'medium' ? 'border-yellow-500 bg-chart-3/10' :
+                'border-chart-2 bg-chart-2/10'
               )}
             >
               <div className="flex items-start space-x-2">
                 <div className={cn(
                   'mt-0.5',
-                  insight.priority === 'high' ? 'text-red-600 dark:text-red-400' :
-                  insight.priority === 'medium' ? 'text-yellow-600 dark:text-yellow-400' :
-                  'text-blue-600 dark:text-blue-400'
+                  insight.priority === 'high' ? 'text-destructive' :
+                  insight.priority === 'medium' ? 'text-chart-3' :
+                  'text-chart-2'
                 )}>
                   {insight.type === 'urgent' || insight.type === 'overdue' ? (
                     <AlertTriangleIcon className="w-4 h-4" />
@@ -707,9 +707,9 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
                   </p>
                   <p className={cn(
                     'mt-1 text-xs',
-                    insight.priority === 'high' ? 'text-red-600 dark:text-red-400' :
-                    insight.priority === 'medium' ? 'text-yellow-600 dark:text-yellow-400' :
-                    'text-blue-600 dark:text-blue-400'
+                    insight.priority === 'high' ? 'text-destructive' :
+                    insight.priority === 'medium' ? 'text-chart-3' :
+                    'text-chart-2'
                   )}>
                     {insight.action}
                   </p>
@@ -727,8 +727,8 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
             <EmptyState onBrowsePrograms={handleBrowsePrograms} />
           ) : (
             <div className="text-center py-8">
-              <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 dark:text-gray-400">
+              <CalendarIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground">
                 No applications match the current filter.
               </p>
               <button
@@ -755,13 +755,13 @@ export const ApplicationTimelineWidget: React.FC<{ className?: string }> = ({ cl
 
       {/* Footer with next deadline summary */}
       {timelineData?.nextDeadline && (
-        <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="pt-4 border-t border-border">
           <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
+            <div className="flex items-center space-x-2 text-muted-foreground">
               <ClockIcon className="w-4 h-4" />
               <span>Next deadline: {timelineData.nextDeadline.programs?.name}</span>
             </div>
-            <div className="font-medium text-gray-900 dark:text-white">
+            <div className="font-medium text-foreground">
               {formatTimeUntilDeadline(getDaysUntilDeadline(timelineData.nextDeadline.deadline))}
             </div>
           </div>

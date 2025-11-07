@@ -49,7 +49,7 @@ export const useSavedPrograms = (userId?: string) => {
         count: data?.length || 0 
       });
 
-      setSavedPrograms(data || []);
+      setSavedPrograms((data || []) as any as SavedProgram[]);
     } catch (error) {
       logger.error('Error fetching saved programs', { userId, error });
       setError('Failed to fetch saved programs');

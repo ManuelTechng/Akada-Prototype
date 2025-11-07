@@ -12,16 +12,16 @@ export interface RecommendationCategory {
 }
 
 export interface UserPreferences {
-  budget_range?: [number, number]
-  countries?: string[]
-  degree_type?: string[]
-  specialization?: string[]
-  duration?: string[]
-  study_level?: string
-  language_preference?: string
-  scholarship_needed?: boolean
-  preferred_cities?: string[]
-  goals?: string
+  budget_range?: [number, number] | number | null
+  countries?: string[] | null
+  degree_type?: string[] | null
+  specialization?: string[] | null
+  duration?: string[] | string | null
+  study_level?: string | null
+  language_preference?: string | null
+  scholarship_needed?: boolean | null
+  preferred_cities?: string[] | null
+  goals?: string | null
 }
 
 export interface UserBehavior {
@@ -172,7 +172,10 @@ async function calculateAdvancedMatchScore(
   // Language preference (5% weight) - New factor
   if (preferences.language_preference && program.language_requirements) {
     factors++
-    if (program.language_requirements.toLowerCase().includes(preferences.language_preference.toLowerCase())) {
+    const langReq = typeof program.language_requirements === 'string'
+      ? program.language_requirements
+      : JSON.stringify(program.language_requirements)
+    if (langReq.toLowerCase().includes(preferences.language_preference.toLowerCase())) {
       score += 5
       reasons.push(`Matches your language preference: ${preferences.language_preference}`)
     }
@@ -225,7 +228,7 @@ async function calculateAdvancedMatchScore(
   let category = 'general'
   if (score >= 90) {
     category = 'perfect-match'
-  } else if (score >= 80 && preferences.budget_range && program.tuition_fee && program.tuition_fee <= preferences.budget_range[1]) {
+  } else if (score >= 80 && preferences.budget_range && program.tuition_fee && Array.isArray(preferences.budget_range) && program.tuition_fee <= preferences.budget_range[1]) {
     category = 'budget-friendly'
   } else if (score >= 75 && program.scholarship_available) {
     category = 'rising-stars'
@@ -313,10 +316,10 @@ async function getSpecializationInterest(savedProgramIds: string[]): Promise<str
       .in('id', savedProgramIds)
       .not('specialization', 'is', null)
 
-    const specializations = programs
+    const specializations: string[] = programs
       ?.map(p => p.specialization?.split(',').map((s: string) => s.trim()))
       .flat()
-      .filter(Boolean) || []
+      .filter((s): s is string => Boolean(s)) || []
 
     return [...new Set(specializations)]
   } catch {
@@ -339,9 +342,11 @@ async function getUserBehavior(userId: string): Promise<UserBehavior> {
     ])
 
     return {
-      viewed_programs: viewedPrograms.data?.viewed_programs || [],
-      saved_programs: savedPrograms.data?.map(sp => sp.program_id) || [],
-      applied_programs: appliedPrograms.data?.map(ap => ap.program_id) || [],
+      viewed_programs: Array.isArray((viewedPrograms.data?.viewed_programs as any))
+        ? (viewedPrograms.data?.viewed_programs as string[])
+        : [],
+      saved_programs: savedPrograms.data?.map(sp => sp.program_id).filter((id): id is string => id !== null) || [],
+      applied_programs: appliedPrograms.data?.map(ap => ap.program_id).filter((id): id is string => id !== null) || [],
       search_history: [], // This would need to be tracked separately
       time_spent: {} // This would need to be tracked separately
     }
@@ -430,10 +435,11 @@ export async function fetchPersonalizedRecommendations(
     }
 
     // Budget-Friendly Options (80%+ match, under budget)
-    const budgetFriendly = programMatches.filter(p => 
-      p.matchScore >= 80 && 
-      preferences.budget_range && 
-      p.program.tuition_fee && 
+    const budgetFriendly = programMatches.filter(p =>
+      p.matchScore >= 80 &&
+      preferences.budget_range &&
+      Array.isArray(preferences.budget_range) &&
+      p.program.tuition_fee &&
       p.program.tuition_fee <= preferences.budget_range[1]
     )
     if (budgetFriendly.length > 0) {
@@ -444,7 +450,7 @@ export async function fetchPersonalizedRecommendations(
         icon: 'DollarSign',
         programs: budgetFriendly.slice(0, 4).map(p => p.program),
         matchPercentage: Math.round(budgetFriendly.reduce((sum, p) => sum + p.matchScore, 0) / budgetFriendly.length),
-        reason: `These programs fit your ₦${preferences.budget_range?.[1]?.toLocaleString() || 'budget'} budget while maintaining quality`
+        reason: `These programs fit your ₦${Array.isArray(preferences.budget_range) ? preferences.budget_range[1]?.toLocaleString() : 'budget'} budget while maintaining quality`
       })
     }
 
@@ -594,16 +600,16 @@ export async function getUserRecommendations(userId: string): Promise<Recommenda
     }
 
     const userPrefs: UserPreferences = {
-      budget_range: preferences.budget_range,
-      countries: preferences.countries,
-      degree_type: preferences.degree_type,
-      specialization: preferences.specialization,
-      duration: preferences.duration,
-      study_level: preferences.study_level,
-      language_preference: preferences.language_preference,
-      scholarship_needed: preferences.scholarship_needed,
-      preferred_cities: preferences.preferred_cities,
-      goals: preferences.goals
+      budget_range: preferences.budget_range || undefined,
+      countries: preferences.countries || undefined,
+      degree_type: undefined, // Not in user_preferences table
+      specialization: preferences.specializations || undefined,
+      duration: preferences.preferred_duration || undefined,
+      study_level: preferences.study_level || undefined,
+      language_preference: preferences.language_preference || undefined,
+      scholarship_needed: preferences.scholarship_needed || undefined,
+      preferred_cities: preferences.preferred_cities || undefined,
+      goals: preferences.goals || undefined
     }
 
     return fetchPersonalizedRecommendations(userPrefs, userId)
@@ -645,23 +651,23 @@ export async function getProgramMatchDetails(
     }
 
     const userPrefs: UserPreferences = {
-      budget_range: preferences.budget_range,
-      countries: preferences.countries,
-      degree_type: preferences.degree_type,
-      specialization: preferences.specialization,
-      duration: preferences.duration,
-      study_level: preferences.study_level,
-      language_preference: preferences.language_preference,
-      scholarship_needed: preferences.scholarship_needed,
-      preferred_cities: preferences.preferred_cities,
-      goals: preferences.goals
+      budget_range: preferences.budget_range || undefined,
+      countries: preferences.countries || undefined,
+      degree_type: undefined, // Not in user_preferences table
+      specialization: preferences.specializations || undefined,
+      duration: preferences.preferred_duration || undefined,
+      study_level: preferences.study_level || undefined,
+      language_preference: preferences.language_preference || undefined,
+      scholarship_needed: preferences.scholarship_needed || undefined,
+      preferred_cities: preferences.preferred_cities || undefined,
+      goals: preferences.goals || undefined
     }
 
     // Get user behavior
     const behavior = await getUserBehavior(userId)
 
     // Calculate match details
-    return await calculateAdvancedMatchScore(program, userPrefs, behavior)
+    return await calculateAdvancedMatchScore(program as any as Program, userPrefs, behavior)
 
   } catch (error) {
     console.error('Error getting program match details:', error)

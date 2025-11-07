@@ -1,0 +1,366 @@
+
+> project@0.0.0 build
+> tsc && vite build
+
+src/components/app/ApplicationTracker.tsx(671,26): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/components/app/ApplicationTracker.tsx(683,23): error TS2345: Argument of type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { application_deadline: string | null; ... 35 more ...; website: string | null; }; }[]' is not assignable to parameter of type 'SetStateAction<Application[]>'.
+  Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { application_deadline: string | null; ... 35 more ...; website: string | null; }; }[]' is not assignable to type 'Application[]'.
+    Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { application_deadline: string | null; ... 35 more ...; website: string | null; }; }' is not assignable to type 'Application'.
+      Types of property 'status' are incompatible.
+        Type 'string' is not assignable to type '"planning" | "submitted" | "accepted" | "rejected" | "deferred" | "in-review" | "in-progress"'.
+src/components/app/ApplicationTracker.tsx(702,11): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: { created_at?: string | null | undefined; deadline?: string | null | undefined; id?: string | undefined; notes?: string | null | undefined; program_id: string; status?: string | undefined; updated_at?: string | ... 1 more ... | undefined; user_id: string; }, options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+  Overload 2 of 2, '(values: { created_at?: string | null | undefined; deadline?: string | null | undefined; id?: string | undefined; notes?: string | null | undefined; program_id: string; status?: string | undefined; updated_at?: string | ... 1 more ... | undefined; user_id: string; }[], options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Object literal may only specify known properties, and 'user_id' does not exist in type '{ created_at?: string | null | undefined; deadline?: string | null | undefined; id?: string | undefined; notes?: string | null | undefined; program_id: string; status?: string | undefined; updated_at?: string | ... 1 more ... | undefined; user_id: string; }[]'.
+src/components/app/ApplicationTracker.tsx(758,24): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/components/app/Dashboard.tsx(83,22): error TS2345: Argument of type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }[]' is not assignable to parameter of type 'SetStateAction<Program[]>'.
+  Type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }[]' is not assignable to type 'Program[]'.
+    Type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }' is not assignable to type 'Program'.
+      Types of property 'tuition_fee_currency' are incompatible.
+        Type 'string | null' is not assignable to type 'string | undefined'.
+          Type 'null' is not assignable to type 'string | undefined'.
+src/components/DocumentUpload.tsx(42,43): error TS2554: Expected 0 arguments, but got 1.
+src/components/DocumentUpload.tsx(111,47): error TS2554: Expected 0 arguments, but got 3.
+src/components/DocumentUpload.tsx(177,28): error TS2554: Expected 0 arguments, but got 2.
+src/components/DocumentUpload.tsx(196,30): error TS2554: Expected 0 arguments, but got 2.
+src/hooks/useApplications.ts(66,23): error TS2345: Argument of type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }[]' is not assignable to parameter of type 'SetStateAction<Application[]>'.
+  Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }[]' is not assignable to type 'Application[]'.
+    Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+      Types of property 'status' are incompatible.
+        Type 'string' is not assignable to type '"planning" | "submitted" | "accepted" | "rejected" | "deferred" | "in-review" | "in-progress"'.
+src/hooks/useDashboard.ts(181,35): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/hooks/useDashboard.ts(186,35): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/hooks/useDashboard.ts(200,35): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/hooks/useProgramCurrency.ts(69,43): error TS2339: Property 'tuition_fee_currency' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(70,47): error TS2339: Property 'application_fee_currency' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(76,59): error TS2339: Property 'tuition_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(79,25): error TS2339: Property 'tuition_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(89,63): error TS2339: Property 'application_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(92,25): error TS2339: Property 'application_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(103,9): error TS2698: Spread types may only be created from object types.
+src/hooks/useProgramCurrency.ts(194,45): error TS2339: Property 'tuition_fee_currency' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(195,49): error TS2339: Property 'application_fee_currency' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(201,61): error TS2339: Property 'tuition_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(204,27): error TS2339: Property 'tuition_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(209,79): error TS2339: Property 'id' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(213,65): error TS2339: Property 'application_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(216,27): error TS2339: Property 'application_fee_original' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(221,87): error TS2339: Property 'id' does not exist on type 'SelectQueryError<"column 'currency_source' does not exist on 'programs'.">'.
+src/hooks/useProgramCurrency.ts(226,11): error TS2698: Spread types may only be created from object types.
+src/hooks/useProgramMatching.ts(82,26): error TS2345: Argument of type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }[]' is not assignable to parameter of type 'SetStateAction<Program[]>'.
+  Type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }[]' is not assignable to type 'Program[]'.
+    Type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }' is missing the following properties from type 'Program': field_of_study, currency, updated_at
+src/hooks/useSavedPrograms.ts(52,24): error TS2345: Argument of type '{ id: string; notes: string | null; program_id: string | null; saved_at: string | null; user_id: string | null; program: { application_deadline: string | null; application_deadlines: Json; ... 34 more ...; website: string | null; } | null; }[]' is not assignable to parameter of type 'SetStateAction<SavedProgram[]>'.
+  Type '{ id: string; notes: string | null; program_id: string | null; saved_at: string | null; user_id: string | null; program: { application_deadline: string | null; application_deadlines: Json; ... 34 more ...; website: string | null; } | null; }[]' is not assignable to type 'SavedProgram[]'.
+    Type '{ id: string; notes: string | null; program_id: string | null; saved_at: string | null; user_id: string | null; program: { application_deadline: string | null; application_deadlines: Json; ... 34 more ...; website: string | null; } | null; }' is not assignable to type 'SavedProgram'.
+      Types of property 'user_id' are incompatible.
+        Type 'string | null' is not assignable to type 'string'.
+          Type 'null' is not assignable to type 'string'.
+src/lib/__tests__/PreferenceDataConsistency.integration.test.ts(259,40): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/__tests__/PreferenceDataConsistency.integration.test.ts(276,17): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/__tests__/PreferenceDataConsistency.integration.test.ts(293,17): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/__tests__/PreferenceDataConsistency.integration.test.ts(310,17): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/__tests__/PreferenceDataConsistency.integration.test.ts(388,32): error TS2698: Spread types may only be created from object types.
+src/lib/application.ts(95,5): error TS2322: Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }[]' is not assignable to type 'Application[]'.
+  Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+    Types of property 'status' are incompatible.
+      Type 'string' is not assignable to type '"planning" | "in_progress" | "submitted" | "accepted" | "rejected"'.
+src/lib/application.ts(135,5): error TS2322: Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+  Types of property 'status' are incompatible.
+    Type 'string' is not assignable to type '"planning" | "in_progress" | "submitted" | "accepted" | "rejected"'.
+src/lib/application.ts(184,5): error TS2322: Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+  Types of property 'status' are incompatible.
+    Type 'string' is not assignable to type '"planning" | "in_progress" | "submitted" | "accepted" | "rejected"'.
+src/lib/application.ts(234,5): error TS2322: Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+  Types of property 'status' are incompatible.
+    Type 'string' is not assignable to type '"planning" | "in_progress" | "submitted" | "accepted" | "rejected"'.
+src/lib/application.ts(400,5): error TS2322: Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }[]' is not assignable to type 'Application[]'.
+  Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+    Types of property 'status' are incompatible.
+      Type 'string' is not assignable to type '"planning" | "in_progress" | "submitted" | "accepted" | "rejected"'.
+src/lib/application.ts(436,5): error TS2322: Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }[]' is not assignable to type 'Application[]'.
+  Type '{ created_at: string | null; deadline: string | null; id: string; notes: string | null; program_id: string; status: string; updated_at: string | null; user_id: string; programs: { id: string; ... 7 more ...; specialization: string | null; }; }' is not assignable to type 'Application'.
+    Types of property 'status' are incompatible.
+      Type 'string' is not assignable to type '"planning" | "in_progress" | "submitted" | "accepted" | "rejected"'.
+src/lib/applicationStatus.ts(260,5): error TS2322: Type '{ application_id: string; created_at: string | null; id: string; notes: string | null; status: string; updated_by: string; }[]' is not assignable to type 'ApplicationStatusHistory[]'.
+  Type '{ application_id: string; created_at: string | null; id: string; notes: string | null; status: string; updated_by: string; }' is not assignable to type 'ApplicationStatusHistory'.
+    Types of property 'updated_by' are incompatible.
+      Type 'string' is not assignable to type '"university" | "user" | "system"'.
+src/lib/auth.ts(86,7): error TS2322: Type '{ test_scores: any; study_preferences: any; address_line1: string | null; address_line2: string | null; bio: string | null; city: string | null; country: string | null; created_at: string | null; ... 13 more ...; updated_at: string | null; }' is not assignable to type 'UserProfile'.
+  Types of property 'email' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/lib/auth.ts(161,5): error TS2322: Type '{ address_line1: string | null; address_line2: string | null; bio: string | null; city: string | null; country: string | null; created_at: string | null; current_university: string | null; ... 14 more ...; updated_at: string | null; }' is not assignable to type 'UserProfile'.
+  Types of property 'email' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/lib/auth.ts(326,15): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(values: { address_line1?: string | null | undefined; address_line2?: string | null | undefined; bio?: string | null | undefined; city?: string | null | undefined; country?: string | null | undefined; ... 16 more ...; updated_at?: string | ... 1 more ... | undefined; }, options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ test_scores: string | null; study_preferences: string | null; updated_at: string; id: string; email?: string | undefined; full_name?: string | undefined; education_level?: string | undefined; ... 14 more ...; created_at?: string | undefined; }' is not assignable to parameter of type '{ address_line1?: string | null | undefined; address_line2?: string | null | undefined; bio?: string | null | undefined; city?: string | null | undefined; country?: string | null | undefined; ... 16 more ...; updated_at?: string | ... 1 more ... | undefined; }'.
+      Types of property 'education_level' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+  Overload 2 of 2, '(values: { address_line1?: string | null | undefined; address_line2?: string | null | undefined; bio?: string | null | undefined; city?: string | null | undefined; country?: string | null | undefined; ... 16 more ...; updated_at?: string | ... 1 more ... | undefined; }[], options?: { ...; } | undefined): PostgrestFilterBuilder<...>', gave the following error.
+    Argument of type '{ test_scores: string | null; study_preferences: string | null; updated_at: string; id: string; email?: string | undefined; full_name?: string | undefined; education_level?: string | undefined; ... 14 more ...; created_at?: string | undefined; }' is not assignable to parameter of type '{ address_line1?: string | null | undefined; address_line2?: string | null | undefined; bio?: string | null | undefined; city?: string | null | undefined; country?: string | null | undefined; ... 16 more ...; updated_at?: string | ... 1 more ... | undefined; }[]'.
+      Type '{ test_scores: string | null; study_preferences: string | null; updated_at: string; id: string; email?: string | undefined; full_name?: string | undefined; education_level?: string | undefined; ... 14 more ...; created_at?: string | undefined; }' is missing the following properties from type '{ address_line1?: string | null | undefined; address_line2?: string | null | undefined; bio?: string | null | undefined; city?: string | null | undefined; country?: string | null | undefined; ... 16 more ...; updated_at?: string | ... 1 more ... | undefined; }[]': length, pop, push, concat, and 29 more.
+src/lib/auth.ts(346,58): error TS2345: Argument of type 'string | number | true | { [key: string]: Json | undefined; } | Json[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/lib/auth.ts(347,70): error TS2345: Argument of type 'string | number | true | { [key: string]: Json | undefined; } | Json[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/lib/auth.ts(401,5): error TS2322: Type '{ address_line1: string | null; address_line2: string | null; bio: string | null; city: string | null; country: string | null; created_at: string | null; current_university: string | null; ... 14 more ...; updated_at: string | null; }' is not assignable to type 'UserProfile'.
+  Types of property 'email' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.
+src/lib/costCalculation.ts(92,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/costCalculation.ts(93,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/costCalculation.ts(135,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/costCalculation.ts(137,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/costCalculation.ts(138,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/costCalculation.ts(140,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/notifications.ts(53,5): error TS2322: Type '{ action_label: string | null; action_url: string | null; category: string; created_at: string | null; expires_at: string | null; id: string; is_archived: boolean | null; is_read: boolean | null; ... 5 more ...; user_id: string; }' is not assignable to type 'Notification'.
+  Types of property 'type' are incompatible.
+    Type 'string' is not assignable to type '"error" | "success" | "info" | "warning" | "reminder"'.
+src/lib/notifications.ts(97,5): error TS2322: Type '{ action_label: string | null; action_url: string | null; category: string; created_at: string | null; expires_at: string | null; id: string; is_archived: boolean | null; is_read: boolean | null; ... 5 more ...; user_id: string; }[]' is not assignable to type 'Notification[]'.
+  Type '{ action_label: string | null; action_url: string | null; category: string; created_at: string | null; expires_at: string | null; id: string; is_archived: boolean | null; is_read: boolean | null; ... 5 more ...; user_id: string; }' is not assignable to type 'Notification'.
+    Types of property 'type' are incompatible.
+      Type 'string' is not assignable to type '"error" | "success" | "info" | "warning" | "reminder"'.
+src/lib/notifications.ts(408,5): error TS2322: Type 'string | number | true | { [key: string]: Json | undefined; } | Json[]' is not assignable to type 'NotificationPreferences | null'.
+  Type 'string' is not assignable to type 'NotificationPreferences'.
+src/lib/preferences.ts(136,9): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/preferences.ts(137,9): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/preferences.ts(189,13): error TS2322: Type 'StudyPreferencesJSONB' is not assignable to type 'Json | undefined'.
+  Type 'StudyPreferencesJSONB' is not assignable to type '{ [key: string]: Json | undefined; }'.
+    Index signature for type 'string' is missing in type 'StudyPreferencesJSONB'.
+src/lib/preferences.ts(251,17): error TS2698: Spread types may only be created from object types.
+src/lib/preferences.ts(287,11): error TS2322: Type 'number | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+src/lib/preferences.ts(288,11): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/preferences.ts(331,11): error TS2322: Type 'number | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+src/lib/preferences.ts(332,11): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/lib/program.ts(75,12): error TS2352: Conversion of type '{ fields: string[]; location: string; deadline: string; requirements: string[]; abbreviation: any; description: string; website: string; logo: any; faculties: any; term: any; match: any; application_deadline: string | null; ... 30 more ...; university_website: string | null; }[]' to type 'Program[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ fields: string[]; location: string; deadline: string; requirements: string[]; abbreviation: any; description: string; website: string; logo: any; faculties: any; term: any; match: any; application_deadline: string | null; ... 30 more ...; university_website: string | null; }' is not comparable to type 'Program'.
+    Types of property 'application_fee' are incompatible.
+      Type 'number | null' is not comparable to type 'string | undefined'.
+        Type 'number' is not comparable to type 'string'.
+src/lib/program.ts(84,29): error TS2339: Property 'abbreviation' does not exist on type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }'.
+src/lib/program.ts(87,21): error TS2339: Property 'logo' does not exist on type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }'.
+src/lib/program.ts(88,26): error TS2339: Property 'faculties' does not exist on type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }'.
+src/lib/program.ts(89,21): error TS2339: Property 'term' does not exist on type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }'.
+src/lib/program.ts(90,22): error TS2339: Property 'match' does not exist on type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }'.
+src/lib/recommendations.ts(321,5): error TS2322: Type '(string | undefined)[]' is not assignable to type 'string[]'.
+  Type 'string | undefined' is not assignable to type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+src/lib/recommendations.ts(342,7): error TS2322: Type 'string | number | true | { [key: string]: Json | undefined; } | Json[]' is not assignable to type 'string[] | undefined'.
+  Type 'string' is not assignable to type 'string[]'.
+src/lib/recommendations.ts(343,7): error TS2322: Type '(string | null)[]' is not assignable to type 'string[]'.
+  Type 'string | null' is not assignable to type 'string'.
+    Type 'null' is not assignable to type 'string'.
+src/lib/recommendations.ts(597,7): error TS2322: Type 'number | null' is not assignable to type '[number, number] | undefined'.
+  Type 'null' is not assignable to type '[number, number] | undefined'.
+src/lib/recommendations.ts(598,7): error TS2322: Type 'string[] | null' is not assignable to type 'string[] | undefined'.
+  Type 'null' is not assignable to type 'string[] | undefined'.
+src/lib/recommendations.ts(599,32): error TS2339: Property 'degree_type' does not exist on type '{ budget_range: number | null; countries: string[] | null; created_at: string | null; goals: string | null; id: string; language_preference: string | null; preferred_cities: string[] | null; ... 5 more ...; user_id: string | null; }'.
+src/lib/recommendations.ts(600,35): error TS2551: Property 'specialization' does not exist on type '{ budget_range: number | null; countries: string[] | null; created_at: string | null; goals: string | null; id: string; language_preference: string | null; preferred_cities: string[] | null; ... 5 more ...; user_id: string | null; }'. Did you mean 'specializations'?
+src/lib/recommendations.ts(601,29): error TS2339: Property 'duration' does not exist on type '{ budget_range: number | null; countries: string[] | null; created_at: string | null; goals: string | null; id: string; language_preference: string | null; preferred_cities: string[] | null; ... 5 more ...; user_id: string | null; }'.
+src/lib/recommendations.ts(602,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/recommendations.ts(603,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/recommendations.ts(604,7): error TS2322: Type 'boolean | null' is not assignable to type 'boolean | undefined'.
+  Type 'null' is not assignable to type 'boolean | undefined'.
+src/lib/recommendations.ts(605,7): error TS2322: Type 'string[] | null' is not assignable to type 'string[] | undefined'.
+  Type 'null' is not assignable to type 'string[] | undefined'.
+src/lib/recommendations.ts(606,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/recommendations.ts(648,7): error TS2322: Type 'number | null' is not assignable to type '[number, number] | undefined'.
+  Type 'null' is not assignable to type '[number, number] | undefined'.
+src/lib/recommendations.ts(649,7): error TS2322: Type 'string[] | null' is not assignable to type 'string[] | undefined'.
+  Type 'null' is not assignable to type 'string[] | undefined'.
+src/lib/recommendations.ts(650,32): error TS2339: Property 'degree_type' does not exist on type '{ budget_range: number | null; countries: string[] | null; created_at: string | null; goals: string | null; id: string; language_preference: string | null; preferred_cities: string[] | null; ... 5 more ...; user_id: string | null; }'.
+src/lib/recommendations.ts(651,35): error TS2551: Property 'specialization' does not exist on type '{ budget_range: number | null; countries: string[] | null; created_at: string | null; goals: string | null; id: string; language_preference: string | null; preferred_cities: string[] | null; ... 5 more ...; user_id: string | null; }'. Did you mean 'specializations'?
+src/lib/recommendations.ts(652,29): error TS2339: Property 'duration' does not exist on type '{ budget_range: number | null; countries: string[] | null; created_at: string | null; goals: string | null; id: string; language_preference: string | null; preferred_cities: string[] | null; ... 5 more ...; user_id: string | null; }'.
+src/lib/recommendations.ts(653,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/recommendations.ts(654,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/recommendations.ts(655,7): error TS2322: Type 'boolean | null' is not assignable to type 'boolean | undefined'.
+  Type 'null' is not assignable to type 'boolean | undefined'.
+src/lib/recommendations.ts(656,7): error TS2322: Type 'string[] | null' is not assignable to type 'string[] | undefined'.
+  Type 'null' is not assignable to type 'string[] | undefined'.
+src/lib/recommendations.ts(657,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/recommendations.ts(664,46): error TS2345: Argument of type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }' is not assignable to parameter of type 'Program'.
+  Types of property 'tuition_fee_currency' are incompatible.
+    Type 'string | null' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.
+src/lib/reminderSystem.ts(118,5): error TS2322: Type '{ created_at: string | null; days_before_deadline: number[]; description: string | null; id: string; is_active: boolean | null; name: string; notification_types: string[]; updated_at: string | null; user_id: string; }[]' is not assignable to type 'ReminderRule[]'.
+  Type '{ created_at: string | null; days_before_deadline: number[]; description: string | null; id: string; is_active: boolean | null; name: string; notification_types: string[]; updated_at: string | null; user_id: string; }' is not assignable to type 'ReminderRule'.
+    Types of property 'description' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+src/lib/reminderSystem.ts(280,31): error TS2352: Conversion of type 'string | number | boolean | { [key: string]: Json | undefined; } | Json[] | null | undefined' to type 'NotificationPreferences' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Json[]' is missing the following properties from type 'NotificationPreferences': email, deadline_reminders, application_updates, program_recommendations, system_announcements
+src/lib/reminderSystem.ts(331,34): error TS2345: Argument of type '{ application_id: string | null; created_at: string | null; data: Json; id: string; processed_at: string | null; program_id: string | null; scheduled_for: string; status: string; type: string; user_id: string; }' is not assignable to parameter of type 'ReminderJob'.
+  Types of property 'type' are incompatible.
+    Type 'string' is not assignable to type '"deadline" | "status_update" | "custom"'.
+src/lib/reminderSystem.ts(407,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/lib/reminderSystem.ts(548,5): error TS2322: Type '{ application_id: string | null; created_at: string | null; data: Json; id: string; processed_at: string | null; program_id: string | null; scheduled_for: string; status: string; type: string; user_id: string; }[]' is not assignable to type 'ReminderJob[]'.
+  Type '{ application_id: string | null; created_at: string | null; data: Json; id: string; processed_at: string | null; program_id: string | null; scheduled_for: string; status: string; type: string; user_id: string; }' is not assignable to type 'ReminderJob'.
+    Types of property 'type' are incompatible.
+      Type 'string' is not assignable to type '"deadline" | "status_update" | "custom"'.
+src/lib/supabase/queries/comparisons.ts(109,46): error TS2339: Property 'find' does not exist on type 'SelectQueryError<"could not find the relation between program_comparisons and programs">'.
+src/lib/supabase/queries/comparisons.ts(165,40): error TS2339: Property 'find' does not exist on type 'SelectQueryError<"could not find the relation between program_comparisons and programs">'.
+src/lib/supabase/queries/comparisons.ts(396,46): error TS2339: Property 'find' does not exist on type 'SelectQueryError<"could not find the relation between program_comparisons and programs">'.
+src/lib/supabase/queries/comparisons.ts(418,49): error TS2339: Property 'is_active' does not exist on type '{ program_ids: string[]; programs: SelectQueryError<"could not find the relation between program_comparisons and programs">; }'.
+src/lib/supabase/queries/courses.ts(67,11): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/lib/supabase/queries/courses.ts(68,11): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/lib/supabase/queries/courses.ts(118,9): error TS7034: Variable 'prerequisites_details' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/lib/supabase/queries/courses.ts(135,7): error TS7005: Variable 'prerequisites_details' implicitly has an 'any[]' type.
+src/lib/supabase/queries/courses.ts(166,13): error TS7034: Variable 'prerequisites_details' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/lib/supabase/queries/courses.ts(180,11): error TS7005: Variable 'prerequisites_details' implicitly has an 'any[]' type.
+src/lib/supabase/queries/flights.ts(153,5): error TS2322: Type '{ api_provider: string | null; api_route_id: string | null; avg_business_cost: number | null; avg_economy_cost: number; avg_flight_duration_hours: number | null; budget_airline_available: boolean | null; ... 12 more ...; destination_country: { ...; } | null; }[]' is not assignable to type '({ api_provider: string | null; api_route_id: string | null; avg_business_cost: number | null; avg_economy_cost: number; avg_flight_duration_hours: number | null; budget_airline_available: boolean | null; ... 10 more ...; typical_layovers: number | null; } & { ...; })[]'.
+  Type '{ api_provider: string | null; api_route_id: string | null; avg_business_cost: number | null; avg_economy_cost: number; avg_flight_duration_hours: number | null; budget_airline_available: boolean | null; ... 12 more ...; destination_country: { ...; } | null; }' is not assignable to type '{ api_provider: string | null; api_route_id: string | null; avg_business_cost: number | null; avg_economy_cost: number; avg_flight_duration_hours: number | null; budget_airline_available: boolean | null; ... 10 more ...; typical_layovers: number | null; } & { ...; }'.
+    Type '{ api_provider: string | null; api_route_id: string | null; avg_business_cost: number | null; avg_economy_cost: number; avg_flight_duration_hours: number | null; budget_airline_available: boolean | null; ... 12 more ...; destination_country: { ...; } | null; }' is not assignable to type '{ origin_country?: { name: string; country_code: string; } | undefined; destination_country?: { name: string; country_code: string; } | undefined; }'.
+      Types of property 'origin_country' are incompatible.
+        Type '{ name: string; country_code: string; } | null' is not assignable to type '{ name: string; country_code: string; } | undefined'.
+          Type 'null' is not assignable to type '{ name: string; country_code: string; } | undefined'.
+src/lib/supabase/queries/institutions.ts(133,5): error TS2322: Type '{ acceptance_rate: number | null; accreditations: string[] | null; city_id: string | null; contact_email: string | null; country_code: string | null; created_at: string | null; ... 16 more ...; testimonials: { ...; }[]; }' is not assignable to type 'InstitutionWithDetails'.
+  Types of property 'programs' are incompatible.
+    Type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url: string | null; application_deadlines: Json; intake_periods: string[] | null; min_gpa: number | null; language_requirements: Json; required_documents: string[] | null; }[]' is not assignable to type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url?: string | undefined; application_deadlines?: any; intake_periods?: string[] | undefined; min_gpa?: number | undefined; language_requirements?: any; required_documents?: string[] | undefined; }[]'.
+      Type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url: string | null; application_deadlines: Json; intake_periods: string[] | null; min_gpa: number | null; language_requirements: Json; required_documents: string[] | null; }' is not assignable to type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url?: string | undefined; application_deadlines?: any; intake_periods?: string[] | undefined; min_gpa?: number | undefined; language_requirements?: any; required_documents?: string[] | undefined; }'.
+        Types of property 'program_url' are incompatible.
+          Type 'string | null' is not assignable to type 'string | undefined'.
+            Type 'null' is not assignable to type 'string | undefined'.
+src/lib/supabase/queries/institutions.ts(178,5): error TS2322: Type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url: string | null; application_deadlines: Json; intake_periods: string[] | null; min_gpa: number | null; language_requirements: Json; required_documents: string[] | null; }[]' is not assignable to type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url?: string | undefined; application_deadlines?: any; intake_periods?: string[] | undefined; min_gpa?: number | undefined; language_requirements?: any; required_documents?: string[] | undefined; }[]'.
+  Type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url: string | null; application_deadlines: Json; intake_periods: string[] | null; min_gpa: number | null; language_requirements: Json; required_documents: string[] | null; }' is not assignable to type '{ id: string; name: string; degree_type: string; tuition_fee: number; program_url?: string | undefined; application_deadlines?: any; intake_periods?: string[] | undefined; min_gpa?: number | undefined; language_requirements?: any; required_documents?: string[] | undefined; }'.
+    Types of property 'program_url' are incompatible.
+      Type 'string | null' is not assignable to type 'string | undefined'.
+        Type 'null' is not assignable to type 'string | undefined'.
+src/lib/supabase/queries/institutions.ts(238,5): error TS2322: Type '{ id: string; student_name: string; graduation_year: number | null; degree_obtained: string | null; current_position: string | null; current_company: string | null; testimonial_text: string; ... 4 more ...; submitted_at: string | null; }[]' is not assignable to type '{ id: string; student_name: string; graduation_year: number | null; degree_obtained: string | null; current_position: string | null; current_company: string | null; testimonial_text: string; ... 4 more ...; submitted_at: string; }[]'.
+  Type '{ id: string; student_name: string; graduation_year: number | null; degree_obtained: string | null; current_position: string | null; current_company: string | null; testimonial_text: string; ... 4 more ...; submitted_at: string | null; }' is not assignable to type '{ id: string; student_name: string; graduation_year: number | null; degree_obtained: string | null; current_position: string | null; current_company: string | null; testimonial_text: string; ... 4 more ...; submitted_at: string; }'.
+    Types of property 'tags' are incompatible.
+      Type 'string[] | null' is not assignable to type 'string[]'.
+        Type 'null' is not assignable to type 'string[]'.
+src/lib/supabase/queries/institutions.ts(258,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/lib/supabase/queries/institutions.ts(336,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/lib/supabase/queries/institutions.ts(359,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/lib/supabase/queries/locations.ts(209,61): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/lib/supabase/queries/scholarships.ts(52,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/scholarships.ts(90,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/scholarships.ts(127,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/scholarships.ts(212,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/scholarships.ts(265,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/scholarships.ts(323,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/scholarships.ts(376,5): error TS2322: Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }[]' is not assignable to type 'ScholarshipWithDetails[]'.
+  Type '{ amount_max_usd: number | null; amount_min_usd: number | null; application_deadline: string | null; application_url: string | null; coverage_details: string | null; created_at: string | null; ... 12 more ...; university: { ...; } | null; }' is not assignable to type 'ScholarshipWithDetails'.
+    Types of property 'program' are incompatible.
+      Type '{ id: string; name: string; degree_type: string; university: string; } | null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+        Type 'null' is not assignable to type '{ id: string; name: string; degree_type: string; university: string; } | undefined'.
+src/lib/supabase/queries/universities.ts(113,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/lib/supabase/queries/universities.ts(191,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/lib/supabase/queries/universities.ts(214,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'nullsLast' does not exist in type '{ ascending?: boolean | undefined; nullsFirst?: boolean | undefined; foreignTable?: string | undefined; }'.
+src/pages/ProgramDetailPage.tsx(88,20): error TS2345: Argument of type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }' is not assignable to parameter of type 'SetStateAction<Program | null>'.
+  Type '{ application_deadline: string | null; application_deadlines: Json; application_fee: number | null; application_fee_currency: string | null; application_fee_original: number | null; ... 31 more ...; website: string | null; }' is not assignable to type 'Program'.
+    Types of property 'tuition_fee_currency' are incompatible.
+      Type 'string | null' is not assignable to type 'string | undefined'.
+        Type 'null' is not assignable to type 'string | undefined'.
+src/pages/ProgramDetailPage.tsx(97,25): error TS2345: Argument of type '{ acceptance_rate: number | null; accreditations: string[] | null; city_id: string | null; contact_email: string | null; country_code: string | null; created_at: string | null; ... 12 more ...; website: string | null; } | null' is not assignable to parameter of type 'SetStateAction<University | null>'.
+  Type '{ acceptance_rate: number | null; accreditations: string[] | null; city_id: string | null; contact_email: string | null; country_code: string | null; created_at: string | null; ... 12 more ...; website: string | null; }' is not assignable to type 'SetStateAction<University | null>'.
+    Type '{ acceptance_rate: number | null; accreditations: string[] | null; city_id: string | null; contact_email: string | null; country_code: string | null; created_at: string | null; ... 12 more ...; website: string | null; }' is not assignable to type 'University'.
+      Types of property 'country_code' are incompatible.
+        Type 'string | null' is not assignable to type 'string'.
+          Type 'null' is not assignable to type 'string'.
+src/pages/ProgramDetailPage.tsx(106,20): error TS2345: Argument of type '{ avg_living_cost_monthly_usd: number | null; climate: string | null; country_code: string; created_at: string | null; currency_code: string | null; currency_symbol: string | null; ... 18 more ...; work_permit_hours_weekly: number | null; } | null' is not assignable to parameter of type 'SetStateAction<Country | null>'.
+  Type '{ avg_living_cost_monthly_usd: number | null; climate: string | null; country_code: string; created_at: string | null; currency_code: string | null; currency_symbol: string | null; ... 18 more ...; work_permit_hours_weekly: number | null; }' is not assignable to type 'SetStateAction<Country | null>'.
+    Type '{ avg_living_cost_monthly_usd: number | null; climate: string | null; country_code: string; created_at: string | null; currency_code: string | null; currency_symbol: string | null; ... 18 more ...; work_permit_hours_weekly: number | null; }' is not assignable to type 'Country'.
+      Types of property 'visa_type' are incompatible.
+        Type 'string | null' is not assignable to type 'string | undefined'.
+          Type 'null' is not assignable to type 'string | undefined'.
+src/pages/ProgramDetailPage.tsx(115,19): error TS2345: Argument of type '{ accommodation_max: number | null; accommodation_min: number | null; climate: string | null; country_code: string | null; created_at: string | null; currency_code: string; entertainment_monthly: number | null; ... 11 more ...; utilities_monthly: number | null; } | null' is not assignable to parameter of type 'SetStateAction<City | null>'.
+  Type '{ accommodation_max: number | null; accommodation_min: number | null; climate: string | null; country_code: string | null; created_at: string | null; currency_code: string; entertainment_monthly: number | null; ... 11 more ...; utilities_monthly: number | null; }' is not assignable to type 'SetStateAction<City | null>'.
+    Type '{ accommodation_max: number | null; accommodation_min: number | null; climate: string | null; country_code: string | null; created_at: string | null; currency_code: string; entertainment_monthly: number | null; ... 11 more ...; utilities_monthly: number | null; }' is not assignable to type 'City'.
+      Types of property 'country_code' are incompatible.
+        Type 'string | null' is not assignable to type 'string'.
+          Type 'null' is not assignable to type 'string'.
+src/pages/UniversityDetailPage.tsx(481,19): error TS2322: Type '{ university: string; application_deadline: string | null; application_deadlines: Json | null; application_fee: number | null; application_fee_currency: string | null; ... 32 more ...; university_name?: string; }' is not assignable to type 'EnhancedProgram'.
+  Types of property 'city' are incompatible.
+    Type 'string | null' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.

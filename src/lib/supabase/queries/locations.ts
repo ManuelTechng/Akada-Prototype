@@ -206,7 +206,7 @@ export async function getCitiesWithCosts(countryCode: string): Promise<City[]> {
       .select('*')
       .eq('country_code', countryCode)
       .not('accommodation_min', 'is', null)
-      .order('student_friendly_rating', { ascending: false, nullsLast: true });
+      .order('student_friendly_rating', { ascending: false, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching cities with costs:', error);

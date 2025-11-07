@@ -19,21 +19,21 @@ const createSlug = (name: string): string => {
 
 // Enhanced Program interface for better type safety
 export interface EnhancedProgram extends Program {
-  city?: string;
+  city?: string | null;
   studentsEnrolled?: number;
   ranking?: number;
   imageUrl?: string;
   degreeLevel?: 'bachelor' | 'master' | 'phd';
   scholarshipAvailable?: boolean;
-  applicationFee?: number;
+  applicationFee?: number | null;
   requirementsDetails?: {
     gpa?: number;
     ielts?: number;
     toefl?: number;
     gre?: boolean;
   };
-  duration?: string;
-  specialization?: string;
+  duration?: string | null;
+  specialization?: string | null;
   university_id?: string;
 }
 
@@ -64,7 +64,7 @@ export const ProgramCardSkeleton: React.FC<ProgramCardSkeletonProps> = ({ classN
   const baseClasses = `animate-pulse ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded`;
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 ${className}`}>
+    <div className={`bg-card rounded-lg border border-border p-4 ${className}`}>
       {/* Header skeleton */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
@@ -76,7 +76,7 @@ export const ProgramCardSkeleton: React.FC<ProgramCardSkeletonProps> = ({ classN
       </div>
 
       {/* Price skeleton */}
-      <div className="mb-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+      <div className="mb-3 p-3 bg-primary/10 dark:bg-indigo-900/20 rounded-lg">
         <div className="flex items-baseline justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-2">
@@ -195,7 +195,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       case 'bachelor': return 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300';
       case 'master': return 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300';
       case 'phd': return 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300';
-      default: return 'bg-gray-100 dark:bg-gray-900/20 text-gray-800 dark:text-gray-300';
+      default: return 'bg-muted dark:bg-gray-900/20 text-gray-800 dark:text-gray-300';
     }
   };
 
@@ -206,10 +206,10 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   return (
     <article 
       className={`
-        bg-white dark:bg-gray-800 
-        rounded-lg border border-gray-200 dark:border-gray-700 
+        bg-card 
+        rounded-lg border border-border 
         hover:border-indigo-300 dark:hover:border-indigo-600
-        hover:shadow-lg dark:hover:shadow-gray-900/20
+        hover:shadow-sm dark:hover:shadow-gray-900/20
         transition-all duration-200 
         p-4 ${isMobile ? 'p-3' : 'p-4'}
         relative overflow-hidden
@@ -220,10 +220,10 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 text-sm sm:text-base line-clamp-2 mb-1">
+          <h3 className="font-semibold text-foreground text-sm sm:text-base line-clamp-2 mb-1">
             {program.name || 'Program Title'}
           </h3>
-          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-1">
+          <div className="flex items-center text-sm text-muted-foreground mb-1">
             <GraduationCap className="h-4 w-4 mr-1 flex-shrink-0" />
             {program.university ? (
               <button
@@ -232,7 +232,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
                   const slug = createSlug(program.university);
                   navigate(`/app/institution/${slug}`);
                 }}
-                className="truncate text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors underline cursor-pointer font-medium"
+                className="truncate text-primary dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors underline cursor-pointer font-medium"
                 title="View university details"
               >
                 {program.university}
@@ -250,11 +250,11 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       </div>
 
       {/* Price Section - Prominent display with real-time indicators */}
-      <div className="mb-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+      <div className="mb-3 p-3 bg-primary/10 dark:bg-indigo-900/20 rounded-lg">
         <div className="flex items-baseline justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-2">
-              <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">
+              <div className="text-lg font-bold text-primary dark:text-indigo-400">
                 {tuitionDisplay.isLoading ? (
                   <div className="flex items-center space-x-2">
                     <div className="animate-pulse bg-indigo-200 dark:bg-indigo-700 h-6 w-24 rounded"></div>
@@ -286,7 +286,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
             </div>
             
             {currencyDisplay.secondary && !tuitionDisplay.isLoading && (
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <div className="text-xs text-muted-foreground mt-1">
                 {currencyDisplay.secondary}
               </div>
             )}
@@ -309,16 +309,16 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
       {/* Program Details */}
       <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-        <div className="flex items-center text-gray-600 dark:text-gray-400">
+        <div className="flex items-center text-muted-foreground">
           <Clock className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>{program.duration || 'Duration N/A'}</span>
         </div>
-        <div className="flex items-center text-gray-600 dark:text-gray-400">
+        <div className="flex items-center text-muted-foreground">
           <BookOpen className="h-3 w-3 mr-1 flex-shrink-0" />
           <span className="truncate">{program.specialization || 'Specialization N/A'}</span>
         </div>
         {program.studentsEnrolled && (
-          <div className="flex items-center text-gray-600 dark:text-gray-400">
+          <div className="flex items-center text-muted-foreground">
             <Users className="h-3 w-3 mr-1 flex-shrink-0" />
             <span>{program.studentsEnrolled} students</span>
           </div>
@@ -334,15 +334,15 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       {program.requirementsDetails && (
         <div className="mb-3">
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
-              <span className="text-gray-500 dark:text-gray-400">Min GPA:</span>
-              <span className="font-medium text-gray-900 dark:text-gray-100 ml-1">{program.requirementsDetails.gpa || 'N/A'}</span>
+            <div className="bg-muted dark:bg-gray-700 p-2 rounded">
+              <span className="text-muted-foreground">Min GPA:</span>
+              <span className="font-medium text-foreground ml-1">{program.requirementsDetails.gpa || 'N/A'}</span>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700 p-2 rounded">
-              <span className="text-gray-500 dark:text-gray-400">
+            <div className="bg-muted dark:bg-gray-700 p-2 rounded">
+              <span className="text-muted-foreground">
                 {program.requirementsDetails.ielts ? 'IELTS:' : program.requirementsDetails.toefl ? 'TOEFL:' : 'English:'}
               </span>
-              <span className="font-medium text-gray-900 dark:text-gray-100 ml-1">
+              <span className="font-medium text-foreground ml-1">
                 {program.requirementsDetails.ielts || program.requirementsDetails.toefl || 'Required'}
               </span>
             </div>
@@ -353,13 +353,13 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       {/* Expandable Description */}
       {program.description && (
         <div className="mb-3">
-          <p className={`text-xs text-gray-600 dark:text-gray-400 ${!isExpanded ? 'line-clamp-2' : ''}`}>
+          <p className={`text-xs text-muted-foreground ${!isExpanded ? 'line-clamp-2' : ''}`}>
             {program.description}
           </p>
           {program.description.length > 100 && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-1 focus:outline-none"
+              className="text-xs text-primary dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 mt-1 focus:outline-none"
               aria-expanded={isExpanded}
               aria-label={isExpanded ? 'Show less description' : 'Show more description'}
             >
@@ -371,9 +371,9 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
       {/* Footer */}
       <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
-        <div className="text-xs text-gray-500 dark:text-gray-400">
+        <div className="text-xs text-muted-foreground">
           <span>Deadline: </span>
-          <span className="font-medium text-gray-700 dark:text-gray-300">
+          <span className="font-medium text-foreground dark:text-gray-300">
             {program.deadline || 'N/A'}
           </span>
         </div>
@@ -387,7 +387,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               className={`text-xs px-3 py-1.5 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
                 isSaved
                   ? 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/30 focus:ring-red-500'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-gray-500'
+                  : 'bg-muted dark:bg-gray-700 text-foreground dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 focus:ring-gray-500'
               }`}
               aria-label={isSaved ? `Remove ${program.name} from saved programs` : `Save ${program.name}`}
             >
@@ -399,7 +399,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
           {onApply && (
             <button
               onClick={() => onApply(program.id)}
-              className="text-xs bg-indigo-600 dark:bg-indigo-500 text-white px-3 py-1.5 rounded hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="text-xs bg-primary dark:bg-primary/100 text-white px-3 py-1.5 rounded hover:bg-primary/90 dark:hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               aria-label={`Apply to ${program.name}`}
             >
               Apply
@@ -410,7 +410,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
           {onViewDetails && (
             <button
               onClick={() => onViewDetails(program.id)}
-              className="text-xs bg-indigo-600 dark:bg-indigo-500 text-white px-3 py-1.5 rounded hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              className="text-xs bg-primary dark:bg-primary/100 text-white px-3 py-1.5 rounded hover:bg-primary/90 dark:hover:bg-primary transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               aria-label={`View details for ${program.name}`}
             >
               View Details

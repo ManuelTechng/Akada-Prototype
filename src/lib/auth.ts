@@ -87,7 +87,7 @@ export const getUserProfile = async (userId: string, retryCount = 0): Promise<Us
         ...data,
         test_scores: parseJsonField(data.test_scores),
         study_preferences: parseJsonField(data.study_preferences)
-      };
+      } as any as UserProfile;
     }
     
     // If error is anything other than "not found", throw it
@@ -158,7 +158,7 @@ export const getUserProfile = async (userId: string, retryCount = 0): Promise<Us
     }
     
     console.log('Initial profile created successfully:', { userId });
-    return insertedData || newProfile;
+    return (insertedData || newProfile) as any as UserProfile;
     
   } catch (error) {
     console.error('Error getting/creating user profile:', { error, attempt: retryCount + 1 });
@@ -325,7 +325,7 @@ export const updateUserProfile = async (userId: string, profileData: Partial<Use
       .from('user_profiles')
       .upsert({
         id: userId,
-        ...formattedProfile
+        ...formattedProfile as any
       }, {
         onConflict: 'id',
         ignoreDuplicates: false
@@ -343,8 +343,8 @@ export const updateUserProfile = async (userId: string, profileData: Partial<Use
     }
 
     // Parse JSON strings back to objects
-    result.test_scores = result.test_scores ? JSON.parse(result.test_scores) : null;
-    result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences) : null;
+    result.test_scores = result.test_scores ? JSON.parse(result.test_scores as any as string) : null;
+    result.study_preferences = result.study_preferences ? JSON.parse(result.study_preferences as any as string) : null;
 
     // Sync all study_preferences fields to user_preferences table
     if (sanitizedData.study_preferences) {
@@ -398,7 +398,7 @@ export const updateUserProfile = async (userId: string, profileData: Partial<Use
     const endTime = performance.now();
     console.log(`✅ Profile updated successfully in ${(endTime - startTime).toFixed(0)}ms`);
 
-    return result;
+    return result as any as UserProfile;
   } catch (error) {
     console.error('❌ Error in updateUserProfile:', error);
     throw error;

@@ -1028,10 +1028,12 @@ export type Database = {
           application_deadlines: Json | null
           application_fee: number | null
           application_fee_currency: string | null
+          application_fee_original: number | null
           city: string | null
           city_id: string | null
           country: string
           created_at: string | null
+          currency_source: string | null
           deadline: string | null
           degree_type: string
           description: string | null
@@ -1066,10 +1068,12 @@ export type Database = {
           application_deadlines?: Json | null
           application_fee?: number | null
           application_fee_currency?: string | null
+          application_fee_original?: number | null
           city?: string | null
           city_id?: string | null
           country: string
           created_at?: string | null
+          currency_source?: string | null
           deadline?: string | null
           degree_type: string
           description?: string | null
@@ -1104,10 +1108,12 @@ export type Database = {
           application_deadlines?: Json | null
           application_fee?: number | null
           application_fee_currency?: string | null
+          application_fee_original?: number | null
           city?: string | null
           city_id?: string | null
           country?: string
           created_at?: string | null
+          currency_source?: string | null
           deadline?: string | null
           degree_type?: string
           description?: string | null

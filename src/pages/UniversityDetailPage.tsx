@@ -6,7 +6,7 @@ import {
   Filter, Search, ChevronLeft
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import ProgramCard from '../components/app/ProgramCard';
+import ProgramCard, { type EnhancedProgram } from '../components/app/ProgramCard';
 import { useSavedProgramsContext } from '../contexts/SavedProgramsContext';
 import type { Database } from '../lib/database.types';
 
@@ -481,7 +481,7 @@ export default function UniversityDetailPage() {
                   program={{
                     ...program,
                     university: university?.name || program.university,
-                  }}
+                  } as any as EnhancedProgram}
                   onSave={saveProgram}
                   onUnsave={removeSavedProgram}
                   isSaved={savedPrograms.some(sp => sp.program_id === program.id)}

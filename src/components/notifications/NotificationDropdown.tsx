@@ -84,16 +84,11 @@ export function NotificationDropdown() {
         variant="ghost"
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          'relative transition-colors',
-          isDarkTheme
-            ? 'text-gray-400 hover:text-white'
-            : 'text-slate-500 hover:text-slate-900'
-        )}
+        className="relative transition-colors text-muted-foreground hover:text-foreground"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <Badge className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center border-0 bg-indigo-500 p-0 text-[10px] text-white">
+          <Badge className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center border-0 bg-primary p-0 text-[10px] text-primary-foreground">
             {unreadCount}
           </Badge>
         )}
@@ -108,38 +103,16 @@ export function NotificationDropdown() {
           />
 
           {/* Dropdown */}
-          <div
-            className={cn(
-              'absolute right-0 z-[100] mt-2 w-[380px] rounded-2xl shadow-xl border',
-              isDarkTheme
-                ? 'bg-gray-900/95 backdrop-blur-xl border-white/10'
-                : 'bg-white border-slate-200'
-            )}
-          >
+          <div className="absolute right-0 z-[100] mt-2 w-[380px] rounded-2xl shadow-xl border bg-popover/95 backdrop-blur-xl border-border">
             {/* Header */}
-            <div
-              className={cn(
-                'px-4 py-3 border-b',
-                isDarkTheme ? 'border-white/10' : 'border-slate-200'
-              )}
-            >
+            <div className="px-4 py-3 border-b border-border">
               <div className="flex items-center justify-between">
-                <h3
-                  className={cn(
-                    'text-sm font-semibold',
-                    isDarkTheme ? 'text-white' : 'text-slate-900'
-                  )}
-                >
+                <h3 className="text-sm font-semibold text-foreground">
                   Notifications
                 </h3>
                 <button
                   onClick={() => handleNotificationClick('/app/applications')}
-                  className={cn(
-                    'text-xs font-medium',
-                    isDarkTheme
-                      ? 'text-indigo-300 hover:text-indigo-200'
-                      : 'text-indigo-600 hover:text-indigo-500'
-                  )}
+                  className="text-xs font-medium text-primary hover:text-primary/80"
                 >
                   View all
                 </button>
@@ -152,47 +125,20 @@ export function NotificationDropdown() {
                 <button
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification.actionRoute)}
-                  className={cn(
-                    'w-full px-4 py-3 text-left transition-colors',
-                    isDarkTheme
-                      ? 'hover:bg-white/5'
-                      : 'hover:bg-slate-50'
-                  )}
+                  className="w-full px-4 py-3 text-left transition-colors hover:bg-accent"
                 >
                   <div className="flex items-start gap-3">
-                    <div
-                      className={cn(
-                        'p-2 rounded-lg shrink-0',
-                        notification.iconBg
-                      )}
-                    >
-                      <notification.icon
-                        className={cn('w-4 h-4', notification.iconColor)}
-                      />
+                    <div className={cn('p-2 rounded-lg shrink-0', notification.iconBg)}>
+                      <notification.icon className={cn('w-4 h-4', notification.iconColor)} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p
-                        className={cn(
-                          'text-sm font-medium mb-1',
-                          isDarkTheme ? 'text-white' : 'text-slate-900'
-                        )}
-                      >
+                      <p className="text-sm font-medium mb-1 text-foreground">
                         {notification.title}
                       </p>
-                      <p
-                        className={cn(
-                          'text-xs mb-2',
-                          isDarkTheme ? 'text-slate-400' : 'text-slate-600'
-                        )}
-                      >
+                      <p className="text-xs mb-2 text-muted-foreground">
                         {notification.description}
                       </p>
-                      <p
-                        className={cn(
-                          'text-xs',
-                          isDarkTheme ? 'text-slate-500' : 'text-slate-500'
-                        )}
-                      >
+                      <p className="text-xs text-muted-foreground/70">
                         {notification.timestamp}
                       </p>
                     </div>
@@ -204,18 +150,8 @@ export function NotificationDropdown() {
             {/* Empty State */}
             {notifications.length === 0 && (
               <div className="px-4 py-8 text-center">
-                <Bell
-                  className={cn(
-                    'w-12 h-12 mx-auto mb-2',
-                    isDarkTheme ? 'text-slate-600' : 'text-slate-300'
-                  )}
-                />
-                <p
-                  className={cn(
-                    'text-sm',
-                    isDarkTheme ? 'text-slate-400' : 'text-slate-600'
-                  )}
-                >
+                <Bell className="w-12 h-12 mx-auto mb-2 text-muted-foreground/50" />
+                <p className="text-sm text-muted-foreground">
                   No new notifications
                 </p>
               </div>

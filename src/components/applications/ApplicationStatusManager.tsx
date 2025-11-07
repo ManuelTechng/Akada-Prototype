@@ -187,7 +187,7 @@ export function ApplicationStatusManager({
                             {config.label}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {formatDate(entry.created_at)}
+                            {formatDate(entry.created_at || '')}
                           </p>
                         </div>
                         <p className="text-xs text-gray-600">

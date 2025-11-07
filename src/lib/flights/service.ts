@@ -1,5 +1,5 @@
 import { getFlightCost as getFlightCostFromDB, upsertFlightRoute } from '../supabase/queries/flights';
-import type { FlightRoute, FlightCostResult, FlightDataNotFoundError, FlightApiError, FlightNetworkError } from './types';
+import type { FlightCostResult } from './types';
 import { FlightDataNotFoundError, FlightApiError, FlightNetworkError } from './types';
 
 export class FlightCostService {

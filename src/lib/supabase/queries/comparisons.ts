@@ -106,7 +106,7 @@ export async function getUserComparisons(userId: string): Promise<ComparisonWith
     const comparisons = (data || []).map(comparison => ({
       ...comparison,
       programs: comparison.program_ids.map((programId: string) => {
-        const program = comparison.programs?.find((p: any) => p.id === programId);
+        const program = (comparison.programs as any)?.find((p: any) => p.id === programId);
         return program || null;
       }).filter(Boolean)
     }));
@@ -162,7 +162,7 @@ export async function getActiveComparison(userId: string): Promise<ComparisonWit
     const comparison = {
       ...data,
       programs: data.program_ids.map((programId: string) => {
-        const program = data.programs?.find((p: any) => p.id === programId);
+        const program = (data.programs as any)?.find((p: any) => p.id === programId);
         return program || null;
       }).filter(Boolean)
     };
@@ -393,7 +393,7 @@ export async function getComparisonStats(userId: string): Promise<{
     
     comparisons.forEach(comparison => {
       comparison.program_ids.forEach((programId: string) => {
-        const program = comparison.programs?.find((p: any) => p.id === programId);
+        const program = (comparison.programs as any)?.find((p: any) => p.id === programId);
         if (program) {
           if (!programCounts[programId]) {
             programCounts[programId] = { name: program.name, count: 0 };
@@ -415,7 +415,7 @@ export async function getComparisonStats(userId: string): Promise<{
 
     return {
       totalComparisons: comparisons.length,
-      activeComparison: comparisons.some(c => c.is_active),
+      activeComparison: comparisons.some(c => (c as any).is_active),
       mostComparedPrograms
     };
   } catch (error) {

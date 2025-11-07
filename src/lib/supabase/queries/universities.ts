@@ -110,7 +110,7 @@ export async function searchUniversities(filters: {
     let query = supabase
       .from('universities')
       .select('*')
-      .order('ranking_world', { ascending: true, nullsLast: true });
+      .order('ranking_world', { ascending: true, nullsFirst: false });
 
     // Apply text search filter
     if (filters.query) {
@@ -188,7 +188,7 @@ export async function getUniversitiesByCity(cityId: string): Promise<University[
       .from('universities')
       .select('*')
       .eq('city_id', cityId)
-      .order('ranking_world', { ascending: true, nullsLast: true });
+      .order('ranking_world', { ascending: true, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching universities by city:', error);
@@ -211,7 +211,7 @@ export async function getUniversitiesByCountry(countryCode: string): Promise<Uni
       .from('universities')
       .select('*')
       .eq('country_code', countryCode)
-      .order('ranking_world', { ascending: true, nullsLast: true });
+      .order('ranking_world', { ascending: true, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching universities by country:', error);

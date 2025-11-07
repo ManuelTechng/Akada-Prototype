@@ -63,7 +63,7 @@ export const useApplications = () => {
 
       if (fetchError) throw fetchError
 
-      setApplications(data || [])
+      setApplications((data || []) as any as Application[])
     } catch (err) {
       console.error('Error fetching applications:', err)
       setError('Failed to load applications')

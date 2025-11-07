@@ -9,12 +9,12 @@ export interface ReminderRule {
   id: string
   user_id: string
   name: string
-  description: string
+  description: string | null
   days_before_deadline: number[]
-  notification_types: ('email' | 'push' | 'in_app')[]
-  is_active: boolean
-  created_at: string
-  updated_at: string
+  notification_types: ('email' | 'push' | 'in_app')[] | string[]
+  is_active: boolean | null
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface DeadlineReminder {
@@ -31,15 +31,15 @@ export interface DeadlineReminder {
 
 export interface ReminderJob {
   id: string
-  type: 'deadline' | 'status_update' | 'custom'
+  type: 'deadline' | 'status_update' | 'custom' | string
   user_id: string
-  application_id?: string
-  program_id?: string
+  application_id?: string | null
+  program_id?: string | null
   scheduled_for: string
-  status: 'pending' | 'sent' | 'failed' | 'cancelled'
-  data: Record<string, any>
-  created_at: string
-  processed_at?: string
+  status: 'pending' | 'sent' | 'failed' | 'cancelled' | string
+  data: Record<string, any> | null
+  created_at: string | null
+  processed_at?: string | null
 }
 
 /**
@@ -115,7 +115,7 @@ export async function getUserReminderRules(userId: string): Promise<ReminderRule
       return []
     }
 
-    return data || []
+    return (data || []) as any as ReminderRule[]
   } catch (error) {
     console.error('Error fetching reminder rules:', error)
     return []
@@ -277,7 +277,7 @@ async function scheduleEmailReminder(
       .eq('user_id', userId)
       .single()
 
-    const notificationPrefs = preferences?.notification_preferences as NotificationPreferences
+    const notificationPrefs = preferences?.notification_preferences as any as NotificationPreferences
     if (!notificationPrefs?.email || !notificationPrefs?.deadline_reminders) {
       return
     }
@@ -328,7 +328,7 @@ export async function processReminderJobs(): Promise<number> {
 
     for (const job of jobs) {
       try {
-        await processReminderJob(job)
+        await processReminderJob(job as any as ReminderJob)
         processedCount++
       } catch (error) {
         console.error(`Error processing reminder job ${job.id}:`, error)
@@ -389,7 +389,8 @@ async function processReminderJob(job: ReminderJob): Promise<void> {
  * Process deadline reminder
  */
 async function processDeadlineReminder(job: ReminderJob): Promise<void> {
-  const { program_name, deadline, days_until_deadline, reminder_type } = job.data
+  const jobData = job.data as any;
+  const { program_name, deadline, days_until_deadline, reminder_type } = jobData || {}
 
   // Get user details
   const { data: user } = await supabase
@@ -404,8 +405,8 @@ async function processDeadlineReminder(job: ReminderJob): Promise<void> {
 
   if (reminder_type === 'email') {
     await sendDeadlineEmail({
-      to: user.email,
-      name: user.full_name,
+      to: user.email || '',
+      name: user.full_name || '',
       programName: program_name,
       deadline,
       daysUntilDeadline: days_until_deadline
@@ -545,7 +546,7 @@ export async function getUserUpcomingReminders(userId: string): Promise<Reminder
       return []
     }
 
-    return data || []
+    return (data || []) as any as ReminderJob[]
   } catch (error) {
     console.error('Error fetching upcoming reminders:', error)
     return []

@@ -13,28 +13,28 @@ const OnboardingFlow: React.FC = () => {
   const [formData, setFormData] = useState({
     // Basic info (these should already exist from signup)
     full_name: '',
-    email: '',
+    email: '' as string | null,
     education_level: '',
-    
+
     // Academic info
-    current_university: '',
-    field_of_study: '',
+    current_university: '' as string | null,
+    field_of_study: '' as string | null,
     gpa: '',
-    
+
     // Contact info
-    phone_number: '',
-    
+    phone_number: '' as string | null,
+
     // Location info
-    address_line1: '',
-    address_line2: '',
-    city: '',
-    state_province: '',
-    postal_code: '',
-    country: '',
-    
+    address_line1: '' as string | null,
+    address_line2: '' as string | null,
+    city: '' as string | null,
+    state_province: '' as string | null,
+    postal_code: '' as string | null,
+    country: '' as string | null,
+
     // Personal info
-    date_of_birth: '',
-    bio: '',
+    date_of_birth: '' as string | null,
+    bio: '' as string | null,
     
     // Test scores
     test_scores: {
@@ -129,9 +129,9 @@ const OnboardingFlow: React.FC = () => {
 
   const renderBasicInfoStep = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Basic Information</h2>
+      <h2 className="text-xl font-semibold text-foreground">Basic Information</h2>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Full Name
         </label>
         <input
@@ -141,14 +141,14 @@ const OnboardingFlow: React.FC = () => {
             ...formData,
             full_name: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           disabled={true} // Name is set during signup
         />
-        <p className="text-xs text-gray-500 mt-1">Set during signup. Contact support to change.</p>
+        <p className="text-xs text-muted-foreground mt-1">Set during signup. Contact support to change.</p>
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Education Level
         </label>
         <select
@@ -157,7 +157,7 @@ const OnboardingFlow: React.FC = () => {
             ...formData,
             education_level: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
         >
           <option value="">Select education level</option>
           <option value="undergraduate">Undergraduate</option>
@@ -167,17 +167,17 @@ const OnboardingFlow: React.FC = () => {
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Phone Number
         </label>
         <input
           type="tel"
-          value={formData.phone_number}
+          value={formData.phone_number || ''}
           onChange={(e) => setFormData({
             ...formData,
             phone_number: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           placeholder="+234 801 234 5678"
         />
       </div>
@@ -186,37 +186,37 @@ const OnboardingFlow: React.FC = () => {
 
   const renderAcademicInfoStep = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Academic Background</h2>
+      <h2 className="text-xl font-semibold text-foreground">Academic Background</h2>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Current/Previous University
         </label>
         <input
           type="text"
-          value={formData.current_university}
+          value={formData.current_university || ''}
           onChange={(e) => setFormData({
             ...formData,
             current_university: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Field of Study
         </label>
         <input
           type="text"
-          value={formData.field_of_study}
+          value={formData.field_of_study || ''}
           onChange={(e) => setFormData({
             ...formData,
             field_of_study: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           GPA
         </label>
         <input
@@ -227,22 +227,22 @@ const OnboardingFlow: React.FC = () => {
             ...formData,
             gpa: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
         />
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Brief Bio
         </label>
         <textarea
-          value={formData.bio}
+          value={formData.bio || ''}
           onChange={(e) => setFormData({
             ...formData,
             bio: e.target.value
           })}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           placeholder="Tell us a bit about yourself..."
         />
       </div>
@@ -251,9 +251,9 @@ const OnboardingFlow: React.FC = () => {
 
   const renderTestScoresStep = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Test Scores</h2>
+      <h2 className="text-xl font-semibold text-foreground">Test Scores</h2>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           IELTS Score
         </label>
         <input
@@ -267,13 +267,13 @@ const OnboardingFlow: React.FC = () => {
               ielts: e.target.value
             }
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           placeholder="Overall score (e.g. 7.5)"
         />
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           TOEFL Score
         </label>
         <input
@@ -286,16 +286,16 @@ const OnboardingFlow: React.FC = () => {
               toefl: e.target.value
             }
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           placeholder="Total score (e.g. 95)"
         />
       </div>
       
       <div>
-        <h3 className="text-md font-medium text-gray-800 mb-2">GRE Scores</h3>
+        <h3 className="text-md font-medium text-foreground mb-2">GRE Scores</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Verbal
             </label>
             <input
@@ -311,12 +311,12 @@ const OnboardingFlow: React.FC = () => {
                   }
                 }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Quantitative
             </label>
             <input
@@ -332,12 +332,12 @@ const OnboardingFlow: React.FC = () => {
                   }
                 }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Analytical
             </label>
             <input
@@ -354,7 +354,7 @@ const OnboardingFlow: React.FC = () => {
                   }
                 }
               })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
             />
           </div>
         </div>
@@ -364,9 +364,9 @@ const OnboardingFlow: React.FC = () => {
 
   const renderStudyPreferencesStep = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Study Preferences</h2>
+      <h2 className="text-xl font-semibold text-foreground">Study Preferences</h2>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Preferred Countries
         </label>
         <select
@@ -390,11 +390,11 @@ const OnboardingFlow: React.FC = () => {
           <option value="Sweden">Sweden</option>
           <option value="Switzerland">Switzerland</option>
         </select>
-        <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple countries</p>
+        <p className="text-xs text-muted-foreground mt-1">Hold Ctrl/Cmd to select multiple countries</p>
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Maximum Tuition Budget (USD/year)
         </label>
         <select
@@ -406,7 +406,7 @@ const OnboardingFlow: React.FC = () => {
               max_tuition: e.target.value
             }
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
         >
           <option value="">Select budget range</option>
           <option value="10000">Under $10,000</option>
@@ -419,7 +419,7 @@ const OnboardingFlow: React.FC = () => {
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Program Types
         </label>
         <select
@@ -441,11 +441,11 @@ const OnboardingFlow: React.FC = () => {
           <option value="Research">Research Program</option>
           <option value="Professional">Professional Degree</option>
         </select>
-        <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple program types</p>
+        <p className="text-xs text-muted-foreground mt-1">Hold Ctrl/Cmd to select multiple program types</p>
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Preferred Start Date
         </label>
         <select
@@ -457,7 +457,7 @@ const OnboardingFlow: React.FC = () => {
               start_date: e.target.value
             }
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
         >
           <option value="">Select start date</option>
           <option value="Fall 2025">Fall 2025</option>
@@ -471,99 +471,99 @@ const OnboardingFlow: React.FC = () => {
 
   const renderContactInfoStep = () => (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Contact Information</h2>
+      <h2 className="text-xl font-semibold text-foreground">Contact Information</h2>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Address Line 1
         </label>
         <input
           type="text"
-          value={formData.address_line1}
+          value={formData.address_line1 || ''}
           onChange={(e) => setFormData({
             ...formData,
             address_line1: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           placeholder="Street address, P.O. box, etc."
         />
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Address Line 2
         </label>
         <input
           type="text"
-          value={formData.address_line2}
+          value={formData.address_line2 || ''}
           onChange={(e) => setFormData({
             ...formData,
             address_line2: e.target.value
           })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           placeholder="Apartment, suite, unit, building, floor, etc."
         />
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             City
           </label>
           <input
             type="text"
-            value={formData.city}
+            value={formData.city || ''}
             onChange={(e) => setFormData({
               ...formData,
               city: e.target.value
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           />
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             State / Province
           </label>
           <input
             type="text"
-            value={formData.state_province}
+            value={formData.state_province || ''}
             onChange={(e) => setFormData({
               ...formData,
               state_province: e.target.value
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           />
         </div>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Postal / Zip Code
           </label>
           <input
             type="text"
-            value={formData.postal_code}
+            value={formData.postal_code || ''}
             onChange={(e) => setFormData({
               ...formData,
               postal_code: e.target.value
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           />
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Country
           </label>
           <select
-            value={formData.country}
+            value={formData.country || ''}
             onChange={(e) => setFormData({
               ...formData,
               country: e.target.value
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
           >
             <option value="">Select a country</option>
             <option value="Nigeria">Nigeria</option>
@@ -606,22 +606,22 @@ const OnboardingFlow: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold">Complete Your Profile</h1>
-            <span className="text-sm text-gray-500">Step {step} of {totalSteps}</span>
+            <h1 className="text-2xl font-bold text-foreground">Complete Your Profile</h1>
+            <span className="text-sm text-muted-foreground">Step {step} of {totalSteps}</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-secondary rounded-full h-2">
             <div
-              className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+              className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{ width: `${(step / totalSteps) * 100}%` }}
             ></div>
           </div>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-50 text-red-700 rounded-md flex items-center">
+          <div className="mb-6 p-3 bg-destructive/10 border border-destructive/20 text-destructive rounded-md flex items-center">
             <span className="text-sm">{error}</span>
           </div>
         )}
@@ -636,19 +636,19 @@ const OnboardingFlow: React.FC = () => {
               disabled={step === 1 || loading}
               className={`px-4 py-2 rounded-md ${
                 step === 1 || loading
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                  : 'bg-muted text-foreground hover:bg-muted/80'
               }`}
             >
               Previous
             </button>
-            
+
             {step < totalSteps ? (
               <button
                 type="button"
                 onClick={() => setStep(step + 1)}
                 disabled={loading}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-300"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50"
               >
                 Next
               </button>
@@ -656,7 +656,7 @@ const OnboardingFlow: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-300 flex items-center gap-2"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2"
               >
                 {loading ? (
                   <>

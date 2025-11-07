@@ -79,7 +79,7 @@ export const useProgramMatching = (): UseProgramMatchingReturn => {
         return;
       }
 
-      setMatchedPrograms(programs || []);
+      setMatchedPrograms((programs || []) as any as Program[]);
     } catch (err) {
       console.error('Error in program matching:', err);
       setError('Failed to find matching programs');

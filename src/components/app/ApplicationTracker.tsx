@@ -18,7 +18,8 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   GridIcon,
-  ListIcon
+  ListIcon,
+  ChevronDown
 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
@@ -78,56 +79,56 @@ type SortOrder = 'asc' | 'desc'
 const getStatusConfig = (status: Application['status']) => {
   const configs = {
     planning: {
-      color: 'bg-gray-500',
-      bgColor: 'bg-gray-50 dark:bg-gray-900/20',
-      textColor: 'text-gray-700 dark:text-gray-300',
+      color: 'bg-muted-foreground',
+      bgColor: 'bg-muted',
+      textColor: 'text-muted-foreground',
       icon: FileTextIcon,
       label: 'Planning'
     },
     'in-progress': {
-      color: 'bg-blue-500',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-      textColor: 'text-blue-700 dark:text-blue-300',
+      color: 'bg-primary',
+      bgColor: 'bg-accent',
+      textColor: 'text-accent-foreground',
       icon: ClockIcon,
       label: 'In Progress'
     },
     submitted: {
-      color: 'bg-indigo-500',
-      bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
-      textColor: 'text-indigo-700 dark:text-indigo-300',
+      color: 'bg-primary',
+      bgColor: 'bg-primary/10',
+      textColor: 'text-primary',
       icon: ArrowUpIcon,
       label: 'Submitted'
     },
     'in-review': {
-      color: 'bg-yellow-500',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-      textColor: 'text-yellow-700 dark:text-yellow-300',
+      color: 'bg-chart-3',
+      bgColor: 'bg-chart-3/10',
+      textColor: 'text-chart-3',
       icon: ClockIcon,
       label: 'In Review'
     },
     accepted: {
-      color: 'bg-green-500',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      textColor: 'text-green-700 dark:text-green-300',
+      color: 'bg-chart-1',
+      bgColor: 'bg-chart-1/10',
+      textColor: 'text-chart-1',
       icon: CheckCircleIcon,
       label: 'Accepted'
     },
     rejected: {
-      color: 'bg-red-500',
-      bgColor: 'bg-red-50 dark:bg-red-900/20',
-      textColor: 'text-red-700 dark:text-red-300',
+      color: 'bg-destructive',
+      bgColor: 'bg-destructive/10',
+      textColor: 'text-destructive',
       icon: XCircleIcon,
       label: 'Rejected'
     },
     deferred: {
-      color: 'bg-orange-500',
-      bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-      textColor: 'text-orange-700 dark:text-orange-300',
+      color: 'bg-chart-3',
+      bgColor: 'bg-chart-3/10',
+      textColor: 'text-chart-3',
       icon: AlertTriangleIcon,
       label: 'Deferred'
     }
   }
-  
+
   return configs[status]
 }
 
@@ -204,63 +205,69 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-card rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-border shadow-lg">
         <div className="p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-xl font-semibold text-foreground mb-6">
             {application ? 'Edit Application' : 'Add New Application'}
           </h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Program Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Program *
               </label>
-              <select
-                value={formData.program_id}
-                onChange={(e) => setFormData({ ...formData, program_id: e.target.value })}
-                className={cn(
-                  'w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white',
-                  errors.program_id ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                )}
-                disabled={!!application} // Can't change program for existing applications
-              >
-                <option value="">Select a program</option>
-                {programs.map(program => (
-                  <option key={program.id} value={program.id}>
-                    {program.name} - {program.university}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.program_id}
+                  onChange={(e) => setFormData({ ...formData, program_id: e.target.value })}
+                  className={cn(
+                    'w-full appearance-none pl-3 pr-10 py-2 border rounded-md bg-background text-foreground',
+                    errors.program_id ? 'border-destructive' : 'border-input'
+                  )}
+                  disabled={!!application} // Can't change program for existing applications
+                >
+                  <option value="">Select a program</option>
+                  {programs.map(program => (
+                    <option key={program.id} value={program.id}>
+                      {program.name} - {program.university}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+              </div>
               {errors.program_id && (
-                <p className="mt-1 text-sm text-red-600">{errors.program_id}</p>
+                <p className="mt-1 text-sm text-destructive">{errors.program_id}</p>
               )}
             </div>
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Status
               </label>
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-              >
-                <option value="planning">Planning</option>
-                <option value="in-progress">In Progress</option>
-                <option value="submitted">Submitted</option>
-                <option value="in-review">In Review</option>
-                <option value="accepted">Accepted</option>
-                <option value="rejected">Rejected</option>
-                <option value="deferred">Deferred</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
+                  className="w-full appearance-none pl-3 pr-10 py-2 border border-input rounded-md bg-background text-foreground"
+                >
+                  <option value="planning">Planning</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="in-review">In Review</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="deferred">Deferred</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+              </div>
             </div>
 
             {/* Deadline */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Application Deadline *
               </label>
               <input
@@ -268,25 +275,25 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 value={formData.deadline}
                 onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
                 className={cn(
-                  'w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white',
-                  errors.deadline ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                  'w-full px-3 py-2 border rounded-md bg-background text-foreground',
+                  errors.deadline ? 'border-destructive' : 'border-input'
                 )}
               />
               {errors.deadline && (
-                <p className="mt-1 text-sm text-red-600">{errors.deadline}</p>
+                <p className="mt-1 text-sm text-destructive">{errors.deadline}</p>
               )}
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Notes
               </label>
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
                 placeholder="Add notes about this application..."
               />
             </div>
@@ -297,14 +304,14 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 type="submit"
                 disabled={loading}
                 className={cn(
-                  'flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md font-medium',
-                  'hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed',
+                  'flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md font-medium',
+                  'hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed',
                   'flex items-center justify-center space-x-2'
                 )}
               >
                 {loading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground" />
                     <span>Saving...</span>
                   </>
                 ) : (
@@ -314,7 +321,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md font-medium hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="px-4 py-2 border border-input text-foreground rounded-md font-medium hover:bg-muted"
               >
                 Cancel
               </button>
@@ -388,7 +395,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   if (viewMode === 'list') {
     return (
       <div className={cn(
-        'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4',
+        'bg-card border border-border rounded-lg p-4',
         'hover:shadow-md transition-all duration-200'
       )}>
         <div className="flex items-center justify-between">
@@ -399,10 +406,10 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
                 statusConfig.color
               )} />
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+                <h3 className="font-semibold text-foreground truncate">
                   {application.programs.name}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                <p className="text-sm text-muted-foreground truncate">
                   {application.programs.university}, {application.programs.country}
                 </p>
               </div>
@@ -414,11 +421,11 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
               <span className={cn(
                 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
                 statusConfig.color,
-                'text-white'
+                'text-primary-foreground'
               )}>
                 {statusConfig.label}
               </span>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Due: {formatDate(application.deadline)}
               </p>
             </div>
@@ -426,19 +433,19 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowActions(!showActions)}
-                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="p-2 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
               >
                 <MoreVerticalIcon className="w-4 h-4" />
               </button>
 
               {showActions && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg border border-gray-200 dark:border-gray-600 z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-popover rounded-md shadow-lg border border-border z-10">
                   <button
                     onClick={() => {
                       onEdit(application)
                       setShowActions(false)
                     }}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center space-x-2"
+                    className="w-full px-4 py-2 text-left text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground flex items-center space-x-2"
                   >
                     <EditIcon className="w-4 h-4" />
                     <span>Edit</span>
@@ -448,7 +455,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
                       onDelete(application.id)
                       setShowActions(false)
                     }}
-                    className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
+                    className="w-full px-4 py-2 text-left text-sm text-destructive hover:bg-destructive/10 flex items-center space-x-2"
                   >
                     <TrashIcon className="w-4 h-4" />
                     <span>Delete</span>
@@ -465,52 +472,52 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   // Grid view
   return (
     <div className={cn(
-      'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6',
+      'bg-card border border-border rounded-lg p-6',
       'hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1',
-      isOverdue && 'border-red-300 dark:border-red-600',
-      isUrgent && 'border-orange-300 dark:border-orange-600'
+      isOverdue && 'border-destructive',
+      isUrgent && 'border-chart-3'
     )}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+          <h3 className="font-semibold text-foreground truncate">
             {application.programs.name}
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+          <p className="text-sm text-muted-foreground truncate">
             {application.programs.university}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">
+          <p className="text-xs text-muted-foreground">
             {application.programs.country} • {application.programs.duration}
           </p>
         </div>
-        
+
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowActions(!showActions)}
-            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-muted"
           >
             <MoreVerticalIcon className="w-4 h-4" />
           </button>
 
           {showActions && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg border border-gray-200 dark:border-gray-600 z-10">
+            <div className="absolute right-0 mt-2 w-48 bg-popover rounded-md shadow-lg border border-border z-10">
               <button
                 onClick={() => {
                   onEdit(application)
                   setShowActions(false)
                 }}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center space-x-2"
+                className="w-full px-4 py-2 text-left text-sm text-popover-foreground hover:bg-accent hover:text-accent-foreground flex items-center space-x-2"
               >
                 <EditIcon className="w-4 h-4" />
                 <span>Edit</span>
               </button>
-              <hr className="border-gray-200 dark:border-gray-600" />
+              <hr className="border-border" />
               <button
                 onClick={() => {
                   onDelete(application.id)
                   setShowActions(false)
                 }}
-                className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2"
+                className="w-full px-4 py-2 text-left text-sm text-destructive hover:bg-destructive/10 flex items-center space-x-2"
               >
                 <TrashIcon className="w-4 h-4" />
                 <span>Delete</span>
@@ -525,17 +532,17 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         <span className={cn(
           'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
           statusConfig.color,
-          'text-white'
+          'text-primary-foreground'
         )}>
           <StatusIcon className="w-4 h-4 mr-1" />
           {statusConfig.label}
         </span>
-        
+
         {(isOverdue || isUrgent) && (
           <span className={cn(
             'inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold',
-            isOverdue ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' :
-            'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
+            isOverdue ? 'bg-destructive/10 text-destructive' :
+            'bg-chart-3/10 text-chart-3'
           )}>
             {isOverdue ? `${Math.abs(daysLeft)} days overdue` : `${daysLeft} days left`}
           </span>
@@ -543,7 +550,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       </div>
 
       {/* Deadline */}
-      <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+      <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
         <CalendarIcon className="w-4 h-4" />
         <span>Deadline: {formatDate(application.deadline)}</span>
       </div>
@@ -553,19 +560,19 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         {/* Tuition Fee - Using same display system as Programs page */}
         {tuitionAmount > 0 ? (
           <div className="text-sm">
-            <span className="font-medium text-gray-700 dark:text-gray-300">Annual Tuition:</span>
+            <span className="font-medium text-foreground">Annual Tuition:</span>
             <div className="mt-1">
               {tuitionDisplay.isLoading ? (
-                <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-5 w-32 rounded"></div>
+                <div className="animate-pulse bg-muted h-5 w-32 rounded"></div>
               ) : (
                 <>
                   {/* Primary: Original currency */}
-                  <div className="text-gray-900 dark:text-white font-semibold">
+                  <div className="text-foreground font-semibold">
                     {currencyDisplay.primary}
                   </div>
                   {/* Secondary: NGN conversion (if not Nigerian school) */}
                   {currencyDisplay.secondary && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="text-xs text-muted-foreground">
                       {currencyDisplay.secondary}
                     </div>
                   )}
@@ -574,7 +581,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
             </div>
           </div>
         ) : (
-          <div className="text-sm text-gray-500 dark:text-gray-500 italic">
+          <div className="text-sm text-muted-foreground italic">
             Annual tuition fee not available
           </div>
         )}
@@ -582,9 +589,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         {/* Application Fee - Will be implemented when database has application fee data */}
         {application.programs.application_fee && application.programs.application_fee > 0 && (
           <div className="text-sm">
-            <span className="font-medium text-gray-700 dark:text-gray-300">Application Fee:</span>
+            <span className="font-medium text-foreground">Application Fee:</span>
             <div className="mt-1">
-              <div className="text-gray-900 dark:text-white font-semibold text-xs">
+              <div className="text-foreground font-semibold text-xs">
                 {formatNGN(application.programs.application_fee)}
               </div>
             </div>
@@ -594,7 +601,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
       {/* Notes */}
       {application.notes && (
-        <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded p-3 mb-4">
+        <div className="text-sm text-muted-foreground bg-muted rounded p-3 mb-4">
           <p className="truncate">{application.notes}</p>
         </div>
       )}
@@ -603,24 +610,27 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       <div className="flex space-x-2">
         <button
           onClick={() => onEdit(application)}
-          className="flex-1 px-3 py-2 bg-indigo-100 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400 rounded-md text-sm font-medium hover:bg-indigo-200 dark:hover:bg-indigo-900/30"
+          className="flex-1 px-3 py-2 bg-primary/10 text-primary rounded-md text-sm font-medium hover:bg-primary/20"
         >
           Edit
         </button>
-        
-        <select
-          value={application.status}
-          onChange={(e) => onStatusChange(application.id, e.target.value as Application['status'])}
-          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-        >
-          <option value="planning">Planning</option>
-          <option value="in-progress">In Progress</option>
-          <option value="submitted">Submitted</option>
-          <option value="in-review">In Review</option>
-          <option value="accepted">Accepted</option>
-          <option value="rejected">Rejected</option>
-          <option value="deferred">Deferred</option>
-        </select>
+
+        <div className="relative">
+          <select
+            value={application.status}
+            onChange={(e) => onStatusChange(application.id, e.target.value as Application['status'])}
+            className="appearance-none pl-3 pr-10 py-2 border border-input rounded-md text-sm bg-background text-foreground"
+          >
+            <option value="planning">Planning</option>
+            <option value="in-progress">In Progress</option>
+            <option value="submitted">Submitted</option>
+            <option value="in-review">In Review</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+            <option value="deferred">Deferred</option>
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+        </div>
       </div>
     </div>
   )
@@ -668,7 +678,7 @@ export const ApplicationTracker: React.FC = () => {
             *,
             programs!inner(*)
           `)
-          .eq('user_id', user?.id)
+          .eq('user_id', user?.id || '')
           .order('created_at', { ascending: false }),
 
         supabase
@@ -680,7 +690,7 @@ export const ApplicationTracker: React.FC = () => {
       if (applicationsResult.error) throw applicationsResult.error
       if (programsResult.error) throw programsResult.error
 
-      setApplications(applicationsResult.data || [])
+      setApplications((applicationsResult.data || []) as any as Application[])
       setPrograms(programsResult.data || [])
       setError(null)
     } catch (err) {
@@ -699,7 +709,7 @@ export const ApplicationTracker: React.FC = () => {
       const { error } = await supabase
         .from('applications')
         .insert({
-          user_id: user?.id,
+          user_id: user?.id || '',
           program_id: data.program_id,
           status: data.status,
           deadline: data.deadline,
@@ -755,7 +765,7 @@ export const ApplicationTracker: React.FC = () => {
         .from('applications')
         .delete()
         .eq('id', id)
-        .eq('user_id', user?.id)
+        .eq('user_id', user?.id || '')
 
       if (error) {
         console.error('Error deleting application:', error)
@@ -863,14 +873,14 @@ export const ApplicationTracker: React.FC = () => {
       <div className="p-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
-            <XCircleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <XCircleIcon className="w-12 h-12 text-destructive mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               Failed to Load Applications
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+            <p className="text-muted-foreground mb-4">{error}</p>
             <button
               onClick={fetchData}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
             >
               Try Again
             </button>
@@ -886,17 +896,17 @@ export const ApplicationTracker: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               Application Tracker
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-muted-foreground mt-1">
               Manage your study abroad applications
             </p>
           </div>
-          
+
           <button
             onClick={() => setShowForm(true)}
-            className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+            className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
           >
             <PlusIcon className="w-5 h-5 mr-2" />
             Add Application
@@ -905,88 +915,94 @@ export const ApplicationTracker: React.FC = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
+          <div className="bg-card p-4 rounded-lg border border-border">
+            <div className="text-2xl font-bold text-foreground">{stats.total}</div>
+            <div className="text-sm text-muted-foreground">Total</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-blue-600">{stats.inProgress}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
+          <div className="bg-card p-4 rounded-lg border border-border">
+            <div className="text-2xl font-bold text-primary">{stats.inProgress}</div>
+            <div className="text-sm text-muted-foreground">In Progress</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-indigo-600">{stats.submitted}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Submitted</div>
+          <div className="bg-card p-4 rounded-lg border border-border">
+            <div className="text-2xl font-bold text-primary">{stats.submitted}</div>
+            <div className="text-sm text-muted-foreground">Submitted</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-green-600">{stats.accepted}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Accepted</div>
+          <div className="bg-card p-4 rounded-lg border border-border">
+            <div className="text-2xl font-bold text-chart-1">{stats.accepted}</div>
+            <div className="text-sm text-muted-foreground">Accepted</div>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-gray-600">{stats.planning}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Planning</div>
+          <div className="bg-card p-4 rounded-lg border border-border">
+            <div className="text-2xl font-bold text-muted-foreground">{stats.planning}</div>
+            <div className="text-sm text-muted-foreground">Planning</div>
           </div>
         </div>
 
         {/* Filters and Search - Always visible */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
+        <div className="bg-card border border-border rounded-lg p-4 mb-6">
           <div className="flex flex-col gap-4">
             {/* Search */}
             <div className="relative w-full">
-              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search applications..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-input rounded-md bg-background text-foreground text-sm"
               />
             </div>
 
             {/* Filters Row */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {/* Status Filter */}
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
-                className="flex-1 sm:flex-none sm:min-w-[140px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
-              >
-                <option value="all">All Status</option>
-                <option value="planning">Planning</option>
-                <option value="in-progress">In Progress</option>
-                <option value="submitted">Submitted</option>
-                <option value="in-review">In Review</option>
-                <option value="accepted">Accepted</option>
-                <option value="rejected">Rejected</option>
-                <option value="deferred">Deferred</option>
-              </select>
+              <div className="relative flex-1 sm:flex-none sm:min-w-[140px]">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
+                  className="w-full appearance-none pl-3 pr-10 py-2 border border-input rounded-md bg-background text-foreground text-sm"
+                >
+                  <option value="all">All Status</option>
+                  <option value="planning">Planning</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="in-review">In Review</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="deferred">Deferred</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+              </div>
 
               {/* Sort Filter */}
-              <select
-                value={`${sortField}-${sortOrder}`}
-                onChange={(e) => {
-                  const [field, order] = e.target.value.split('-')
-                  setSortField(field as SortField)
-                  setSortOrder(order as SortOrder)
-                }}
-                className="flex-1 sm:flex-none sm:min-w-[160px] px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white text-sm"
-              >
-                <option value="deadline-asc">Deadline (Soon)</option>
-                <option value="deadline-desc">Deadline (Late)</option>
-                <option value="created_at-desc">Recently Added</option>
-                <option value="university-asc">University A-Z</option>
-                <option value="status-asc">Status</option>
-              </select>
+              <div className="relative flex-1 sm:flex-none sm:min-w-[160px]">
+                <select
+                  value={`${sortField}-${sortOrder}`}
+                  onChange={(e) => {
+                    const [field, order] = e.target.value.split('-')
+                    setSortField(field as SortField)
+                    setSortOrder(order as SortOrder)
+                  }}
+                  className="w-full appearance-none pl-3 pr-10 py-2 border border-input rounded-md bg-background text-foreground text-sm"
+                >
+                  <option value="deadline-asc">Deadline (Soon)</option>
+                  <option value="deadline-desc">Deadline (Late)</option>
+                  <option value="created_at-desc">Recently Added</option>
+                  <option value="university-asc">University A-Z</option>
+                  <option value="status-asc">Status</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+              </div>
 
               {/* View Mode Toggle */}
-              <div className="flex items-center justify-center sm:justify-start space-x-1 bg-gray-100 dark:bg-gray-700 rounded-md p-1 sm:ml-auto">
+              <div className="flex items-center justify-center sm:justify-start space-x-1 bg-muted rounded-md p-1 sm:ml-auto">
                 <button
                   onClick={() => setViewMode('grid')}
                   title="Grid View"
                   className={cn(
                     'p-2 rounded-md transition-colors',
                     viewMode === 'grid'
-                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
                   <GridIcon className="w-4 h-4" />
@@ -997,8 +1013,8 @@ export const ApplicationTracker: React.FC = () => {
                   className={cn(
                     'p-2 rounded-md transition-colors',
                     viewMode === 'list'
-                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
                   <ListIcon className="w-4 h-4" />
@@ -1009,8 +1025,8 @@ export const ApplicationTracker: React.FC = () => {
                   className={cn(
                     'p-2 rounded-md transition-colors',
                     viewMode === 'timeline'
-                      ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
                   <CalendarIcon className="w-4 h-4" />
@@ -1028,20 +1044,20 @@ export const ApplicationTracker: React.FC = () => {
             {/* Applications Grid/List */}
             {filteredAndSortedApplications.length === 0 ? (
               <div className="text-center py-12">
-                <FileTextIcon className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <FileTextIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   No applications found
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {searchQuery || statusFilter !== 'all' 
-                    ? 'Try adjusting your search or filters' 
+                <p className="text-muted-foreground mb-4">
+                  {searchQuery || statusFilter !== 'all'
+                    ? 'Try adjusting your search or filters'
                     : 'Start your study abroad journey by adding your first application'
                   }
                 </p>
                 {(!searchQuery && statusFilter === 'all') && (
                   <button
                     onClick={() => setShowForm(true)}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
                   >
                     Add First Application
                   </button>

@@ -88,25 +88,25 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Sparkles className="h-8 w-8 text-indigo-600" />
+        <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/30 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Sparkles className="h-8 w-8 text-primary" />
         </div>
-        <h3 className="text-2xl font-nunito-bold text-gray-900">Let's Get Specific</h3>
-        <p className="mt-2 text-gray-600">
+        <h3 className="text-2xl font-nunito-bold text-foreground">Let's Get Specific</h3>
+        <p className="mt-2 text-muted-foreground">
           Help us find the perfect programs with these detailed preferences
         </p>
       </div>
 
       {/* Program Characteristics */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl">
+      <div className="bg-accent p-6 rounded-xl border border-border">
         <div className="flex items-center gap-2 mb-4">
-          <Target className="h-5 w-5 text-blue-600" />
-          <h4 className="text-lg font-nunito-bold text-gray-900">Program Characteristics</h4>
+          <Target className="h-5 w-5 text-accent-foreground" />
+          <h4 className="text-lg font-nunito-bold text-foreground">Program Characteristics</h4>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-nunito-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-nunito-semibold text-foreground mb-3">
               Preferred Program Duration
             </label>
             <div className="space-y-2">
@@ -116,16 +116,16 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
                     type="checkbox"
                     checked={preferences.program_duration.includes(duration)}
                     onChange={() => handleArrayToggle('program_duration', duration)}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{duration}</span>
+                  <span className="ml-2 text-sm text-foreground">{duration}</span>
                 </label>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-nunito-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-nunito-semibold text-foreground mb-3">
               Program Format
             </label>
             <div className="space-y-2">
@@ -135,9 +135,9 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
                     type="checkbox"
                     checked={preferences.program_format.includes(format)}
                     onChange={() => handleArrayToggle('program_format', format)}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{format}</span>
+                  <span className="ml-2 text-sm text-foreground">{format}</span>
                 </label>
               ))}
             </div>
@@ -145,13 +145,13 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-nunito-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-nunito-semibold text-foreground mb-2">
             University Ranking Importance
           </label>
           <select
             value={preferences.university_ranking}
             onChange={(e) => handleInputChange('university_ranking', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground"
           >
             <option value="">Select importance level</option>
             <option value="Top 50 globally">Must be Top 50 globally</option>
@@ -164,21 +164,21 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
       </div>
 
       {/* Academic Requirements */}
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl">
+      <div className="bg-muted p-6 rounded-xl border border-border">
         <div className="flex items-center gap-2 mb-4">
-          <Brain className="h-5 w-5 text-green-600" />
-          <h4 className="text-lg font-nunito-bold text-gray-900">Academic Preferences</h4>
+          <Brain className="h-5 w-5 text-primary" />
+          <h4 className="text-lg font-nunito-bold text-foreground">Academic Preferences</h4>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-nunito-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-nunito-semibold text-foreground mb-2">
               Preferred GPA Requirement
             </label>
             <select
               value={preferences.preferred_gpa_requirement}
               onChange={(e) => handleInputChange('preferred_gpa_requirement', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground"
             >
               <option value="">Any GPA requirement</option>
               <option value="No minimum">No minimum GPA</option>
@@ -189,13 +189,13 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-nunito-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-nunito-semibold text-foreground mb-2">
               Climate Preference
             </label>
             <select
               value={preferences.climate_preference}
               onChange={(e) => handleInputChange('climate_preference', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground"
             >
               <option value="">No preference</option>
               <option value="Tropical">Tropical (warm year-round)</option>
@@ -212,9 +212,9 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
               type="checkbox"
               checked={preferences.test_requirements.gre_required}
               onChange={(e) => handleTestRequirementChange('gre_required', e.target.checked)}
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
             />
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-foreground">
               I'm willing to take the GRE if required
             </span>
           </label>
@@ -222,15 +222,15 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
       </div>
 
       {/* Career Goals */}
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl">
+      <div className="bg-secondary p-6 rounded-xl border border-border">
         <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="h-5 w-5 text-purple-600" />
-          <h4 className="text-lg font-nunito-bold text-gray-900">Career & Life Goals</h4>
+          <TrendingUp className="h-5 w-5 text-primary" />
+          <h4 className="text-lg font-nunito-bold text-foreground">Career & Life Goals</h4>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-nunito-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-nunito-semibold text-foreground mb-3">
               Career Goals (select up to 3)
             </label>
             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -246,19 +246,19 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
                     checked={preferences.career_goals.includes(goal)}
                     onChange={() => handleArrayToggle('career_goals', goal)}
                     disabled={preferences.career_goals.length >= 3 && !preferences.career_goals.includes(goal)}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 text-primary focus:ring-primary border-input rounded disabled:opacity-50"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{goal}</span>
+                  <span className="ml-2 text-sm text-foreground">{goal}</span>
                 </label>
               ))}
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {preferences.career_goals.length}/3 selected
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-nunito-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-nunito-semibold text-foreground mb-3">
               Industry Focus (select up to 2)
             </label>
             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -273,26 +273,26 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
                     checked={preferences.industry_focus.includes(industry)}
                     onChange={() => handleArrayToggle('industry_focus', industry)}
                     disabled={preferences.industry_focus.length >= 2 && !preferences.industry_focus.includes(industry)}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded disabled:opacity-50"
+                    className="h-4 w-4 text-primary focus:ring-primary border-input rounded disabled:opacity-50"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{industry}</span>
+                  <span className="ml-2 text-sm text-foreground">{industry}</span>
                 </label>
               ))}
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {preferences.industry_focus.length}/2 selected
             </p>
           </div>
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-nunito-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-nunito-semibold text-foreground mb-2">
             Post-Graduation Plans
           </label>
           <select
             value={preferences.post_graduation_plans}
             onChange={(e) => handleInputChange('post_graduation_plans', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground"
           >
             <option value="">Select your plans</option>
             <option value="Work in study country">Work in the country where I study</option>
@@ -305,13 +305,13 @@ const EnhancedPreferencesStep: React.FC<EnhancedPreferencesStepProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between pt-6 border-t">
-        <div className="text-sm text-gray-500">
+      <div className="flex justify-between pt-6 border-t border-border">
+        <div className="text-sm text-muted-foreground">
           These preferences help us find programs that align with your long-term goals
         </div>
         <button
           onClick={handleSubmit}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 font-nunito-semibold"
+          className="bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:bg-primary/90 transition-all duration-200 font-nunito-semibold"
         >
           Complete Enhanced Setup
         </button>

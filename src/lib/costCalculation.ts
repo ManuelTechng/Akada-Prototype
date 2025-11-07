@@ -89,8 +89,8 @@ export async function getCountryCostData(country: string): Promise<CountryCostDa
         min: data.living_cost_range_min || data.avg_monthly_living * 0.8,
         max: data.living_cost_range_max || data.avg_monthly_living * 1.2
       },
-      notes: data.notes,
-      lastUpdated: data.last_updated
+      notes: data.notes || undefined,
+      lastUpdated: data.last_updated || ''
     }
   } catch (error) {
     console.error('Error fetching country cost data:', error)
@@ -130,14 +130,14 @@ export async function getProgramCostData(programId: string): Promise<ProgramCost
       id: data.id,
       name: data.name,
       university: data.university,
-      country: data.country,
+      country: data.country || '',
       tuitionFee: data.tuition_fee,
-      tuitionFeeCurrency: data.tuition_fee_currency,
+      tuitionFeeCurrency: data.tuition_fee_currency || '',
       applicationFee: data.application_fee || 0,
-      applicationFeeCurrency: data.application_fee_currency || data.tuition_fee_currency,
-      duration: data.duration,
-      degreeType: data.degree_type,
-      specialization: data.specialization
+      applicationFeeCurrency: data.application_fee_currency || data.tuition_fee_currency || '',
+      duration: data.duration || '',
+      degreeType: data.degree_type || '',
+      specialization: data.specialization || ''
     }
   } catch (error) {
     console.error('Error fetching program cost data:', error)

@@ -64,8 +64,8 @@ export async function getProgramCoursesGrouped(programId: string): Promise<Cours
       const key = `${programCourse.year}-${programCourse.semester}`;
       if (!acc[key]) {
         acc[key] = {
-          year: programCourse.year,
-          semester: programCourse.semester,
+          year: programCourse.year ?? 0,
+          semester: programCourse.semester ?? 0,
           courses: []
         };
       }
@@ -115,7 +115,7 @@ export async function getCourseWithPrerequisites(courseId: string): Promise<Cour
     if (!course) return null;
 
     // Get prerequisite details if prerequisites exist
-    let prerequisites_details = [];
+    let prerequisites_details: any[] = [];
     if (course.prerequisites && course.prerequisites.length > 0) {
       const { data, error } = await supabase
         .from('courses')
@@ -163,7 +163,7 @@ export async function getCoursesWithPrerequisites(programId: string): Promise<Co
     // For each course, get its prerequisite details
     const coursesWithPrerequisites = await Promise.all(
       courses.map(async (course) => {
-        let prerequisites_details = [];
+        let prerequisites_details: any[] = [];
         if (course.prerequisites && course.prerequisites.length > 0) {
           const { data: prereqData, error: prereqError } = await supabase
             .from('courses')

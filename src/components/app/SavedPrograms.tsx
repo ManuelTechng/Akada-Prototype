@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { 
-  BookmarkIcon, 
-  Search, 
-  Grid3X3, 
-  List, 
-  Trash2, 
+import {
+  BookmarkIcon,
+  Search,
+  Grid3X3,
+  List,
+  Trash2,
   SortAsc,
   SortDesc,
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  ChevronDown
 } from 'lucide-react'
 import { useSavedProgramsContext } from '../../contexts/SavedProgramsContext'
 import { useNavigate } from 'react-router-dom'
@@ -145,21 +146,21 @@ const SavedPrograms: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
-        <p className="text-gray-600 dark:text-gray-400">Loading your saved programs...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p className="text-muted-foreground">Loading your saved programs...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
-        <AlertCircle className="h-12 w-12 text-red-600 dark:text-red-400 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Error Loading Programs</h3>
-        <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+      <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-6 text-center">
+        <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-destructive mb-2">Error Loading Programs</h3>
+        <p className="text-destructive mb-4">{error}</p>
         <button
           onClick={refreshSavedPrograms}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors inline-flex items-center gap-2"
+          className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:bg-destructive/90 transition-colors inline-flex items-center gap-2"
         >
           <RefreshCw className="h-4 w-4" />
           Try Again
@@ -173,10 +174,10 @@ const SavedPrograms: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-heading">
+          <h1 className="text-2xl font-bold text-foreground font-heading">
             Saved Programs
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             {savedPrograms.length} program{savedPrograms.length !== 1 ? 's' : ''} saved for later review
           </p>
         </div>
@@ -184,7 +185,7 @@ const SavedPrograms: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/app/programs')}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2"
           >
             <Search className="h-4 w-4" />
             Find More Programs
@@ -194,19 +195,19 @@ const SavedPrograms: React.FC = () => {
 
       {savedPrograms.length === 0 ? (
         // Empty State
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center">
-          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BookmarkIcon className="h-8 w-8 text-gray-400 dark:text-gray-500" />
+        <div className="bg-card rounded-xl shadow-sm border border-border p-12 text-center">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <BookmarkIcon className="h-8 w-8 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-foreground mb-2">
             No Saved Programs Yet
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             Start building your shortlist by saving programs that interest you. This will help you compare and track your favorites.
           </p>
           <button
             onClick={() => navigate('/app/programs')}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2"
+            className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2"
           >
             <Search className="h-5 w-5" />
             Browse Programs
@@ -215,67 +216,73 @@ const SavedPrograms: React.FC = () => {
       ) : (
         <>
           {/* Controls */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 mb-5">
+          <div className="bg-card rounded-xl shadow-sm border border-border p-4 sm:p-5 mb-5">
             <div className="flex flex-col lg:flex-row lg:items-center gap-3">
               {/* Search */}
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search saved programs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground"
                 />
               </div>
 
               {/* Filters & Controls */}
               <div className="flex items-center gap-3">
                 {/* Country Filter */}
-                <select
-                  aria-label="Filter saved programs by country"
-                  value={filterCountry}
-                  onChange={(e) => setFilterCountry(e.target.value)}
-                  className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                >
-                  <option value="">All Countries</option>
-                  {countries.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    aria-label="Filter saved programs by country"
+                    value={filterCountry}
+                    onChange={(e) => setFilterCountry(e.target.value)}
+                    className="appearance-none border border-input rounded-lg pl-3 pr-10 py-2 focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground text-sm"
+                  >
+                    <option value="">All Countries</option>
+                    {countries.map(country => (
+                      <option key={country} value={country}>{country}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+                </div>
 
                 {/* Sort */}
                 <div className="flex items-center gap-1">
-                  <select
-                    aria-label="Sort saved programs"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
-                    className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                  >
-                    <option value="date">Date Saved</option>
-                    <option value="name">Program Name</option>
-                    <option value="cost">Tuition Cost</option>
-                    <option value="deadline">Deadline</option>
-                  </select>
-                  
+                  <div className="relative">
+                    <select
+                      aria-label="Sort saved programs"
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value as any)}
+                      className="appearance-none border border-input rounded-lg pl-3 pr-10 py-2 focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground text-sm"
+                    >
+                      <option value="date">Date Saved</option>
+                      <option value="name">Program Name</option>
+                      <option value="cost">Tuition Cost</option>
+                      <option value="deadline">Deadline</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+                  </div>
+
                   <button
                     aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    className="p-2 text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
                   </button>
                 </div>
 
                 {/* View Mode */}
-                <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                <div className="flex bg-muted rounded-lg p-1">
                   <button
                     aria-label="Switch to grid view"
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded transition-colors ${
-                      viewMode === 'grid' 
-                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                      viewMode === 'grid'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     <Grid3X3 className="h-4 w-4" />
@@ -284,9 +291,9 @@ const SavedPrograms: React.FC = () => {
                     aria-label="Switch to list view"
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded transition-colors ${
-                      viewMode === 'list' 
-                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                      viewMode === 'list'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     <List className="h-4 w-4" />
@@ -297,22 +304,22 @@ const SavedPrograms: React.FC = () => {
 
             {/* Bulk Actions */}
             {selectedPrograms.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+              <div className="mt-4 pt-4 border-t border-border">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-muted-foreground">
                       {selectedPrograms.length} program{selectedPrograms.length !== 1 ? 's' : ''} selected
                     </span>
                     <button
                       onClick={selectAllPrograms}
-                      className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300"
+                      className="text-sm text-primary hover:text-primary/80"
                     >
                       {selectedPrograms.length === filteredPrograms.length ? 'Deselect All' : 'Select All'}
                     </button>
                   </div>
                   <button
                     onClick={handleBulkRemove}
-                    className="bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors inline-flex items-center gap-2 text-sm"
+                    className="bg-destructive text-destructive-foreground px-3 py-1.5 rounded-lg hover:bg-destructive/90 transition-colors inline-flex items-center gap-2 text-sm"
                   >
                     <Trash2 className="h-4 w-4" />
                     Remove Selected
@@ -324,12 +331,12 @@ const SavedPrograms: React.FC = () => {
 
           {/* Results */}
           {filteredPrograms.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
-              <Search className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="bg-card rounded-xl shadow-sm border border-border p-8 text-center">
+              <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 No Programs Match Your Search
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Try adjusting your search terms or filters.
               </p>
               <button
@@ -337,7 +344,7 @@ const SavedPrograms: React.FC = () => {
                   setSearchQuery('')
                   setFilterCountry('')
                 }}
-                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium"
+                className="text-primary hover:text-primary/80 font-medium"
               >
                 Clear Filters
               </button>
@@ -361,7 +368,7 @@ const SavedPrograms: React.FC = () => {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleProgramSelection(savedProgram.program_id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded cursor-pointer"
+                        className="h-4 w-4 text-primary focus:ring-ring border-input rounded cursor-pointer"
                         title={isSelected ? "Deselect program" : "Select program"}
                       />
                     </div>

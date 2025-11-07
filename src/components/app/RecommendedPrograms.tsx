@@ -164,27 +164,27 @@ const RecommendedPrograms: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64">
         <div className="relative">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-          <Sparkles className="absolute inset-0 m-auto h-6 w-6 text-indigo-600" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <Sparkles className="absolute inset-0 m-auto h-6 w-6 text-primary" />
         </div>
-        <p className="text-gray-600 dark:text-gray-400 mt-4">Generating personalized recommendations...</p>
+        <p className="text-muted-foreground mt-4">Generating personalized recommendations...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
-        <div className="text-red-600 dark:text-red-400 mb-4">
+      <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-6 text-center">
+        <div className="text-destructive mb-4">
           <Info className="h-12 w-12 mx-auto" />
         </div>
-        <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+        <h3 className="text-lg font-semibold text-destructive mb-2">
           Unable to Load Recommendations
         </h3>
-        <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+        <p className="text-destructive mb-4">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors inline-flex items-center gap-2"
+          className="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:bg-destructive/90 transition-colors inline-flex items-center gap-2"
         >
           <RefreshCw className="h-4 w-4" />
           Try Again
@@ -194,37 +194,37 @@ const RecommendedPrograms: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-heading">
+            <Sparkles className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground font-heading">
               Recommended Programs
             </h1>
           </div>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             {getTotalRecommendations()} personalized recommendations based on your profile
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Last updated: {lastUpdated.toLocaleDateString()} at {lastUpdated.toLocaleTimeString()}
           </p>
         </div>
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/dashboard/profile')}
-            className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
+            className="bg-card border border-border text-foreground px-4 py-2 rounded-lg hover:bg-accent transition-colors inline-flex items-center gap-2"
           >
             <Settings className="h-4 w-4" />
             Update Preferences
           </button>
-          
+
           <button
             onClick={handleRefreshRecommendations}
             disabled={refreshing}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
             {refreshing ? 'Refreshing...' : 'Refresh'}
@@ -234,19 +234,19 @@ const RecommendedPrograms: React.FC = () => {
 
       {/* Profile Completeness Banner */}
       {(!profile?.profile_completed || !profile?.study_preferences) && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+        <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4">
           <div className="flex items-start gap-3">
             <Info className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
             <div className="flex-1">
-              <h3 className="font-medium text-amber-800 dark:text-amber-200">
+              <h3 className="font-medium text-amber-800 dark:text-amber-300">
                 Improve Your Recommendations
               </h3>
-              <p className="text-amber-700 dark:text-amber-300 text-sm mt-1">
+              <p className="text-amber-700 dark:text-amber-400 text-sm mt-1">
                 Complete your profile and preferences to get more accurate and personalized program recommendations.
               </p>
               <button
                 onClick={() => navigate('/dashboard/profile')}
-                className="mt-2 text-amber-800 dark:text-amber-200 hover:text-amber-900 dark:hover:text-amber-100 font-medium text-sm underline"
+                className="mt-2 text-amber-800 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-200 font-medium text-sm underline"
               >
                 Complete Profile →
               </button>
@@ -260,46 +260,46 @@ const RecommendedPrograms: React.FC = () => {
         {recommendations.map((category) => (
           <div
             key={category.id}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
+            className="bg-card rounded-xl shadow-sm border border-border"
           >
             {/* Category Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-600">
+            <div className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
                     {getCategoryIcon(category.icon)}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h2 className="text-lg font-semibold text-foreground">
                         {category.title}
                       </h2>
                       {category.matchPercentage && (
-                        <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full text-xs font-medium">
+                        <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full text-xs font-medium">
                           {category.matchPercentage}% Match
                         </span>
                       )}
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       {category.description}
                     </p>
                     {category.reason && (
-                      <p className="text-indigo-600 dark:text-indigo-400 text-sm mt-1">
+                      <p className="text-primary text-sm mt-1">
                         {category.reason}
                       </p>
                     )}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="text-sm text-muted-foreground">
                     {category.programs.length} program{category.programs.length !== 1 ? 's' : ''}
                   </span>
                   <button
                     onClick={() => setActiveCategory(
                       activeCategory === category.id ? null : category.id
                     )}
-                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium text-sm"
+                    className="text-primary hover:text-primary/80 font-medium text-sm"
                   >
                     {activeCategory === category.id ? 'Collapse' : 'View All'}
                   </button>
@@ -333,7 +333,7 @@ const RecommendedPrograms: React.FC = () => {
                 <div className="mt-4 text-center">
                   <button
                     onClick={() => setActiveCategory(category.id)}
-                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium text-sm inline-flex items-center gap-1"
+                    className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center gap-1"
                   >
                     View {category.programs.length - 2} more program{category.programs.length - 2 !== 1 ? 's' : ''}
                     <ExternalLink className="h-4 w-4" />
@@ -346,27 +346,27 @@ const RecommendedPrograms: React.FC = () => {
       </div>
 
       {/* Call to Action */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
+      <div className="bg-primary rounded-xl p-6 text-primary-foreground">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold mb-2">
               Want More Personalized Recommendations?
             </h3>
-            <p className="text-indigo-100">
+            <p className="opacity-90">
               Our AI gets smarter as you interact with programs. Save programs, update your preferences, and get even better recommendations.
             </p>
           </div>
           <div className="flex gap-3">
             <button
               onClick={() => navigate('/dashboard/search')}
-              className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-2"
+              className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-2"
             >
               <Search className="h-4 w-4" />
               Browse All Programs
             </button>
             <button
               onClick={() => navigate('/dashboard/profile')}
-              className="bg-white text-indigo-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
+              className="bg-background text-primary px-4 py-2 rounded-lg hover:bg-background/90 transition-colors inline-flex items-center gap-2"
             >
               <Settings className="h-4 w-4" />
               Update Profile

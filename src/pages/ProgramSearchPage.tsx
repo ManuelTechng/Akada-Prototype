@@ -379,8 +379,8 @@ const ProgramSearchPageFixed: React.FC = () => {
           application_fee: program.application_fee.toString(),
           created_at: new Date().toISOString()
         }));
-        
-        setPrograms(mappedFallbackPrograms);
+
+        setPrograms(mappedFallbackPrograms as any as Program[]);
       } else if (err.message?.includes('timeout')) {
         console.log('⏰ Program search query timed out, showing fallback data');
         setError('Search is taking longer than expected. Showing sample programs.');
@@ -441,8 +441,8 @@ const ProgramSearchPageFixed: React.FC = () => {
           application_fee: program.application_fee.toString(),
           created_at: new Date().toISOString()
         }));
-        
-        setPrograms(mappedFallbackPrograms);
+
+        setPrograms(mappedFallbackPrograms as any as Program[]);
       } else {
         setError(err.message || 'Failed to fetch programs. Please try again.');
         setPrograms([]);
@@ -529,7 +529,7 @@ const ProgramSearchPageFixed: React.FC = () => {
   };
 
   const getFilterSection = () => (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
+    <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sliders className="h-5 w-5 text-indigo-600" />
@@ -571,56 +571,65 @@ const ProgramSearchPageFixed: React.FC = () => {
           <label htmlFor="filter-country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Country
           </label>
-          <select
-            id="filter-country"
-            value={filters.country}
-            onChange={(e) => handleFilterChange('country', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="">Any country</option>
-            {countries.map(country => (
-              <option key={country.code} value={country.name}>
-                {country.name}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="filter-country"
+              value={filters.country}
+              onChange={(e) => handleFilterChange('country', e.target.value)}
+              className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            >
+              <option value="">Any country</option>
+              {countries.map(country => (
+                <option key={country.code} value={country.name}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+          </div>
         </div>
 
         <div>
           <label htmlFor="filter-degree" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Degree Type
           </label>
-          <select
-            id="filter-degree"
-            value={filters.degreeType}
-            onChange={(e) => handleFilterChange('degreeType', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="">Any type</option>
-            {degreeTypes.map(type => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="filter-degree"
+              value={filters.degreeType}
+              onChange={(e) => handleFilterChange('degreeType', e.target.value)}
+              className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            >
+              <option value="">Any type</option>
+              {degreeTypes.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+          </div>
         </div>
 
         <div>
           <label htmlFor="filter-tuition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Tuition Range (USD/year)
           </label>
-          <select
-            id="filter-tuition"
-            value={filters.maxTuition}
-            onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
-            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-          >
-            <option value="any">Any range</option>
-            <option value="5000">Under $5,000</option>
-            <option value="20000">$5,000 - $20,000</option>
-            <option value="40000">$20,000 - $40,000</option>
-            <option value="100000">$40,000+</option>
-          </select>
+          <div className="relative">
+            <select
+              id="filter-tuition"
+              value={filters.maxTuition}
+              onChange={(e) => handleFilterChange('maxTuition', e.target.value)}
+              className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            >
+              <option value="any">Any range</option>
+              <option value="5000">Under $5,000</option>
+              <option value="20000">$5,000 - $20,000</option>
+              <option value="40000">$20,000 - $40,000</option>
+              <option value="100000">$40,000+</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+          </div>
         </div>
 
         {showAdvancedFilters && (
@@ -629,38 +638,44 @@ const ProgramSearchPageFixed: React.FC = () => {
               <label htmlFor="filter-field" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Field of Study
               </label>
-              <select
-                id="filter-field"
-                value={filters.field}
-                onChange={(e) => handleFilterChange('field', e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              >
-                <option value="">Any field</option>
-                {fields.map(field => (
-                  <option key={field} value={field}>
-                    {field}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="filter-field"
+                  value={filters.field}
+                  onChange={(e) => handleFilterChange('field', e.target.value)}
+                  className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="">Any field</option>
+                  {fields.map(field => (
+                    <option key={field} value={field}>
+                      {field}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
             </div>
 
             <div>
               <label htmlFor="filter-institution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Institution Type
               </label>
-              <select
-                id="filter-institution"
-                value={filters.institutionType}
-                onChange={(e) => handleFilterChange('institutionType', e.target.value)}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              >
-                <option value="">Any type</option>
-                {institutionTypes.map(type => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="filter-institution"
+                  value={filters.institutionType}
+                  onChange={(e) => handleFilterChange('institutionType', e.target.value)}
+                  className="w-full appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                >
+                  <option value="">Any type</option>
+                  {institutionTypes.map(type => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -731,13 +746,13 @@ const ProgramSearchPageFixed: React.FC = () => {
               <span>Back to Dashboard</span>
             </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Find Your Program</h1>
-          <p className="text-gray-600 dark:text-gray-400">Discover programs that match your profile and preferences</p>
+          <h1 className="text-2xl font-bold text-foreground">Find Your Program</h1>
+          <p className="text-muted-foreground">Discover programs that match your profile and preferences</p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={() => navigate('/app/calculator')} 
-            className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
+            className="bg-card border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-muted dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
           >
             <Calculator className="h-5 w-5" />
             <span className="hidden sm:inline">Cost Calculator</span>
@@ -753,7 +768,7 @@ const ProgramSearchPageFixed: React.FC = () => {
         <input
           type="text"
           placeholder="Search for programs, universities, or keywords..."
-          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 shadow-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+          className="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-card shadow-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -766,14 +781,14 @@ const ProgramSearchPageFixed: React.FC = () => {
           {getFilterSection()}
           
           {/* Tools section */}
-          <div className="bg-indigo-600 dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
+          <div className="bg-primary dark:bg-indigo-700 rounded-xl shadow-sm p-6 text-white">
             <h2 className="font-semibold mb-4 text-lg">Need Help Finding Programs?</h2>
             <p className="text-indigo-100 mb-4">
               Our AI assistant can help you discover programs that match your profile, preferences, and career goals.
             </p>
             <button 
               onClick={() => navigate('/app/assistant')}
-              className="w-full bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 mb-4"
+              className="w-full bg-card text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 mb-4"
             >
               <Search className="h-5 w-5" />
               Get Personalized Suggestions
@@ -791,7 +806,7 @@ const ProgramSearchPageFixed: React.FC = () => {
         {/* Results area */}
         <div className="lg:col-span-2 xl:col-span-3 space-y-6">
           {/* Results header */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+          <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
@@ -815,34 +830,37 @@ const ProgramSearchPageFixed: React.FC = () => {
               
               <div className="flex gap-3 items-center">
                 <span className="text-sm text-gray-500 hidden sm:inline-block">Sort by:</span>
-                <select
-                  aria-label="Sort programs"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                >
-                  <option value="match">Best Match</option>
-                  <option value="deadline">Deadline (Soonest)</option>
-                  <option value="tuition-low">Tuition (Low to High)</option>
-                  <option value="tuition-high">Tuition (High to Low)</option>
-                </select>
+                <div className="relative">
+                  <select
+                    aria-label="Sort programs"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none border border-gray-300 dark:border-gray-600 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  >
+                    <option value="match">Best Match</option>
+                    <option value="deadline">Deadline (Soonest)</option>
+                    <option value="tuition-low">Tuition (Low to High)</option>
+                    <option value="tuition-high">Tuition (High to Low)</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-gray-400" />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Results grid */}
           {loading ? (
-            <div className="flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
+            <div className="flex flex-col items-center justify-center bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
               <div className="animate-spin h-12 w-12 border-4 border-indigo-600 border-t-transparent rounded-full mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Searching for programs that match your criteria...</p>
+              <p className="text-muted-foreground">Searching for programs that match your criteria...</p>
             </div>
           ) : error ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+            <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
               <div className="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <AlertCircle className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100 mb-2">Unable to Load Programs</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+              <p className="text-muted-foreground mb-4">{error}</p>
               <div className="space-y-2">
                 <p className="text-sm text-gray-500 dark:text-gray-400">This might be due to:</p>
                 <ul className="text-sm text-gray-500 dark:text-gray-400 text-left inline-block">
@@ -853,14 +871,14 @@ const ProgramSearchPageFixed: React.FC = () => {
               </div>
               <button 
                 onClick={searchPrograms}
-                className="mt-4 bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                className="mt-4 bg-primary dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-primary/90 dark:hover:bg-primary transition-colors"
               >
                 Try Again
               </button>
             </div>
           ) : programs.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
-              <div className="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 text-center">
+              <div className="bg-muted dark:bg-gray-700 text-gray-500 dark:text-gray-400 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Search className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-medium text-gray-900 mb-2">No Programs Found</h3>
@@ -869,7 +887,7 @@ const ProgramSearchPageFixed: React.FC = () => {
               </p>
               <button 
                 onClick={clearAllFilters}
-                className="bg-indigo-600 dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors"
+                className="bg-primary dark:bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-primary/90 dark:hover:bg-primary transition-colors"
               >
                 Clear All Filters
               </button>

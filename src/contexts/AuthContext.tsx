@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { UserProfile } from '../lib/types';
@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<Error | null>(null);
   const [initialized, setInitialized] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(false);
+  const hasHandledInitialSignIn = useRef(false); // Track if we've already handled the initial sign-in
   const refreshProfile = async () => {
     if (!user || fetchingProfile) return;
     
@@ -147,31 +148,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('AuthContext: Auth state changed:', event);
         if (mounted) {
           setSession(newSession);
-          // Only set loading true for actual sign in events, not initial session events
-          if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        }
+
+        if (event === 'SIGNED_IN') {
+          // Only fetch profile on initial sign-in, not on session recovery
+          if (hasHandledInitialSignIn.current) {
+            // This is a session recovery (tab switch), not an actual new sign-in
+            console.log('AuthContext: Session recovered on tab focus - skipping profile fetch');
+            if (newSession?.user && mounted) {
+              setUser(newSession.user);
+            }
+            return;
+          }
+
+          // This is an actual sign-in event - mark it so future SIGNED_IN events are treated as recovery
+          hasHandledInitialSignIn.current = true;
+
+          // Only set loading true for actual sign in events
+          if (mounted) {
             setLoading(true);
           }
-        }
-        
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+
           if (newSession?.user) {
-            console.log('AuthContext: User signed in or token refreshed', newSession.user.id);
+            console.log('AuthContext: User signed in', newSession.user.id);
             setUser(newSession.user);
             try {
               if (fetchingProfile) {
                 console.log('AuthContext: Profile fetch already in progress, skipping');
                 return;
               }
-              
+
               setFetchingProfile(true);
               console.log('AuthContext: Fetching profile after sign in');
-              
+
               // Add a timeout wrapper around profile fetch
               const profilePromise = getUserProfile(newSession.user.id);
               const timeoutPromise = new Promise<null>((_, reject) =>
                 setTimeout(() => reject(new Error('Profile fetch timeout')), 8000)
               );
-              
+
               const profile = await Promise.race([profilePromise, timeoutPromise]);
               console.log('AuthContext: Profile fetch result', profile ? 'success' : 'null');
               if (profile && mounted) setProfile(profile);
@@ -193,8 +208,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               setLoading(false);
             }
           }
+        } else if (event === 'TOKEN_REFRESHED') {
+          // Handle token refresh silently without loading UI
+          console.log('AuthContext: Token refreshed silently');
+          if (newSession?.user && mounted) {
+            setUser(newSession.user);
+            // Don't trigger loading state or refetch profile
+            // Profile data is still valid, only token was refreshed
+          }
         } else if (event === 'SIGNED_OUT') {
           console.log('AuthContext: User signed out');
+          // Reset the sign-in tracking so next sign-in is treated as new
+          hasHandledInitialSignIn.current = false;
           if (mounted) {
             setUser(null);
             setProfile(null);

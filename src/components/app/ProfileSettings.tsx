@@ -500,7 +500,7 @@ const ProfileSettings: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Full Name
           </label>
           <div className="relative">
@@ -513,11 +513,11 @@ const ProfileSettings: React.FC = () => {
               className={inputStyles.standard}
               placeholder="Enter your full name"
             />
-            <User className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
+            <User className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Email
           </label>
           <div className="relative">
@@ -530,19 +530,19 @@ const ProfileSettings: React.FC = () => {
               className={inputStyles.standard}
               placeholder="Enter your email"
             />
-            <Mail className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Mail className="absolute right-3 top-2.5 h-5 w-5 text-muted-foreground" />
           </div>
         </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Phone Number
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Phone className="h-5 w-5 text-gray-400" />
+              <Phone className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="tel"
@@ -557,7 +557,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Date of Birth
           </label>
           <input
@@ -572,7 +572,7 @@ const ProfileSettings: React.FC = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Bio / Personal Statement
         </label>
         <textarea
@@ -581,21 +581,21 @@ const ProfileSettings: React.FC = () => {
           onChange={handleInputChange}
           disabled={!isEditing}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-muted disabled:text-muted-foreground bg-background text-foreground"
           placeholder="Tell us a bit about yourself..."
         />
       </div>
       
-      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mt-8 mb-4">Contact Address</h3>
+      <h3 className="text-lg font-medium text-foreground mt-8 mb-4">Contact Address</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Address Line 1
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <MapPin className="h-5 w-5 text-gray-400" />
+              <MapPin className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="text"
@@ -610,7 +610,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Address Line 2
           </label>
           <input
@@ -625,7 +625,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             City
           </label>
           <input
@@ -639,7 +639,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             State / Province
           </label>
           <input
@@ -653,7 +653,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Postal / Zip Code
           </label>
           <input
@@ -667,7 +667,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Country
           </label>
           <select
@@ -701,12 +701,12 @@ const ProfileSettings: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Current/Previous University
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <BookOpen className="h-5 w-5 text-gray-400" />
+              <BookOpen className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="text"
@@ -720,7 +720,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Field of Study
           </label>
           <input
@@ -736,7 +736,7 @@ const ProfileSettings: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             GPA
           </label>
           <input
@@ -750,7 +750,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Education Level
           </label>
           <select
@@ -769,10 +769,10 @@ const ProfileSettings: React.FC = () => {
       </div>
       
       <div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Test Scores</h3>
+        <h3 className="text-lg font-medium text-foreground mb-3">Test Scores</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               IELTS
             </label>
             <input
@@ -787,7 +787,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               TOEFL
             </label>
             <input
@@ -802,7 +802,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               GRE Verbal
             </label>
             <input
@@ -819,7 +819,7 @@ const ProfileSettings: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               GRE Quantitative
             </label>
             <input
@@ -834,7 +834,7 @@ const ProfileSettings: React.FC = () => {
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               GRE Analytical
             </label>
             <input
@@ -855,7 +855,7 @@ const ProfileSettings: React.FC = () => {
   const renderPreferencesSection = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Preferred Countries
         </label>
         <Select
@@ -902,15 +902,15 @@ const ProfileSettings: React.FC = () => {
             })
           }}
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">You can search and select multiple countries</p>
+        <p className="text-xs text-muted-foreground mt-1">You can search and select multiple countries</p>
         {!isEditing && (
-          <p className="text-xs text-red-500 dark:text-red-400 mt-2">Click "Edit Profile" to update your study preferences.</p>
+          <p className="text-xs text-destructive mt-2">Click "Edit Profile" to update your study preferences.</p>
         )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Maximum Tuition Budget (₦ NGN/year)
           </label>
           <select
@@ -930,13 +930,13 @@ const ProfileSettings: React.FC = () => {
             <option value="75000000">₦60M - ₦75M (~$40,000 - $50,000)</option>
             <option value="100000000">₦75M+ (~$50,000+)</option>
           </select>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             All amounts are in Nigerian Naira. USD equivalents shown for reference using current rates.
           </p>
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Preferred Start Date
           </label>
           <select
@@ -944,7 +944,7 @@ const ProfileSettings: React.FC = () => {
             value={formData.study_preferences.start_date}
             onChange={handleInputChange}
             disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-muted disabled:text-muted-foreground bg-background text-foreground"
           >
             <option value="">Select start date</option>
             <option value="Fall 2025">Fall 2025</option>
@@ -955,7 +955,7 @@ const ProfileSettings: React.FC = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Study Goals
           </label>
           <textarea
@@ -964,16 +964,16 @@ const ProfileSettings: React.FC = () => {
             onChange={handleInputChange}
             disabled={!isEditing}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-muted disabled:text-muted-foreground bg-background text-foreground"
             placeholder="What do you hope to achieve with your studies abroad? (e.g., Career advancement, research opportunities, cultural experience)"
           />
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Share your academic and career aspirations
           </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Language Preference
           </label>
           <select
@@ -981,7 +981,7 @@ const ProfileSettings: React.FC = () => {
             value={formData.study_preferences.language_preference || ''}
             onChange={handleInputChange}
             disabled={!isEditing}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-muted disabled:text-muted-foreground bg-background text-foreground"
           >
             <option value="">Select language preference</option>
             <option value="English">English</option>
@@ -992,14 +992,14 @@ const ProfileSettings: React.FC = () => {
             <option value="Japanese">Japanese</option>
             <option value="Other">Other</option>
           </select>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Preferred language of instruction
           </p>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Preferred Cities
         </label>
         <input
@@ -1034,16 +1034,16 @@ const ProfileSettings: React.FC = () => {
             }));
           }}
           disabled={!isEditing}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+          className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-muted disabled:text-muted-foreground bg-background text-foreground"
           placeholder="e.g., London, Berlin, Toronto, Melbourne"
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           Specific cities you'd like to study in (comma-separated)
         </p>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-foreground mb-1">
           Program Types
         </label>
         <Select
@@ -1090,7 +1090,7 @@ const ProfileSettings: React.FC = () => {
             })
           }}
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">You can search and select multiple program types</p>
+        <p className="text-xs text-muted-foreground mt-1">You can search and select multiple program types</p>
       </div>
     </div>
   );
@@ -1115,7 +1115,7 @@ const ProfileSettings: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center space-y-4">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-gray-600">Loading profile data...</p>
+          <p className="text-muted-foreground">Loading profile data...</p>
         </div>
       </div>
     );
@@ -1124,12 +1124,12 @@ const ProfileSettings: React.FC = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center space-y-4 p-6 bg-red-50 rounded-lg">
-          <AlertCircle className="w-8 h-8 text-red-500" />
-          <p className="text-red-700">{error}</p>
+        <div className="flex flex-col items-center space-y-4 p-6 bg-destructive/10 rounded-lg">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+          <p className="text-destructive">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            className="px-4 py-2 bg-destructive text-white rounded hover:bg-destructive/90 transition-colors"
           >
             Refresh Page
           </button>
@@ -1141,23 +1141,23 @@ const ProfileSettings: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-heading">Profile Settings</h1>
-        <p className="text-gray-600 dark:text-gray-400">Manage your account settings and preferences</p>
+        <h1 className="text-2xl font-bold text-foreground mb-2 font-heading">Profile Settings</h1>
+        <p className="text-muted-foreground">Manage your account settings and preferences</p>
       </div>
       
       {/* Loading state */}
       {loading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-10 mb-8 flex flex-col items-center justify-center">
-          <Loader2 className="h-10 w-10 text-indigo-600 animate-spin mb-4" />
-          <p className="text-gray-600">Loading your profile data...</p>
+        <div className="bg-white rounded-xl shadow-sm border border-border p-10 mb-8 flex flex-col items-center justify-center">
+          <Loader2 className="h-10 w-10 text-primary animate-spin mb-4" />
+          <p className="text-muted-foreground">Loading your profile data...</p>
         </div>
       ) : (
         <>
           {/* Profile Header */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-8">
+          <div className="bg-card rounded-xl shadow-sm border border-border dark:border-border p-6 mb-8">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
               <div className="relative group">
-                <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl font-bold flex-shrink-0 overflow-hidden">
+                <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold flex-shrink-0 overflow-hidden">
                   {profileImage ? (
                     <img 
                       src={profileImage} 
@@ -1187,7 +1187,7 @@ const ProfileSettings: React.FC = () => {
                     {/* Always visible upload button when editing */}
                     <button
                       onClick={() => document.getElementById('profile-image-upload')?.click()}
-                      className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:bg-indigo-700 transition-colors"
+                      className="absolute -bottom-2 -right-2 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition-colors"
                       disabled={uploadingImage}
                     >
                       {uploadingImage ? (
@@ -1208,16 +1208,16 @@ const ProfileSettings: React.FC = () => {
                 )}
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">{formData.full_name || 'Not provided'}</h2>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">{formData.email || 'No email address'}</p>
+                <h2 className="text-xl font-bold text-foreground mb-1">{formData.full_name || 'Not provided'}</h2>
+                <p className="text-muted-foreground mb-4">{formData.email || 'No email address'}</p>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <BookOpen className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <BookOpen className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                     <span className="truncate">{formData.current_university || 'Not provided'}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                     <span className="truncate capitalize">{formData.education_level || 'Not provided'}</span>
                   </div>
                 </div>
@@ -1228,7 +1228,7 @@ const ProfileSettings: React.FC = () => {
                     <button
                       onClick={handleSaveProfile}
                       disabled={isSaving}
-                      className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 disabled:bg-indigo-400"
+                      className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:bg-primary/50"
                     >
                       {isSaving ? (
                         <>
@@ -1245,7 +1245,7 @@ const ProfileSettings: React.FC = () => {
                     <button
                       onClick={handleEditToggle}
                       disabled={isSaving}
-                      className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-500"
+                      className="border border-input text-foreground px-4 py-2 rounded-lg hover:bg-muted transition-colors disabled:bg-muted disabled:text-muted-foreground"
                     >
                       Cancel
                     </button>
@@ -1253,7 +1253,7 @@ const ProfileSettings: React.FC = () => {
                 ) : (
                   <button
                     onClick={handleEditToggle}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
                   >
                     <User className="h-5 w-5" />
                     Edit Profile
@@ -1263,7 +1263,7 @@ const ProfileSettings: React.FC = () => {
             </div>
             
             {saveError && (
-              <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+              <div className="mt-4 bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded-lg flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
                 <span>{saveError}</span>
               </div>
@@ -1281,14 +1281,14 @@ const ProfileSettings: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Sidebar */}
             <div className="md:col-span-1">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4">
+              <div className="bg-card rounded-xl shadow-sm border border-border dark:border-border p-4">
                 <nav className="space-y-1">
                   <button
                     onClick={() => setActiveSection('personal')}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
                       activeSection === 'personal'
-                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground hover:bg-muted dark:hover:bg-muted'
                     }`}
                   >
                     <User className="h-5 w-5 flex-shrink-0" />
@@ -1299,8 +1299,8 @@ const ProfileSettings: React.FC = () => {
                     onClick={() => setActiveSection('academic')}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
                       activeSection === 'academic'
-                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground hover:bg-muted dark:hover:bg-muted'
                     }`}
                   >
                     <BookOpen className="h-5 w-5 flex-shrink-0" />
@@ -1311,18 +1311,18 @@ const ProfileSettings: React.FC = () => {
                     onClick={() => setActiveSection('preferences')}
                     className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
                       activeSection === 'preferences'
-                        ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground hover:bg-muted dark:hover:bg-muted'
                     }`}
                   >
                     <MapPin className="h-5 w-5 flex-shrink-0" />
                     <span>Study Preferences</span>
                   </button>
                   
-                  <hr className="my-2 border-gray-200" />
+                  <hr className="my-2 border-border" />
                   
                   <button
-                    className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                    className="w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg text-destructive hover:bg-destructive/10 transition-colors"
                     onClick={async () => { await signOutFn(); window.location.href = '/login'; }}
                   >
                     <LogOut className="h-5 w-5 flex-shrink-0" />
@@ -1331,12 +1331,12 @@ const ProfileSettings: React.FC = () => {
                 </nav>
               </div>
               
-              <div className="bg-indigo-600 rounded-xl shadow-sm p-4 mt-4 text-white">
+              <div className="bg-primary rounded-xl shadow-sm p-4 mt-4 text-white">
                 <h3 className="font-medium mb-2">Need Help?</h3>
-                <p className="text-sm text-indigo-200 mb-3">
+                <p className="text-sm text-primary-foreground/80 mb-3">
                   Our support team is here to assist you with any questions about your account settings.
                 </p>
-                <button className="w-full bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-indigo-50 transition-colors text-sm">
+                <button className="w-full bg-background text-primary px-4 py-2 rounded-lg font-medium hover:bg-primary/10 transition-colors text-sm">
                   Contact Support
                 </button>
               </div>
@@ -1344,18 +1344,18 @@ const ProfileSettings: React.FC = () => {
             
             {/* Main Content */}
             <div className="md:col-span-3">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+              <div className="bg-card rounded-xl shadow-sm border border-border dark:border-border p-6">
                 {isEditing && (
-                  <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-center">
+                  <div className="mb-6 bg-chart-2/10 border border-chart-2 text-chart-2 px-4 py-3 rounded-lg flex items-center">
                     <User className="h-5 w-5 flex-shrink-0 mr-2" />
                     <div>
                       <p className="font-medium">Edit mode active</p>
-                      <p className="text-sm text-blue-600">Make your changes, then click "Save Changes" when done.</p>
+                      <p className="text-sm text-chart-2">Make your changes, then click "Save Changes" when done.</p>
                     </div>
                   </div>
                 )}
                 
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
+                <h2 className="text-xl font-semibold text-foreground mb-6">
                   {activeSection === 'personal' && 'Personal Information'}
                   {activeSection === 'academic' && 'Academic Information'}
                   {activeSection === 'preferences' && 'Study Preferences'}
@@ -1364,12 +1364,12 @@ const ProfileSettings: React.FC = () => {
                 {renderActiveSection()}
                 
                 {isEditing && (
-                  <div className="mt-8 pt-6 border-t border-gray-200">
+                  <div className="mt-8 pt-6 border-t border-border">
                     {/* Edit mode indicator */}
-                    <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <div className="mb-4 p-4 bg-chart-2/10 border border-chart-2 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                        <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                        <div className="w-2 h-2 bg-chart-2 rounded-full animate-pulse"></div>
+                        <p className="text-sm font-medium text-chart-2">
                           Edit mode active - Your changes will be saved when you click "Save Changes"
                         </p>
                       </div>
@@ -1379,7 +1379,7 @@ const ProfileSettings: React.FC = () => {
                       <button
                         onClick={handleSaveProfile}
                         disabled={isSaving}
-                        className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 disabled:bg-indigo-400"
+                        className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:bg-primary/50"
                       >
                         {isSaving ? (
                           <>

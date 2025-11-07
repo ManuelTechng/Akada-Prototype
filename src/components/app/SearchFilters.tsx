@@ -191,7 +191,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   ], [filters.budgetRange]);
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 ${className}`}>
+    <div className={`bg-card rounded-lg border border-border ${className}`}>
       {/* Mobile Header */}
       {isMobile && (
         <button
@@ -202,7 +202,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
         >
           <div className="flex items-center">
             <Filter className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-            <span className="font-medium text-gray-900 dark:text-gray-100">
+            <span className="font-medium text-foreground">
               Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
             </span>
           </div>
@@ -227,7 +227,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           {/* Desktop Header */}
           {!isMobile && (
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+              <h3 className="font-semibold text-foreground flex items-center">
                 <Filter className="h-5 w-5 mr-2" />
                 Search Filters
               </h3>
@@ -245,7 +245,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Country Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground dark:text-gray-300 mb-2">
               <MapPin className="h-4 w-4 inline mr-1" />
               Country
             </label>
@@ -257,19 +257,19 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   placeholder="Search countries..."
                   value={searchQueries.country}
                   onChange={(e) => setSearchQueries(prev => ({ ...prev, country: e.target.value }))}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-foreground placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                 />
               </div>
               <div className="max-h-32 overflow-y-auto space-y-1">
                 {filteredCountries.slice(0, maxResults).map((country) => (
-                  <label key={country.code} className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded cursor-pointer">
+                  <label key={country.code} className="flex items-center p-2 hover:bg-muted dark:hover:bg-gray-700 rounded cursor-pointer">
                     <input
                       type="checkbox"
                       checked={filters.countries.includes(country.name)}
                       onChange={() => handleCountryToggle(country.name)}
                       className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="ml-2 text-sm text-foreground dark:text-gray-300">
                       <span className="mr-2">{country.flag}</span>
                       {country.name}
                       <span className="text-gray-500 dark:text-gray-400 ml-1">({country.count})</span>
@@ -282,13 +282,13 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Budget Range Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground dark:text-gray-300 mb-2">
               <DollarSign className="h-4 w-4 inline mr-1" />
               Budget Range (Annual Tuition)
             </label>
             <div className="space-y-3">
               {/* Current Range Display */}
-              <div className="text-sm text-gray-600 dark:text-gray-400 p-3 bg-gray-50 dark:bg-gray-700 rounded">
+              <div className="text-sm text-muted-foreground p-3 bg-muted dark:bg-gray-700 rounded">
                 <div className="font-medium text-indigo-600 dark:text-indigo-400">
                   {formatNGN(budgetNGN[0], { compact: isMobile, decimals: 0 })} - {formatNGN(budgetNGN[1], { compact: isMobile, decimals: 0 })}
                 </div>
@@ -306,7 +306,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                     className={`text-left p-2 text-sm rounded transition-colors ${
                       filters.budgetRange[0] === range.min && filters.budgetRange[1] === range.max
                         ? 'bg-indigo-100 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300'
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        : 'hover:bg-muted dark:hover:bg-gray-700 text-foreground dark:text-gray-300'
                     }`}
                   >
                     {range.label}
@@ -321,7 +321,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Specialization Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground dark:text-gray-300 mb-2">
               <BookOpen className="h-4 w-4 inline mr-1" />
               Specialization
             </label>
@@ -333,19 +333,19 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   placeholder="Search specializations..."
                   value={searchQueries.specialization}
                   onChange={(e) => setSearchQueries(prev => ({ ...prev, specialization: e.target.value }))}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-foreground placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                 />
               </div>
               <div className="max-h-32 overflow-y-auto space-y-1">
                 {filteredSpecializations.slice(0, maxResults).map((spec) => (
-                  <label key={spec.name} className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded cursor-pointer">
+                  <label key={spec.name} className="flex items-center p-2 hover:bg-muted dark:hover:bg-gray-700 rounded cursor-pointer">
                     <input
                       type="checkbox"
                       checked={filters.specializations.includes(spec.name)}
                       onChange={() => handleSpecializationToggle(spec.name)}
                       className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded"
                     />
-                    <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="ml-2 text-sm text-foreground dark:text-gray-300">
                       {spec.name}
                       <span className="text-gray-500 dark:text-gray-400 ml-1">({spec.count})</span>
                     </span>
@@ -357,19 +357,19 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Degree Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground dark:text-gray-300 mb-2">
               Degree Type
             </label>
             <div className="space-y-1">
               {DEGREE_TYPES.map((degree) => (
-                <label key={degree.value} className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded cursor-pointer">
+                <label key={degree.value} className="flex items-center p-2 hover:bg-muted dark:hover:bg-gray-700 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.degreeTypes.includes(degree.value)}
                     onChange={() => handleDegreeTypeToggle(degree.value)}
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="ml-2 text-sm text-foreground dark:text-gray-300">
                     {degree.label}
                     <span className="text-gray-500 dark:text-gray-400 ml-1">({degree.count})</span>
                   </span>
@@ -380,20 +380,20 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 
           {/* Duration Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-foreground dark:text-gray-300 mb-2">
               <Clock className="h-4 w-4 inline mr-1" />
               Duration
             </label>
             <div className="space-y-1">
               {DURATION_OPTIONS.map((duration) => (
-                <label key={duration.value} className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded cursor-pointer">
+                <label key={duration.value} className="flex items-center p-2 hover:bg-muted dark:hover:bg-gray-700 rounded cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.duration.includes(duration.value)}
                     onChange={() => handleDurationToggle(duration.value)}
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="ml-2 text-sm text-foreground dark:text-gray-300">
                     {duration.label}
                     <span className="text-gray-500 dark:text-gray-400 ml-1">({duration.count})</span>
                   </span>
@@ -421,7 +421,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           {isMobile && activeFilterCount > 0 && (
             <button
               onClick={clearAllFilters}
-              className="w-full py-2 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm"
+              className="w-full py-2 px-4 bg-muted dark:bg-gray-700 text-foreground dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium text-sm"
             >
               Clear all filters ({activeFilterCount})
             </button>
