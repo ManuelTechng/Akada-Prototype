@@ -11,6 +11,7 @@ import { RecentActivitiesWidget } from '../widgets/RecentActivitiesWidget';
 import { ApplicationWidget } from '../widgets/ApplicationWidget';
 import { CostAnalysisWidget } from '../widgets/CostAnalysisWidget';
 import { QuickActionsWidget } from '../widgets/QuickActionsWidget';
+import { ProgramRecommendationsWidget } from '../widgets/ProgramRecommendationsWidget';
 
 export default function FigmaDashboard() {
   const { theme } = useTheme();
@@ -37,6 +38,11 @@ export default function FigmaDashboard() {
           <ProfileCompletionWidget />
           <NotificationsWidget />
           <RecentActivitiesWidget />
+        </div>
+
+        {/* Program Recommendations */}
+        <div className="grid grid-cols-1">
+          <ProgramRecommendationsWidget />
         </div>
 
         {/* Application Timeline | Cost Analysis | Quick Actions */}

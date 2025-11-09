@@ -500,3 +500,100 @@ export const useCostAnalysis = () => {
     getBudgetInsights
   }
 }
+
+/**
+ * Dashboard hook for personalized program recommendations
+ * Provides AI-powered recommendations for Nigerian students
+ */
+export const useRecommendations = () => {
+  const { user } = useAuth()
+  const { preferences } = useUserPreferences()
+  const [recommendationsData, setRecommendationsData] = useState<{
+    categories: any[]
+    topMatches: any[]
+    hasRecommendations: boolean
+  } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchRecommendations = useCallback(async () => {
+    if (!user?.id) {
+      setLoading(false)
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      // Import the recommendations engine
+      const { getUserRecommendations } = await import('../lib/recommendations')
+
+      // Fetch personalized recommendations
+      const categories = await getUserRecommendations(user.id)
+
+      // Extract top matches (from Perfect Matches category if available)
+      const perfectMatchCategory = categories.find(cat => cat.id === 'perfect-match')
+      const topMatches = perfectMatchCategory?.programs.slice(0, 6) || []
+
+      // If no perfect matches, get top programs from any category
+      if (topMatches.length === 0 && categories.length > 0) {
+        topMatches.push(...categories[0].programs.slice(0, 6))
+      }
+
+      setRecommendationsData({
+        categories,
+        topMatches,
+        hasRecommendations: categories.length > 0 && topMatches.length > 0
+      })
+
+      setError(null)
+    } catch (err) {
+      console.error('Error fetching recommendations:', err)
+      setError('Failed to load recommendations')
+    } finally {
+      setLoading(false)
+    }
+  }, [user?.id])
+
+  // Get recommendation insights
+  const getRecommendationInsights = useCallback(() => {
+    if (!recommendationsData) return null
+
+    const { categories, topMatches } = recommendationsData
+
+    const insights = []
+
+    if (topMatches.length > 0) {
+      insights.push({
+        type: 'matches',
+        message: `${topMatches.length} programs match your profile`,
+        count: topMatches.length
+      })
+    }
+
+    if (categories.length > 0) {
+      const scholarshipCategory = categories.find(cat => cat.id === 'rising-stars')
+      if (scholarshipCategory) {
+        insights.push({
+          type: 'scholarships',
+          message: `${scholarshipCategory.programs.length} programs offer scholarships`,
+          count: scholarshipCategory.programs.length
+        })
+      }
+    }
+
+    return insights
+  }, [recommendationsData])
+
+  useEffect(() => {
+    fetchRecommendations()
+  }, [fetchRecommendations])
+
+  return {
+    recommendationsData,
+    loading,
+    error,
+    refetchRecommendations: fetchRecommendations,
+    getRecommendationInsights
+  }
+}

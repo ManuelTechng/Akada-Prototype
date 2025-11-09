@@ -281,7 +281,7 @@ export default function UniversityDetailPage() {
           )}
 
           {/* Statistics Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {university.total_students && (
               <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl p-5 border border-indigo-200 dark:border-indigo-800">
                 <div className="flex items-center text-indigo-700 dark:text-indigo-400 mb-2">

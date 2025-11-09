@@ -22,11 +22,11 @@ const LandingHero: React.FC = () => {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-slate-50 via-blue-50/30 to-white pt-20 pb-16">
-      {/* Animated Background Gradient Blobs */}
-      <div className="absolute top-0 left-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-indigo-200 dark:bg-indigo-900/20 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
-      <div className="absolute top-1/2 right-0 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-purple-200 dark:bg-purple-800/20 rounded-full opacity-20 blur-3xl translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute bottom-0 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-pink-200 dark:bg-pink-800/20 rounded-full opacity-10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+    <section className="relative bg-gradient-to-br from-slate-50 via-blue-50/30 to-white pt-20 pb-16 overflow-hidden">
+      {/* Animated Background Gradient Blobs - Responsive */}
+      <div className="absolute top-0 left-0 w-[60vw] max-w-xs sm:max-w-md lg:max-w-xl aspect-square bg-indigo-200 dark:bg-indigo-900/20 rounded-full opacity-20 blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
+      <div className="absolute top-1/2 right-0 w-[55vw] max-w-xs sm:max-w-lg aspect-square bg-purple-200 dark:bg-purple-800/20 rounded-full opacity-20 blur-3xl translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute bottom-0 left-1/4 w-[50vw] max-w-[18rem] aspect-square bg-pink-200 dark:bg-pink-800/20 rounded-full opacity-10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
 
       <div className="relative max-w-7xl mx-auto px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-20 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
