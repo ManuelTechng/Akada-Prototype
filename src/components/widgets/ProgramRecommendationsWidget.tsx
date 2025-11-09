@@ -49,7 +49,7 @@ export const ProgramRecommendationsWidget: React.FC<{ className?: string }> = ({
   }
 
   if (loading) {
-    return <SkeletonLoader.DashboardWidget variant="grid" className={className} />
+    return <SkeletonLoader.DashboardWidget className={className} />
   }
 
   if (error) {

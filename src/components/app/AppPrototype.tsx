@@ -6,7 +6,7 @@ import {
   Clock, HelpCircle, BookmarkIcon, BellRing, Headphones, ArrowLeft
 } from 'lucide-react';
 import ProgramSearch from './ProgramSearch';
-import Dashboard from './Dashboard';
+import FigmaDashboard from '../dashboard/FigmaDashboard';
 import ProfileSettings from './ProfileSettings';
 import Resources from './Resources';
 import ChatAssistant from './ChatAssistant';
@@ -218,7 +218,7 @@ const AppPrototype: React.FC = () => {
         <div className="flex-1 overflow-y-auto">
           <Tabs value={activeTab} className="h-full">
             <TabsContent value="dashboard" className="h-full m-0">
-              <Dashboard />
+              <FigmaDashboard />
             </TabsContent>
             <TabsContent value="search" className="h-full m-0">
               <ProgramSearch />
