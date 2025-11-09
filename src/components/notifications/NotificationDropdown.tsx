@@ -103,7 +103,7 @@ export function NotificationDropdown() {
           />
 
           {/* Dropdown */}
-          <div className="absolute right-0 z-[100] mt-2 w-[380px] rounded-2xl shadow-xl border bg-popover/95 backdrop-blur-xl border-border">
+          <div className="absolute right-0 z-[100] mt-2 w-full max-w-[min(22rem,calc(100vw-2rem))] sm:w-[22rem] rounded-2xl shadow-xl border bg-popover/95 backdrop-blur-xl border-border">
             {/* Header */}
             <div className="px-4 py-3 border-b border-border">
               <div className="flex items-center justify-between">
