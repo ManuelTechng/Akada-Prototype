@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -296,6 +297,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <AppWithProviders />
+          <Analytics />
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
