@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   CreditCard,
   Download,
@@ -13,7 +13,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../lib/utils';
 
-const Billing: React.FC = () => {
+const Billing = () => {
   const { user, profile } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState('free');
 
@@ -84,33 +84,33 @@ const Billing: React.FC = () => {
     <div className="max-w-7xl mx-auto">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Billing & Subscription</h1>
-        <p className="text-gray-600 dark:text-gray-400">Manage your subscription and billing information</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Billing & Subscription</h1>
+        <p className="text-muted-foreground">Manage your subscription and billing information</p>
       </div>
 
       {/* Current Plan Card */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-8">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6 mb-8">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Current Plan</h2>
-              <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-medium rounded-full">
+              <h2 className="text-xl font-semibold text-foreground">Current Plan</h2>
+              <span className="px-3 py-1 bg-chart-1/10 text-chart-1 text-xs font-medium rounded-full">
                 Active
               </span>
             </div>
-            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
-              ${currentPlan.price.toFixed(2)}<span className="text-sm text-gray-600 dark:text-gray-400 font-normal">/month</span>
+            <p className="text-2xl font-bold text-primary mb-1">
+              ${currentPlan.price.toFixed(2)}<span className="text-sm text-muted-foreground font-normal">/month</span>
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               {currentPlan.nextBillingDate !== 'N/A' ? `Next billing date: ${currentPlan.nextBillingDate}` : 'No upcoming charges'}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <button className="px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors">
               Change Plan
             </button>
             {currentPlan.price > 0 && (
-              <button className="px-4 py-2 border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+              <button className="px-4 py-2 border border-destructive/50 text-destructive rounded-lg hover:bg-destructive/10 transition-colors">
                 Cancel Subscription
               </button>
             )}
@@ -120,7 +120,7 @@ const Billing: React.FC = () => {
 
       {/* Available Plans */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Available Plans</h2>
+        <h2 className="text-xl font-semibold text-foreground mb-6">Available Plans</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => {
             const Icon = plan.icon;
@@ -128,17 +128,17 @@ const Billing: React.FC = () => {
               <div
                 key={plan.id}
                 className={cn(
-                  'relative bg-white dark:bg-gray-800 rounded-xl border-2 p-6 transition-all cursor-pointer hover:shadow-lg',
+                  'relative bg-card rounded-xl border-2 p-6 transition-all cursor-pointer hover:shadow-lg',
                   selectedPlan === plan.id
-                    ? 'border-indigo-500 shadow-lg'
-                    : 'border-gray-200 dark:border-gray-700',
-                  plan.popular && 'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-gray-900'
+                    ? 'border-primary shadow-lg'
+                    : 'border-border',
+                  plan.popular && 'ring-2 ring-primary ring-offset-2 ring-offset-background'
                 )}
                 onClick={() => setSelectedPlan(plan.id)}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="bg-indigo-500 text-white px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                    <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                       <Zap className="w-3 h-3" />
                       Most Popular
                     </span>
@@ -149,29 +149,29 @@ const Billing: React.FC = () => {
                   <div className={cn(
                     'p-2 rounded-lg',
                     plan.popular
-                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-muted text-muted-foreground'
                   )}>
                     <Icon className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{plan.name}</h3>
+                    <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
                   </div>
                 </div>
 
                 <div className="mb-4">
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-3xl font-bold text-foreground">
                     ${plan.price.toFixed(2)}
-                    <span className="text-sm text-gray-600 dark:text-gray-400 font-normal">/month</span>
+                    <span className="text-sm text-muted-foreground font-normal">/month</span>
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{plan.limitations}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{plan.limitations}</p>
                 </div>
 
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
+                      <CheckCircle className="w-5 h-5 text-chart-1 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-foreground">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -180,10 +180,10 @@ const Billing: React.FC = () => {
                   className={cn(
                     'w-full py-2.5 rounded-lg font-medium transition-colors',
                     plan.id === 'free'
-                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 cursor-not-allowed'
+                      ? 'bg-muted text-muted-foreground cursor-not-allowed'
                       : plan.popular
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                      : 'bg-white dark:bg-gray-800 border-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                      : 'bg-card border-2 border-primary text-primary hover:bg-primary/10'
                   )}
                   disabled={plan.id === 'free'}
                 >
@@ -196,32 +196,32 @@ const Billing: React.FC = () => {
       </div>
 
       {/* Payment Method */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-8">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6 mb-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Payment Method</h2>
-          <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm">
+          <h2 className="text-xl font-semibold text-foreground">Payment Method</h2>
+          <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm">
             Add Payment Method
           </button>
         </div>
 
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+        <div className="border border-border rounded-lg p-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <CreditCard className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+            <div className="p-3 bg-muted rounded-lg">
+              <CreditCard className="w-6 h-6 text-muted-foreground" />
             </div>
             <div className="flex-1">
-              <p className="text-sm text-gray-600 dark:text-gray-400">No payment method added</p>
-              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">Add a payment method to upgrade your plan</p>
+              <p className="text-sm text-muted-foreground">No payment method added</p>
+              <p className="text-xs text-muted-foreground mt-1">Add a payment method to upgrade your plan</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Billing History */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Billing History</h2>
-          <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground">Billing History</h2>
+          <button className="px-4 py-2 border border-border text-foreground rounded-lg hover:bg-muted transition-colors text-sm flex items-center gap-2">
             <Download className="w-4 h-4" />
             Export All
           </button>
@@ -230,37 +230,37 @@ const Billing: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-700">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Date</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Description</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Amount</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Status</th>
-                <th className="text-right py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Invoice</th>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Description</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Amount</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
+                <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Invoice</th>
               </tr>
             </thead>
             <tbody>
               {billingHistory.map((invoice) => (
-                <tr key={invoice.id} className="border-b border-gray-100 dark:border-gray-700 last:border-0">
+                <tr key={invoice.id} className="border-b border-border last:border-0">
                   <td className="py-4 px-4">
-                    <div className="flex items-center gap-2 text-gray-900 dark:text-white">
-                      <Calendar className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center gap-2 text-foreground">
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm">{invoice.date}</span>
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-sm text-gray-700 dark:text-gray-300">{invoice.description}</td>
+                  <td className="py-4 px-4 text-sm text-foreground">{invoice.description}</td>
                   <td className="py-4 px-4">
-                    <div className="flex items-center gap-1 text-gray-900 dark:text-white">
-                      <DollarSign className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center gap-1 text-foreground">
+                      <DollarSign className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm font-medium">{invoice.amount.toFixed(2)}</span>
                     </div>
                   </td>
                   <td className="py-4 px-4">
-                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-medium rounded-full">
+                    <span className="px-3 py-1 bg-chart-1/10 text-chart-1 text-xs font-medium rounded-full">
                       {invoice.status}
                     </span>
                   </td>
                   <td className="py-4 px-4 text-right">
-                    <button className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-sm flex items-center gap-1 ml-auto">
+                    <button className="text-primary hover:text-primary/80 text-sm flex items-center gap-1 ml-auto">
                       <Download className="w-4 h-4" />
                       Download
                     </button>

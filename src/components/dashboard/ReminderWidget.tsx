@@ -18,9 +18,9 @@ export function ReminderWidget({ className }: ReminderWidgetProps) {
     const now = new Date()
     const diffInHours = (date.getTime() - now.getTime()) / (1000 * 60 * 60)
 
-    if (diffInHours <= 24) return 'text-red-600'
-    if (diffInHours <= 72) return 'text-orange-600'
-    return 'text-blue-600'
+    if (diffInHours <= 24) return 'text-destructive'
+    if (diffInHours <= 72) return 'text-chart-2'
+    return 'text-primary'
   }
 
   const getUrgencyIcon = (scheduledFor: string) => {
@@ -54,13 +54,13 @@ export function ReminderWidget({ className }: ReminderWidgetProps) {
   const getReminderTypeColor = (type: string) => {
     switch (type) {
       case 'deadline':
-        return 'bg-red-100 text-red-800'
+        return 'bg-destructive/10 text-destructive'
       case 'status_update':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-primary/10 text-primary'
       case 'custom':
-        return 'bg-green-100 text-green-800'
+        return 'bg-chart-1/10 text-chart-1'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-muted-foreground'
     }
   }
 
@@ -121,7 +121,7 @@ export function ReminderWidget({ className }: ReminderWidgetProps) {
             <CardDescription>
               {upcomingCount} reminder{upcomingCount !== 1 ? 's' : ''} scheduled
               {urgentCount > 0 && (
-                <span className="text-red-600 ml-2">
+                <span className="text-destructive ml-2">
                   ({urgentCount} urgent)
                 </span>
               )}
