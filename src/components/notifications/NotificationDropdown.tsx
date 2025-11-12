@@ -54,6 +54,13 @@ const notifications: Notification[] = [
   },
 ];
 
+/**
+ * Renders a notifications dropdown UI with a bell trigger, unread count badge, backdrop, and a scrollable list of notifications.
+ *
+ * The dropdown toggles open/closed when the bell button is clicked, closes when clicking outside or on the backdrop, and navigates to a notification's route when an item is selected. A header provides a "View all" action.
+ *
+ * @returns A JSX element representing the notification dropdown.
+ */
 export function NotificationDropdown() {
   const { theme } = useTheme();
   const navigate = useNavigate();
