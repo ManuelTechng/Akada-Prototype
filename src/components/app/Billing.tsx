@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   CreditCard,
   Download,
@@ -8,77 +8,76 @@ import {
   Users,
   Sparkles,
   Crown,
-  Zap
+  Zap,
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useSubscription } from '../../contexts/SubscriptionContext';
+import { SUBSCRIPTION_PLANS, SubscriptionTier } from '../../lib/subscription-types';
 import { cn } from '../../lib/utils';
 
 const Billing = () => {
   const { user, profile } = useAuth();
-  const [selectedPlan, setSelectedPlan] = useState('free');
+  const { subscription, tier, loading: subscriptionLoading } = useSubscription();
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionTier>(tier);
 
-  // Dummy data - can be replaced with real API calls
-  const currentPlan = {
-    name: 'Free Plan',
-    price: 0,
-    billingCycle: 'monthly',
-    nextBillingDate: 'N/A',
-    status: 'active'
+  // Update selected plan when tier changes
+  useEffect(() => {
+    setSelectedPlan(tier);
+  }, [tier]);
+
+  // Get current plan details
+  const currentPlan = subscription
+    ? {
+        name: SUBSCRIPTION_PLANS[tier].displayName,
+        price: SUBSCRIPTION_PLANS[tier].price,
+        billingCycle: SUBSCRIPTION_PLANS[tier].interval,
+        nextBillingDate: subscription.current_period_end || 'N/A',
+        status: subscription.status,
+      }
+    : {
+        name: 'Free Plan',
+        price: 0,
+        billingCycle: 'monthly' as const,
+        nextBillingDate: 'N/A',
+        status: 'active' as const,
+      };
+
+  // Dummy billing history - replace with real data later
+  const billingHistory = [
+    {
+      id: 1,
+      date: '2025-01-15',
+      amount: currentPlan.price,
+      status: 'paid',
+      description: currentPlan.name,
+    },
+  ];
+
+  // Convert subscription plans to display format
+  const planIcons: Record<SubscriptionTier, any> = {
+    free: Users,
+    basic: Sparkles,
+    premium: Crown,
   };
 
-  const billingHistory = [
-    { id: 1, date: '2025-01-15', amount: 0, status: 'paid', description: 'Free Plan' },
-    { id: 2, date: '2024-12-15', amount: 0, status: 'paid', description: 'Free Plan' },
-    { id: 3, date: '2024-11-15', amount: 0, status: 'paid', description: 'Free Plan' },
-  ];
+  const plans = Object.values(SUBSCRIPTION_PLANS).map((plan) => ({
+    id: plan.id,
+    name: plan.displayName,
+    price: plan.price,
+    icon: planIcons[plan.id],
+    popular: plan.popular,
+    features: plan.features.map((f) => f.description),
+    limitations: plan.description,
+  }));
 
-  const plans = [
-    {
-      id: 'free',
-      name: 'Free',
-      price: 0,
-      icon: Users,
-      features: [
-        'Search up to 10 programs',
-        'Basic application tracking',
-        'Email support',
-        'Limited AI recommendations'
-      ],
-      limitations: 'Perfect for exploring the platform'
-    },
-    {
-      id: 'pro',
-      name: 'Pro',
-      price: 19.99,
-      icon: Sparkles,
-      popular: true,
-      features: [
-        'Unlimited program searches',
-        'Advanced application tracking',
-        'Priority email support',
-        'AI-powered recommendations',
-        'Document review assistance',
-        'Deadline reminders'
-      ],
-      limitations: 'Best for serious applicants'
-    },
-    {
-      id: 'premium',
-      name: 'Premium',
-      price: 49.99,
-      icon: Crown,
-      features: [
-        'Everything in Pro',
-        'One-on-one consultation',
-        'Dedicated success manager',
-        'Custom application strategies',
-        'Unlimited document reviews',
-        'Priority application processing',
-        'Exclusive scholarship alerts'
-      ],
-      limitations: 'For maximum success'
-    }
-  ];
+  if (subscriptionLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -99,7 +98,7 @@ const Billing = () => {
               </span>
             </div>
             <p className="text-2xl font-bold text-primary mb-1">
-              ${currentPlan.price.toFixed(2)}<span className="text-sm text-muted-foreground font-normal">/month</span>
+              ₦{currentPlan.price.toLocaleString()}<span className="text-sm text-muted-foreground font-normal">/month</span>
             </p>
             <p className="text-sm text-muted-foreground">
               {currentPlan.nextBillingDate !== 'N/A' ? `Next billing date: ${currentPlan.nextBillingDate}` : 'No upcoming charges'}
@@ -161,7 +160,7 @@ const Billing = () => {
 
                 <div className="mb-4">
                   <p className="text-3xl font-bold text-foreground">
-                    ${plan.price.toFixed(2)}
+                    ₦{plan.price.toLocaleString()}
                     <span className="text-sm text-muted-foreground font-normal">/month</span>
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">{plan.limitations}</p>

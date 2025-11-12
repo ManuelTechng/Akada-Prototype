@@ -5,7 +5,13 @@
       "Read(//c/Users/oyiny/OneDrive/2025/manueltech/Projects/Akada Modern UI Redesign/**)",
       "Bash(npm install recharts)",
       "Bash(mkdir -p \"c:\\Users\\oyiny\\OneDrive\\2025\\manueltech\\Projects\\Akada-Prototype\\src\\components\\cost-calculator\")",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

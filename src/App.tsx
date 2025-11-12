@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { SavedProgramsProvider } from './contexts/SavedProgramsContext';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useAuth } from './contexts/AuthContext';
 import { checkEnvironmentVariables } from './utils/envCheck';
@@ -297,9 +298,11 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <AuthProvider>
-          <AppWithProviders />
-          <Analytics />
-          <SpeedInsights />
+          <SubscriptionProvider>
+            <AppWithProviders />
+            <Analytics />
+            <SpeedInsights />
+          </SubscriptionProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
