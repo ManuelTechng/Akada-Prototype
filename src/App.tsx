@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -298,6 +299,7 @@ function App() {
         <AuthProvider>
           <AppWithProviders />
           <Analytics />
+          <SpeedInsights />
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
