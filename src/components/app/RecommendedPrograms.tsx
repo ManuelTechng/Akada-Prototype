@@ -263,43 +263,43 @@ const RecommendedPrograms: React.FC = () => {
             className="bg-card rounded-xl shadow-sm border border-border"
           >
             {/* Category Header */}
-            <div className="p-6 border-b border-border">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+            <div className="p-4 sm:p-6 border-b border-border">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                <div className="flex items-start gap-3 min-w-0 flex-1">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary flex-shrink-0">
                     {getCategoryIcon(category.icon)}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-semibold text-foreground">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="text-base sm:text-lg font-semibold text-foreground">
                         {category.title}
                       </h2>
                       {category.matchPercentage && (
-                        <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full text-xs font-medium">
+                        <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">
                           {category.matchPercentage}% Match
                         </span>
                       )}
                     </div>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-sm mt-1">
                       {category.description}
                     </p>
                     {category.reason && (
-                      <p className="text-primary text-sm mt-1">
+                      <p className="text-primary text-xs sm:text-sm mt-1">
                         {category.reason}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 flex-shrink-0 justify-between sm:justify-end">
+                  <span className="text-sm text-muted-foreground whitespace-nowrap">
                     {category.programs.length} program{category.programs.length !== 1 ? 's' : ''}
                   </span>
                   <button
                     onClick={() => setActiveCategory(
                       activeCategory === category.id ? null : category.id
                     )}
-                    className="text-primary hover:text-primary/80 font-medium text-sm"
+                    className="text-primary hover:text-primary/80 font-medium text-sm whitespace-nowrap"
                   >
                     {activeCategory === category.id ? 'Collapse' : 'View All'}
                   </button>

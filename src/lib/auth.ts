@@ -1,5 +1,7 @@
 import type { UserProfile, SignUpData, AuthResponse } from './types';
 import { supabase } from './supabase';
+import { authRateLimiter } from '../utils/rateLimiter';
+import { logger } from '../utils/logger';
 
 // Constants for authentication configuration
 const AUTH_TIMEOUT = 30000; // 30 seconds
@@ -200,29 +202,44 @@ export const signUp = async ({
       throw new Error('Education level is required');
     }
 
+    // SECURITY: Check rate limit before attempting signup
+    const isAllowed = await authRateLimiter.check(email.trim().toLowerCase());
+    if (!isAllowed) {
+      const blockedTime = authRateLimiter.getBlockedTimeRemaining(email.trim().toLowerCase());
+      const blockedMinutes = Math.ceil(blockedTime / 60000);
+      throw new Error(`Too many signup attempts. Please try again in ${blockedMinutes} minute${blockedMinutes !== 1 ? 's' : ''}.`);
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email: email.trim(),
       password: password,
       options: {
-        data: { 
-          full_name: fullName, 
-          education_level: educationLevel 
+        data: {
+          full_name: fullName,
+          education_level: educationLevel
         }
       },
     });
 
-    if (error) throw error;
+    if (error) {
+      // Increment failed attempt counter
+      await authRateLimiter.increment(email.trim().toLowerCase());
+      throw error;
+    }
+
+    // Reset rate limit on successful signup
+    await authRateLimiter.reset(email.trim().toLowerCase());
 
     // Check if session was created
     const { data: sessionData } = await supabase.auth.getSession();
 
-    return { 
-      user: data.user, 
+    return {
+      user: data.user,
       session: sessionData.session,
-      error: null 
+      error: null
     };
   } catch (error) {
-    console.error('Error signing up:', error);
+    logger.error('Error signing up:', error);
     return {
       user: null,
       session: null,
@@ -237,20 +254,35 @@ export const signIn = async (email: string, password: string): Promise<AuthRespo
     if (!email?.trim()) throw new Error('Email is required');
     if (!password?.trim()) throw new Error('Password is required');
 
+    // SECURITY: Check rate limit before attempting login
+    const isAllowed = await authRateLimiter.check(email.trim().toLowerCase());
+    if (!isAllowed) {
+      const blockedTime = authRateLimiter.getBlockedTimeRemaining(email.trim().toLowerCase());
+      const blockedMinutes = Math.ceil(blockedTime / 60000);
+      throw new Error(`Too many login attempts. Please try again in ${blockedMinutes} minute${blockedMinutes !== 1 ? 's' : ''}.`);
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password: password,
     });
 
-    if (error) throw error;
+    if (error) {
+      // Increment failed attempt counter
+      await authRateLimiter.increment(email.trim().toLowerCase());
+      throw error;
+    }
 
-    return { 
-      user: data.user, 
+    // Reset rate limit on successful login
+    await authRateLimiter.reset(email.trim().toLowerCase());
+
+    return {
+      user: data.user,
       session: data.session,
-      error: null 
+      error: null
     };
   } catch (error) {
-    console.error('Error signing in:', error);
+    logger.error('Error signing in:', error);
     return {
       user: null,
       session: null,
@@ -500,15 +532,32 @@ export const resetPassword = async (email: string): Promise<{ error: Error | nul
       throw new Error('Email is required');
     }
 
+    // SECURITY: Check rate limit before attempting password reset
+    const isAllowed = await authRateLimiter.check(email.trim().toLowerCase());
+    if (!isAllowed) {
+      const blockedTime = authRateLimiter.getBlockedTimeRemaining(email.trim().toLowerCase());
+      const blockedMinutes = Math.ceil(blockedTime / 60000);
+      throw new Error(`Too many password reset attempts. Please try again in ${blockedMinutes} minute${blockedMinutes !== 1 ? 's' : ''}.`);
+    }
+
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-    
-    if (error) throw error;
+
+    if (error) {
+      // Increment failed attempt counter
+      await authRateLimiter.increment(email.trim().toLowerCase());
+      throw error;
+    }
+
+    // Note: We don't reset the rate limit here because password reset emails
+    // are sent even for non-existent accounts (security best practice)
+    // This prevents email enumeration attacks
+
     return { error: null };
   } catch (error) {
-    console.error('Error resetting password:', error);
-    return { 
+    logger.error('Error resetting password:', error);
+    return {
       error: error instanceof Error ? error : new Error('Unknown error during password reset')
     };
   }

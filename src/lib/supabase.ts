@@ -1,19 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './database.types';
+import { logger } from '../utils/logger';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Validate environment variables are present and correctly formatted
 if (!supabaseUrl || !supabaseUrl.startsWith('https://')) {
-  console.error('Invalid or missing VITE_SUPABASE_URL. Must be a valid HTTPS URL.');
+  logger.error('Invalid or missing VITE_SUPABASE_URL. Must be a valid HTTPS URL.');
 }
 
 if (!supabaseAnonKey || supabaseAnonKey.length === 0) {
-  console.error('Invalid or missing VITE_SUPABASE_ANON_KEY. Please check your .env file.');
+  logger.error('Invalid or missing VITE_SUPABASE_ANON_KEY. Please check your .env file.');
 }
 
-console.log("Supabase: Initializing with URL", supabaseUrl);
+logger.debug("Supabase: Initializing");
 
 // In-memory fallback storage
 const memoryStorage = new Map<string, string>();
@@ -26,52 +27,54 @@ const STORAGE_KEYS = {
 
 const createFallbackStorage = () => ({
   getItem: (key: string) => {
-    console.log("Supabase Storage: Fallback getItem", key);
+    logger.debug("Supabase Storage: Fallback getItem");
     return memoryStorage.get(key) ?? null;
   },
   setItem: (key: string, value: string) => {
-    console.log("Supabase Storage: Fallback setItem", key);
+    logger.debug("Supabase Storage: Fallback setItem");
     memoryStorage.set(key, value);
   },
   removeItem: (key: string) => {
-    console.log("Supabase Storage: Fallback removeItem", key);
+    logger.debug("Supabase Storage: Fallback removeItem");
     memoryStorage.delete(key);
   }
 });
 
 const handleStorageError = (operation: string, error: unknown) => {
-  console.error(`Supabase Storage: ${operation} error:`, error);
+  logger.error(`Supabase Storage: ${operation} error:`, error);
   try {
     memoryStorage.set(STORAGE_KEYS.LAST_ERROR, JSON.stringify({ operation, timestamp: Date.now() }));
   } catch (jsonError) {
-    console.error('Failed to stringify error for storage:', jsonError);
+    logger.error('Failed to stringify error for storage:', jsonError);
     memoryStorage.set(STORAGE_KEYS.LAST_ERROR, `${operation}-error-${Date.now()}`);
   }
 };
 
 const getStorage = () => {
   try {
-    // Simplified storage setup - try localStorage first, fallback to memory
-    console.log("Supabase: Setting up storage");
+    // SECURITY: Use sessionStorage instead of localStorage to mitigate XSS attacks
+    // sessionStorage is cleared when the tab/window closes, reducing the attack surface
+    // compared to localStorage which persists indefinitely
+    logger.debug("Supabase: Setting up storage");
 
-    // Quick test for localStorage availability
+    // Quick test for sessionStorage availability
     try {
       const testKey = 'supabase-test';
-      localStorage.setItem(testKey, 'test');
-      localStorage.removeItem(testKey);
-      console.log("Supabase Storage: Using localStorage");
+      sessionStorage.setItem(testKey, 'test');
+      sessionStorage.removeItem(testKey);
+      logger.debug("Supabase Storage: Using sessionStorage (secure)");
 
       return {
-        getItem: (key: string) => localStorage.getItem(key),
-        setItem: (key: string, value: string) => localStorage.setItem(key, value),
-        removeItem: (key: string) => localStorage.removeItem(key)
+        getItem: (key: string) => sessionStorage.getItem(key),
+        setItem: (key: string, value: string) => sessionStorage.setItem(key, value),
+        removeItem: (key: string) => sessionStorage.removeItem(key)
       };
     } catch (e) {
-      console.warn("Supabase Storage: localStorage not available, using memory storage");
+      logger.warn("Supabase Storage: sessionStorage not available, using memory storage");
       return createFallbackStorage();
     }
   } catch (error) {
-    console.warn('Supabase Storage: localStorage not available, using in-memory storage', error);
+    logger.warn('Supabase Storage: sessionStorage not available, using in-memory storage', error);
     return createFallbackStorage();
   }
 };
@@ -85,7 +88,7 @@ const customFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
   return fetch(input, { ...init, headers });
 };
 
-console.log("Supabase: Creating client");
+logger.debug("Supabase: Creating client");
 
 // Create a single instance of the Supabase client
 const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -109,6 +112,6 @@ const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   }
 });
 
-console.log("Supabase: Client created");
+logger.debug("Supabase: Client created");
 
 export { supabase };
