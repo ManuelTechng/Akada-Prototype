@@ -231,51 +231,51 @@ const SavedPrograms: React.FC = () => {
               </div>
 
               {/* Filters & Controls */}
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 {/* Country Filter */}
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                   <select
                     aria-label="Filter saved programs by country"
                     value={filterCountry}
                     onChange={(e) => setFilterCountry(e.target.value)}
-                    className="appearance-none border border-input rounded-lg pl-3 pr-10 py-2 focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground text-sm"
+                    className="appearance-none border border-input rounded-lg pl-3 pr-8 py-2 focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground text-sm w-auto"
                   >
                     <option value="">All Countries</option>
                     {countries.map(country => (
                       <option key={country} value={country}>{country}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
                 </div>
 
                 {/* Sort */}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 flex-shrink-0">
                   <div className="relative">
                     <select
                       aria-label="Sort saved programs"
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as any)}
-                      className="appearance-none border border-input rounded-lg pl-3 pr-10 py-2 focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground text-sm"
+                      className="appearance-none border border-input rounded-lg pl-3 pr-8 py-2 focus:ring-2 focus:ring-ring focus:border-ring bg-background text-foreground text-sm w-auto"
                     >
                       <option value="date">Date Saved</option>
                       <option value="name">Program Name</option>
                       <option value="cost">Tuition Cost</option>
                       <option value="deadline">Deadline</option>
                     </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+                    <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
                   </div>
 
                   <button
                     aria-label={`Sort ${sortOrder === 'asc' ? 'descending' : 'ascending'}`}
                     onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                    className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-2 text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
                   >
                     {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
                   </button>
                 </div>
 
                 {/* View Mode */}
-                <div className="flex bg-muted rounded-lg p-1">
+                <div className="flex bg-muted rounded-lg p-1 flex-shrink-0">
                   <button
                     aria-label="Switch to grid view"
                     onClick={() => setViewMode('grid')}
