@@ -283,20 +283,20 @@ const Resources: React.FC = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-2">Resources</h1>
-        <p className="text-gray-600">Helpful guides and information for your international education journey</p>
+        <p className="text-muted-foreground">Helpful guides and information for your international education journey</p>
       </div>
 
       {/* Search and filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
+      <div className="bg-card rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-4">
           <div className="relative flex-1 w-full">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
+              <Search className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="text"
               placeholder="Search resources..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full"
+              className="pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -307,8 +307,8 @@ const Resources: React.FC = () => {
               onClick={() => setActiveCategory('all')}
               className={`px-4 py-2 rounded-lg ${
                 activeCategory === 'all'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted'
               }`}
             >
               All Resources
@@ -317,8 +317,8 @@ const Resources: React.FC = () => {
               onClick={() => setActiveCategory('scholarships')}
               className={`px-4 py-2 rounded-lg ${
                 activeCategory === 'scholarships'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted'
               }`}
             >
               Scholarships
@@ -327,8 +327,8 @@ const Resources: React.FC = () => {
               onClick={() => setActiveCategory('visas')}
               className={`px-4 py-2 rounded-lg ${
                 activeCategory === 'visas'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted'
               }`}
             >
               Visa Guides
@@ -337,8 +337,8 @@ const Resources: React.FC = () => {
               onClick={() => setActiveCategory('guides')}
               className={`px-4 py-2 rounded-lg ${
                 activeCategory === 'guides'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted'
               }`}
             >
               Guides & Tips
@@ -348,12 +348,12 @@ const Resources: React.FC = () => {
 
         {/* Country filter */}
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-500" />
-          <span className="text-sm text-gray-700">Filter by country:</span>
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-foreground">Filter by country:</span>
           <select
             value={countryFilter}
             onChange={(e) => setCountryFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="border border-border rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="">All Countries</option>
             <option value="UK">United Kingdom</option>
@@ -373,20 +373,20 @@ const Resources: React.FC = () => {
             <h2 className="text-xl font-semibold mb-4">Featured Resources</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {guides.filter(guide => guide.featured).slice(0, 3).map((guide, index) => (
-                <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                <div key={index} className="bg-card rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3 mb-4">
-                    <div className="bg-indigo-100 p-2 rounded-lg flex-shrink-0">
+                    <div className="bg-primary/10 p-2 rounded-lg flex-shrink-0">
                       {guide.icon}
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-900 mb-1">{guide.title}</h3>
-                      <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full">{guide.type}</span>
+                      <h3 className="font-medium text-foreground mb-1">{guide.title}</h3>
+                      <span className="text-xs bg-primary/10 text-indigo-700 px-2 py-1 rounded-full">{guide.type}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">{guide.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{guide.description}</p>
                   <a 
                     href={guide.downloadUrl} 
-                    className="text-indigo-600 text-sm font-medium flex items-center gap-1 hover:text-indigo-700"
+                    className="text-primary text-sm font-medium flex items-center gap-1 hover:text-primary"
                   >
                     <Download className="h-4 w-4" />
                     <span>Download</span>
@@ -399,9 +399,9 @@ const Resources: React.FC = () => {
 
         {/* Scholarships Section */}
         {(activeCategory === 'all' || activeCategory === 'scholarships') && filteredScholarships.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+          <div className="bg-card rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-6">
-              <Award className="h-6 w-6 text-indigo-600 flex-shrink-0" />
+              <Award className="h-6 w-6 text-primary flex-shrink-0" />
               <h2 className="text-xl font-semibold">Scholarships for Nigerian Students</h2>
             </div>
             
@@ -409,7 +409,7 @@ const Resources: React.FC = () => {
               {filteredScholarships.map((scholarship, index) => (
                 <div key={index} className="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
                   <div className="flex flex-col md:flex-row gap-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                       <img 
                         src={scholarship.logo} 
                         alt={`${scholarship.name} logo`} 
@@ -418,19 +418,19 @@ const Resources: React.FC = () => {
                     </div>
                     <div className="flex-1">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2">
-                        <h3 className="font-semibold text-lg text-gray-900 break-words">{scholarship.name}</h3>
-                        <span className="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full text-xs self-start">
+                        <h3 className="font-semibold text-lg text-foreground break-words">{scholarship.name}</h3>
+                        <span className="bg-primary/10 text-indigo-700 px-2 py-1 rounded-full text-xs self-start">
                           {scholarship.country}
                         </span>
                       </div>
-                      <p className="text-gray-700 mb-3 break-words">{scholarship.coverage}</p>
+                      <p className="text-foreground mb-3 break-words">{scholarship.coverage}</p>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm">
-                        <span className="flex items-center gap-1 text-red-600 font-medium">
+                        <span className="flex items-center gap-1 text-destructive font-medium">
                           <Calendar className="h-4 w-4" />
                           Deadline: {scholarship.deadline}
                         </span>
-                        <span className="flex items-center gap-1 text-gray-600">
-                          <GraduationCap className="h-4 w-4 text-gray-500" />
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <GraduationCap className="h-4 w-4 text-muted-foreground" />
                           {scholarship.eligibility}
                         </span>
                       </div>
@@ -438,7 +438,7 @@ const Resources: React.FC = () => {
                         href={scholarship.website}
                         target="_blank"
                         rel="noopener noreferrer" 
-                        className="mt-4 inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                        className="mt-4 inline-flex items-center gap-1 text-primary hover:text-primary text-sm font-medium"
                       >
                         Visit official website
                         <ExternalLink className="h-4 w-4" />
@@ -449,7 +449,7 @@ const Resources: React.FC = () => {
               ))}
             </div>
             
-            <button className="mt-6 text-indigo-600 text-sm font-medium flex items-center gap-1 hover:text-indigo-700">
+            <button className="mt-6 text-primary text-sm font-medium flex items-center gap-1 hover:text-primary">
               <span>View all scholarships</span>
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -458,9 +458,9 @@ const Resources: React.FC = () => {
 
         {/* Visa Guides */}
         {(activeCategory === 'all' || activeCategory === 'visas') && filteredVisas.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mt-8">
+          <div className="bg-card rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mt-8">
             <div className="flex items-center gap-2 mb-6">
-              <Globe className="h-6 w-6 text-indigo-600 flex-shrink-0" />
+              <Globe className="h-6 w-6 text-primary flex-shrink-0" />
               <h2 className="text-xl font-semibold">Visa Requirements</h2>
             </div>
             
@@ -468,7 +468,7 @@ const Resources: React.FC = () => {
               {filteredVisas.map((visa, index) => (
                 <div key={index} className="border border-gray-100 rounded-xl p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-gray-100">
+                    <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-muted">
                       <img 
                         src={visa.flag} 
                         alt={`${visa.country} flag`} 
@@ -476,20 +476,20 @@ const Resources: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg text-gray-900">{visa.country} Student Visa</h3>
-                      <span className="text-sm text-gray-500">Processing: {visa.processingTime}</span>
+                      <h3 className="font-semibold text-lg text-foreground">{visa.country} Student Visa</h3>
+                      <span className="text-sm text-muted-foreground">Processing: {visa.processingTime}</span>
                     </div>
                   </div>
                   
-                  <h4 className="font-medium text-gray-700 mb-2 text-sm">Requirements:</h4>
+                  <h4 className="font-medium text-foreground mb-2 text-sm">Requirements:</h4>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {visa.requirements.map((req, idx) => (
-                      <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
+                      <span key={idx} className="bg-muted text-foreground px-2 py-1 rounded-full text-xs">
                         {req}
                       </span>
                     ))}
                   </div>
-                  <a href={visa.link} className="text-indigo-600 text-sm font-medium flex items-center gap-1 hover:text-indigo-700 mt-2">
+                  <a href={visa.link} className="text-primary text-sm font-medium flex items-center gap-1 hover:text-primary mt-2">
                     <span>View detailed guide</span>
                     <ExternalLink className="h-4 w-4" />
                   </a>
@@ -501,9 +501,9 @@ const Resources: React.FC = () => {
 
         {/* Guides and Resources */}
         {(activeCategory === 'all' || activeCategory === 'guides') && filteredGuides.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mt-8">
+          <div className="bg-card rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mt-8">
             <div className="flex items-center gap-2 mb-6">
-              <BookOpen className="h-6 w-6 text-indigo-600 flex-shrink-0" />
+              <BookOpen className="h-6 w-6 text-primary flex-shrink-0" />
               <h2 className="text-xl font-semibold">Guides & Tips</h2>
             </div>
             
@@ -511,24 +511,24 @@ const Resources: React.FC = () => {
               {filteredGuides.map((guide, index) => (
                 <div key={index} className="border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3">
-                    <div className="bg-indigo-100 p-2 rounded-lg flex-shrink-0">
+                    <div className="bg-primary/10 p-2 rounded-lg flex-shrink-0">
                       {guide.icon}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-medium text-gray-900 mb-1 break-words">{guide.title}</h3>
-                        <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full flex-shrink-0">{guide.type}</span>
+                        <h3 className="font-medium text-foreground mb-1 break-words">{guide.title}</h3>
+                        <span className="text-xs bg-primary/10 text-indigo-700 px-2 py-1 rounded-full flex-shrink-0">{guide.type}</span>
                       </div>
-                      <p className="text-sm text-gray-600 mb-3 break-words">{guide.description}</p>
+                      <p className="text-sm text-muted-foreground mb-3 break-words">{guide.description}</p>
                       <div className="flex justify-between items-center">
                         <a 
                           href={guide.downloadUrl} 
-                          className="text-indigo-600 text-sm font-medium flex items-center gap-1 hover:text-indigo-700"
+                          className="text-primary text-sm font-medium flex items-center gap-1 hover:text-primary"
                         >
                           <Download className="h-4 w-4" />
                           <span>Download</span>
                         </a>
-                        <button className="text-gray-400 hover:text-indigo-600 transition-colors">
+                        <button className="text-muted-foreground hover:text-primary transition-colors">
                           <BookmarkIcon className="h-5 w-5" />
                         </button>
                       </div>
@@ -542,12 +542,12 @@ const Resources: React.FC = () => {
 
         {/* If no results found */}
         {filteredGuides.length === 0 && filteredScholarships.length === 0 && filteredVisas.length === 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-            <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="h-8 w-8 text-gray-400" />
+          <div className="bg-card rounded-xl shadow-sm border border-border p-8 text-center">
+            <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-medium text-gray-800 mb-2">No Resources Found</h3>
-            <p className="text-gray-500 mb-6">
+            <h3 className="text-lg font-medium text-foreground mb-2">No Resources Found</h3>
+            <p className="text-muted-foreground mb-6">
               {searchQuery 
                 ? `No resources matching "${searchQuery}" were found.` 
                 : "No resources found for the selected filters."}
@@ -558,7 +558,7 @@ const Resources: React.FC = () => {
                 setCountryFilter('');
                 setActiveCategory('all');
               }}
-              className="text-indigo-600 hover:text-indigo-700 font-medium"
+              className="text-primary hover:text-primary font-medium"
             >
               Clear Filters
             </button>
@@ -566,18 +566,18 @@ const Resources: React.FC = () => {
         )}
 
         {/* Upcoming Events */}
-        <div className="bg-indigo-600 rounded-xl p-6 text-white mt-8">
+        <div className="bg-primary rounded-xl p-6 text-primary-foreground mt-8">
           <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
           <div className="space-y-4">
             {upcomingEvents.map((event, index) => (
               <div key={index} className="bg-indigo-700/50 rounded-lg p-4">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2">
-                  <h3 className="font-medium text-white">{event.title}</h3>
-                  <span className="bg-indigo-500 px-2 py-1 rounded text-xs font-medium inline-block">
+                  <h3 className="font-medium text-primary-foreground">{event.title}</h3>
+                  <span className="bg-primary px-2 py-1 rounded text-xs font-medium inline-block">
                     {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
                   </span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 text-indigo-200 text-sm">
+                <div className="flex flex-col sm:flex-row gap-4 text-primary-foreground/80 text-sm">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     {event.date}, {event.time}
@@ -586,7 +586,7 @@ const Resources: React.FC = () => {
                 </div>
                 <a 
                   href={event.link} 
-                  className="mt-3 inline-flex items-center gap-1 bg-white text-indigo-700 px-3 py-1 rounded-lg text-sm hover:bg-indigo-50 transition-colors"
+                  className="mt-3 inline-flex items-center gap-1 bg-card text-indigo-700 px-3 py-1 rounded-lg text-sm hover:bg-primary/10 transition-colors"
                 >
                   Register now
                   <ChevronRight className="h-4 w-4" />
@@ -595,7 +595,7 @@ const Resources: React.FC = () => {
             ))}
           </div>
           <div className="mt-4 text-center">
-            <a href="#" className="text-indigo-200 hover:text-white text-sm font-medium inline-flex items-center">
+            <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground text-sm font-medium inline-flex items-center">
               View all upcoming events
               <ChevronRight className="h-4 w-4 ml-1" />
             </a>
@@ -603,12 +603,12 @@ const Resources: React.FC = () => {
         </div>
 
         {/* Ask for Resources */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-8 text-center">
+        <div className="bg-card rounded-xl shadow-sm border border-gray-100 p-6 mt-8 text-center">
           <h2 className="text-xl font-semibold mb-2">Can't Find What You Need?</h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-muted-foreground mb-4">
             We're constantly adding new resources. Let us know what you're looking for.
           </p>
-          <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors inline-flex items-center gap-2">
+          <button className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2">
             <MessageIcon className="h-5 w-5" />
             <span>Request a Resource</span>
           </button>
