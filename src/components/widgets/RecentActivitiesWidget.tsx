@@ -1,8 +1,14 @@
+import React from 'react';
 import { Card } from '../ui/card';
 import { Activity, FileText, BookMarked, Calendar, UserCheck, Clock } from 'lucide-react';
-import { useRecentActivities } from '../../hooks/useRecentActivities';
+import { useRecentActivities, type Activity as ActivityType } from '../../hooks/useRecentActivities';
 
-const getActivityIcon = (actionType: string) => {
+type ActivityColors = {
+  color: string;
+  bg: string;
+};
+
+const getActivityIcon = (actionType: ActivityType['action_type']): React.ComponentType<{ className?: string }> => {
   switch (actionType) {
     case 'saved_program':
       return BookMarked;
@@ -19,7 +25,7 @@ const getActivityIcon = (actionType: string) => {
   }
 };
 
-const getActivityColors = (actionType: string) => {
+const getActivityColors = (actionType: ActivityType['action_type']): ActivityColors => {
   switch (actionType) {
     case 'saved_program':
       return { color: 'text-blue-400', bg: 'bg-blue-500/15' };
