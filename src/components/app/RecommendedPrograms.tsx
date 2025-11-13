@@ -345,6 +345,7 @@ const RecommendedPrograms: React.FC = () => {
                       onSave={() => handleSaveToggle(program.id)}
                       onUnsave={() => handleSaveToggle(program.id)}
                       onViewDetails={() => navigate(`/app/programs/${program.id}`)}
+                      onApply={() => handleApplyToProgram(program.id)}
                     />
                   ))}
               </div>
