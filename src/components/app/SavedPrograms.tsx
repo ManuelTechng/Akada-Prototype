@@ -379,6 +379,7 @@ const SavedPrograms: React.FC = () => {
                         isSaved={true}
                         onUnsave={() => handleRemoveProgram(savedProgram.program_id)}
                         onViewDetails={() => navigate(`/app/programs/${savedProgram.program_id}`)}
+                        onApply={() => handleApplyToProgram(savedProgram.program_id)}
                         compact={viewMode === 'list'}
                       />
                     </div>
