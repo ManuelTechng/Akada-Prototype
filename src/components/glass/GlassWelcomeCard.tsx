@@ -10,6 +10,14 @@ interface GlassWelcomeCardProps {
   subtitle?: string;
 }
 
+/**
+ * Render a glass-style welcome card that displays a time-aware greeting, a derived or provided display name, the current local time, and a motivational subtitle.
+ *
+ * @param userName - Optional override for the displayed user name; if omitted the component derives a first name from authenticated user metadata or email, falling back to "there"
+ * @param greeting - Optional override for the greeting text (e.g., "Good afternoon"); if omitted the component uses the time-based greeting
+ * @param subtitle - Optional override for the subtitle; if omitted the component selects a motivational subtitle based on the current time period
+ * @returns A JSX element representing the styled welcome card containing the time-of-day and local time line, the greeting line with emoji, a subtitle paragraph, and an action button with a sparkles icon
+ */
 export function GlassWelcomeCard({
   userName,
   greeting: customGreeting,
@@ -64,6 +72,5 @@ export function GlassWelcomeCard({
     </div>
   );
 }
-
 
 

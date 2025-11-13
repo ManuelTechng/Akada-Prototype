@@ -13,6 +13,15 @@ export const useTimeBasedGreeting = () => {
     calculateGreeting()
   );
 
+  /**
+   * Create a TimeBasedGreeting object that reflects the current local time.
+   *
+   * The returned object includes a human-friendly greeting and emoji chosen from the local hour,
+   * a period label (`morning` | `afternoon` | `evening` | `night`), a `timeOfDay` string (weekday, month, day),
+   * and `localTime` formatted for en-US with hour and minute in 12-hour notation.
+   *
+   * @returns A TimeBasedGreeting containing `greeting`, `emoji`, `period`, `timeOfDay`, and `localTime` for the current local time.
+   */
   function calculateGreeting(): TimeBasedGreeting {
     const now = new Date();
     const hour = now.getHours();

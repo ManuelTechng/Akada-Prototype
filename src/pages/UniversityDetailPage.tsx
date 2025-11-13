@@ -71,6 +71,16 @@ const getCountryName = (code: string | null): string => {
   return countryMap[code || ''] || code || 'Country';
 };
 
+/**
+ * Page component that displays a university's profile and its list of programs.
+ *
+ * Presents the university header (logo, name, country, type, website), description, statistics,
+ * accreditations, and contact information, and a programs section with search, degree-type filter,
+ * and sorting. Data is loaded based on the route `slug`, and users can save/unsave programs or
+ * navigate to program detail pages. Renders loading and error states when appropriate.
+ *
+ * @returns A React element rendering the university detail page with program filtering and actions.
+ */
 export default function UniversityDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();

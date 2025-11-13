@@ -4,6 +4,13 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTimeBasedGreeting, getMotivationalSubtitle } from '../../hooks/useTimeBasedGreeting';
 import { useMemo } from 'react';
 
+/**
+ * Render a dark, glass-styled welcome card personalized with the current user's display name and a time-based greeting.
+ *
+ * The card shows the local time and time-of-day label, a greeting with an emoji, a motivational subtitle, and a circular action icon.
+ *
+ * @returns A JSX element representing the personalized welcome card.
+ */
 export function GlassWelcomeCardDark() {
   const { user } = useAuth();
   const greetingData = useTimeBasedGreeting();

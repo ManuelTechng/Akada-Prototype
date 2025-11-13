@@ -36,6 +36,14 @@ const getActivityColors = (actionType: string) => {
   }
 };
 
+/**
+ * Renders a "Recent Activities" widget showing the user's latest actions.
+ *
+ * Displays a skeleton while activities are loading, an empty-state message when there are no activities,
+ * and up to four recent activity items each with an icon, color badge, description, and relative timestamp.
+ *
+ * @returns The Recent Activities widget UI element.
+ */
 export function RecentActivitiesWidget() {
   const { activities, loading, formatTimeAgo } = useRecentActivities();
 
@@ -98,5 +106,4 @@ export function RecentActivitiesWidget() {
     </Card>
   );
 }
-
 
