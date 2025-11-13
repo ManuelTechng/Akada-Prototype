@@ -177,7 +177,7 @@ export default function UniversityDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -185,13 +185,13 @@ export default function UniversityDetailPage() {
   if (error || !university) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
-          <p className="text-red-600 dark:text-red-400">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-6 text-center">
+          <p className="text-destructive">
             {error || 'University not found'}
           </p>
           <button
             onClick={() => navigate('/app/programs')}
-            className="mt-4 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300"
+            className="mt-4 text-primary hover:text-primary/80"
           >
             Return to Programs
           </button>
@@ -205,16 +205,16 @@ export default function UniversityDetailPage() {
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 flex items-center text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors group"
+        className="mb-6 flex items-center text-muted-foreground hover:text-foreground transition-colors group"
       >
         <ChevronLeft className="h-5 w-5 mr-1 group-hover:-translate-x-1 transition-transform" />
         <span className="font-medium">Back to Programs</span>
       </button>
 
       {/* University Header */}
-      <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
+      <div className="bg-card rounded-2xl shadow-lg border border-border overflow-hidden mb-8">
         {/* Header with purple gradient */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 sm:px-8 py-6 sm:py-8">
+        <div className="bg-gradient-to-r from-primary to-purple-600 px-4 sm:px-8 py-6 sm:py-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-start lg:justify-between gap-6">
             <div className="flex items-start space-x-4 sm:space-x-6 flex-1 w-full">
               {university.logo_url && (
@@ -258,7 +258,7 @@ export default function UniversityDetailPage() {
                 href={university.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-indigo-600 px-6 py-3 rounded-lg transition-colors shadow-md hover:shadow-lg font-medium w-full lg:w-auto lg:ml-4"
+                className="flex items-center justify-center gap-2 bg-white hover:bg-gray-100 dark:bg-white/90 dark:hover:bg-white text-primary px-6 py-3 rounded-lg transition-colors shadow-md hover:shadow-lg font-medium w-full lg:w-auto lg:ml-4"
               >
                 <Globe className="h-5 w-5" />
                 <span>Visit Website</span>
@@ -273,8 +273,8 @@ export default function UniversityDetailPage() {
 
           {/* Description */}
           {university.description && (
-            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-6">
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base">
+            <div className="bg-accent/50 rounded-xl p-6 border border-border mb-6">
+              <p className="text-foreground leading-relaxed text-base">
                 {university.description}
               </p>
             </div>
@@ -288,7 +288,7 @@ export default function UniversityDetailPage() {
                   <Users className="h-5 w-5 mr-2" />
                   <span className="text-xs font-semibold uppercase tracking-wide">Total Students</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-2xl font-bold text-foreground">
                   {university.total_students.toLocaleString()}
                 </p>
               </div>
@@ -300,7 +300,7 @@ export default function UniversityDetailPage() {
                   <Globe className="h-5 w-5 mr-2" />
                   <span className="text-xs font-semibold uppercase tracking-wide">International</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-2xl font-bold text-foreground">
                   {university.international_students.toLocaleString()}
                 </p>
               </div>
@@ -312,7 +312,7 @@ export default function UniversityDetailPage() {
                   <TrendingUp className="h-5 w-5 mr-2" />
                   <span className="text-xs font-semibold uppercase tracking-wide">Acceptance Rate</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-2xl font-bold text-foreground">
                   {university.acceptance_rate < 1
                     ? (university.acceptance_rate * 100).toFixed(0)
                     : university.acceptance_rate.toFixed(0)}%
@@ -329,18 +329,18 @@ export default function UniversityDetailPage() {
                 <div className="flex items-center justify-around gap-4">
                   {university.ranking_world && (
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      <p className="text-2xl font-bold text-foreground">
                         #{university.ranking_world}
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">(World)</p>
+                      <p className="text-xs text-muted-foreground mt-1">(World)</p>
                     </div>
                   )}
                   {university.ranking_national && (
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      <p className="text-2xl font-bold text-foreground">
                         #{university.ranking_national}
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">(National)</p>
+                      <p className="text-xs text-muted-foreground mt-1">(National)</p>
                     </div>
                   )}
                 </div>
@@ -350,16 +350,16 @@ export default function UniversityDetailPage() {
 
           {/* Accreditations */}
           {university.accreditations && university.accreditations.length > 0 && (
-            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                <Award className="h-5 w-5 mr-2 text-indigo-600 dark:text-indigo-400" />
+            <div className="bg-accent/50 rounded-xl p-6 border border-border">
+              <h3 className="text-base font-semibold text-foreground mb-4 flex items-center">
+                <Award className="h-5 w-5 mr-2 text-primary" />
                 Accreditations & Certifications
               </h3>
               <div className="flex flex-wrap gap-2">
                 {university.accreditations.map((accreditation, index) => (
                   <span
                     key={index}
-                    className="bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 dark:border-gray-600 shadow-sm"
+                    className="bg-card text-foreground px-4 py-2 rounded-lg text-sm font-medium border border-border shadow-sm"
                   >
                     {accreditation}
                   </span>
@@ -371,12 +371,12 @@ export default function UniversityDetailPage() {
           {/* Contact Information */}
           {university.contact_email && (
             <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-indigo-200 dark:border-indigo-800">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h3 className="text-base font-semibold text-foreground mb-3">
                 Contact Information
               </h3>
               <a
                 href={`mailto:${university.contact_email}`}
-                className="flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors"
+                className="flex items-center text-primary hover:text-primary/80 font-medium transition-colors"
               >
                 <Mail className="h-5 w-5 mr-3" />
                 {university.contact_email}
@@ -387,12 +387,12 @@ export default function UniversityDetailPage() {
       </div>
 
       {/* Programs Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-card rounded-2xl shadow-lg border border-border overflow-hidden">
         <div className="px-8 pt-8 pb-4">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
-            <GraduationCap className="h-8 w-8 mr-3 text-indigo-600 dark:text-indigo-400" />
+          <h2 className="text-3xl font-bold text-foreground flex items-center">
+            <GraduationCap className="h-8 w-8 mr-3 text-primary" />
             Programs Offered
-            <span className="ml-3 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-4 py-1 rounded-full text-lg font-semibold">
+            <span className="ml-3 bg-indigo-100 dark:bg-indigo-900/30 text-primary px-4 py-1 rounded-full text-lg font-semibold">
               {filteredPrograms.length}
             </span>
           </h2>
@@ -404,19 +404,19 @@ export default function UniversityDetailPage() {
             <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
               {/* Search */}
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search programs..."
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-border rounded-xl bg-card text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-all"
                 />
               </div>
 
               {/* Filters Label */}
-              <div className="hidden lg:flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg h-fit">
-                <Filter className="h-4 w-4 mr-2 text-indigo-600 dark:text-indigo-400" />
+              <div className="hidden lg:flex items-center text-sm font-semibold text-foreground bg-accent px-4 py-2 rounded-lg h-fit">
+                <Filter className="h-4 w-4 mr-2 text-primary" />
                 Filters
               </div>
 
@@ -424,7 +424,7 @@ export default function UniversityDetailPage() {
               <select
                 value={degreeFilter}
                 onChange={(e) => setDegreeFilter(e.target.value)}
-                className="px-5 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer"
+                className="px-5 py-3 border-2 border-border rounded-xl bg-card text-foreground font-medium focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer"
               >
                 <option value="">All Degree Types</option>
                 {degreeTypes.map((type) => (
@@ -438,7 +438,7 @@ export default function UniversityDetailPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-5 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all cursor-pointer"
+                className="px-5 py-3 border-2 border-border rounded-xl bg-card text-foreground font-medium focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer"
               >
                 <option value="name">Sort by Name</option>
                 <option value="tuition-low">Tuition: Low to High</option>
@@ -462,12 +462,12 @@ export default function UniversityDetailPage() {
 
           {/* Programs Grid */}
           {filteredPrograms.length === 0 ? (
-            <div className="text-center py-16 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
-              <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <div className="text-center py-16 bg-accent/50 rounded-xl border-2 border-dashed border-border">
+              <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
                 No Programs Found
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              <p className="text-muted-foreground max-w-md mx-auto">
                 {searchQuery || degreeFilter
                   ? 'Try adjusting your filters to see more programs'
                   : 'This university doesn\'t have any programs listed yet'}
