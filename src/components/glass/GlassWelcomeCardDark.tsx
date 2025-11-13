@@ -1,7 +1,26 @@
 import { Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useAuth } from '../../contexts/AuthContext';
+import { useTimeBasedGreeting, getMotivationalSubtitle } from '../../hooks/useTimeBasedGreeting';
+import { useMemo } from 'react';
 
 export function GlassWelcomeCardDark() {
+  const { user } = useAuth();
+  const greetingData = useTimeBasedGreeting();
+
+  // Extract first name from user's full name or email
+  const displayName = useMemo(() => {
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name.split(' ')[0];
+    }
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    return 'there';
+  }, [user]);
+
+  const subtitle = getMotivationalSubtitle(greetingData.period);
+
   return (
     <div className="relative overflow-hidden rounded-[32px] bg-gray-900/45 backdrop-blur-2xl border border-white/10 px-6 py-8 sm:px-10 sm:py-10 xl:px-14 xl:py-14 shadow-[0_38px_80px_-44px_rgba(14,20,45,0.85)] min-h-[180px] sm:min-h-[190px] xl:min-h-[210px]">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/28 via-purple-600/22 to-sky-500/16" />
@@ -12,12 +31,14 @@ export function GlassWelcomeCardDark() {
       <div className="relative z-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex-1 space-y-3 xl:space-y-4">
-            <p className="text-xs uppercase tracking-[0.32em] text-white/55">Today&apos;s Focus</p>
+            <p className="text-xs uppercase tracking-[0.32em] text-white/55">
+              {greetingData.timeOfDay} • {greetingData.localTime}
+            </p>
             <h2 className="text-2xl sm:text-3xl xl:text-[2.25rem] font-semibold text-white leading-[1.1]">
-              Good afternoon, Tosin! Keep the momentum going 💪
+              {greetingData.greeting}, {displayName}! Keep the momentum going {greetingData.emoji}
             </h2>
             <p className="text-sm sm:text-base xl:text-lg text-white/80 max-w-2xl">
-              Every application brings you closer to success ✨
+              {subtitle}
             </p>
           </div>
           <Button
