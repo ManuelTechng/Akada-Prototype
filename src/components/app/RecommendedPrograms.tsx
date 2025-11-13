@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { 
   Sparkles, 
   Target, 
@@ -24,7 +24,6 @@ import {
 } from '../../lib/recommendations'
 import CreateApplicationModal from './CreateApplicationModal'
 import { useSavedPrograms } from '../../hooks/useSavedPrograms'
-import { useMemo } from 'react'
 
 // RecommendationCategory interface is now imported from recommendations.ts
 
