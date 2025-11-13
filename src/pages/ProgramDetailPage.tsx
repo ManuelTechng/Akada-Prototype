@@ -22,6 +22,7 @@ import { supabase } from '../lib/supabase';
 import CostCalculator from '../components/app/CostCalculator';
 import type { Program } from '../lib/types';
 import { useDarkMode } from '../hooks/useDarkMode';
+import CreateApplicationModal from '../components/app/CreateApplicationModal';
 
 interface University {
   id: string;
@@ -70,6 +71,7 @@ const ProgramDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<SectionType>('overview');
   const [isSaved, setIsSaved] = useState(false);
+  const [showApplicationModal, setShowApplicationModal] = useState(false);
 
   useEffect(() => {
     const fetchProgramDetails = async () => {
@@ -147,6 +149,15 @@ const ProgramDetailPage: React.FC = () => {
     }
   };
 
+  const handleApplyNow = () => {
+    setShowApplicationModal(true);
+  };
+
+  const handleApplicationSuccess = () => {
+    console.log('Application created successfully');
+    setShowApplicationModal(false);
+  };
+
   const sections = [
     { id: 'overview', label: 'Overview', icon: <FileText className="w-4 h-4" /> },
     { id: 'requirements', label: 'Requirements', icon: <CheckCircle className="w-4 h-4" /> },
@@ -159,7 +170,7 @@ const ProgramDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -209,7 +220,7 @@ const ProgramDetailPage: React.FC = () => {
                   <GraduationCap className="w-4 h-4 mr-1" />
                   {program.degree_type}
                 </div>
-                <div className="flex items-center font-semibold text-indigo-600 dark:text-indigo-400">
+                <div className="flex items-center font-semibold text-primary dark:text-primary">
                   <DollarSign className="w-4 h-4 mr-1" />
                   ${program.tuition_fee?.toLocaleString()}/year
                 </div>
@@ -236,7 +247,8 @@ const ProgramDetailPage: React.FC = () => {
                 Share
               </button>
               <button
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+                onClick={handleApplyNow}
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 font-medium transition-colors"
               >
                 Apply Now
               </button>
@@ -254,8 +266,8 @@ const ProgramDetailPage: React.FC = () => {
                   onClick={() => setActiveSection(section.id as SectionType)}
                   className={`flex items-center px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors ${
                     activeSection === section.id
-                      ? 'border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'border-b-2 border-primary text-primary'
+                      : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   {section.icon}
@@ -495,6 +507,16 @@ const ProgramDetailPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Application Modal */}
+      <CreateApplicationModal
+        isOpen={showApplicationModal}
+        onClose={() => setShowApplicationModal(false)}
+        programId={program?.id}
+        programName={program?.name}
+        universityName={program?.university}
+        onSuccess={handleApplicationSuccess}
+      />
     </div>
   );
 };
