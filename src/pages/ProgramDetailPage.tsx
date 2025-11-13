@@ -69,6 +69,7 @@ const ProgramDetailPage: React.FC = () => {
   const [country, setCountry] = useState<Country | null>(null);
   const [city, setCity] = useState<City | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<SectionType>('overview');
   const [isSaved, setIsSaved] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
@@ -78,6 +79,7 @@ const ProgramDetailPage: React.FC = () => {
       if (!id) return;
 
       setLoading(true);
+      setError(null);
       try {
         // Fetch program
         const { data: programData, error: programError } = await supabase
@@ -87,37 +89,43 @@ const ProgramDetailPage: React.FC = () => {
           .single();
 
         if (programError) throw programError;
-        setProgram(programData as any as Program);
+        if (!programData) throw new Error('Program not found');
+        setProgram(programData as Program);
 
         // Fetch university if university_id exists
         if (programData.university_id) {
-          const { data: universityData } = await supabase
+          const { data: universityData, error: universityError } = await supabase
             .from('universities')
             .select('*')
             .eq('id', programData.university_id)
             .single();
-          setUniversity(universityData as any as University);
+          if (universityError) console.warn('Failed to fetch university:', universityError);
+          if (universityData) setUniversity(universityData as University);
         }
 
         // Fetch country
-        const { data: countryData } = await supabase
+        const { data: countryData, error: countryError } = await supabase
           .from('countries')
           .select('*')
           .eq('country_code', programData.country)
           .single();
-        setCountry(countryData as any as Country);
+        if (countryError) console.warn('Failed to fetch country:', countryError);
+        if (countryData) setCountry(countryData as Country);
 
         // Fetch city if city_id exists
         if (programData.city_id) {
-          const { data: cityData } = await supabase
+          const { data: cityData, error: cityError } = await supabase
             .from('cities')
             .select('*')
             .eq('id', programData.city_id)
             .single();
-          setCity(cityData as any as City);
+          if (cityError) console.warn('Failed to fetch city:', cityError);
+          if (cityData) setCity(cityData as City);
         }
-      } catch (error) {
-        console.error('Error fetching program details:', error);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to load program details';
+        console.error('Error fetching program details:', err);
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -175,16 +183,28 @@ const ProgramDetailPage: React.FC = () => {
     );
   }
 
-  if (!program) {
+  if (error || !program) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold text-foreground mb-4">Program Not Found</h2>
-        <button
-          onClick={() => navigate('/app/search')}
-          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          Back to Search
-        </button>
+      <div className="flex flex-col items-center justify-center min-h-screen px-4">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-8 text-center max-w-md">
+          <div className="text-destructive mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            {error ? 'Error Loading Program' : 'Program Not Found'}
+          </h2>
+          <p className="text-destructive mb-6">
+            {error || 'The program you are looking for could not be found.'}
+          </p>
+          <button
+            onClick={() => navigate('/app/programs')}
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Back to Programs
+          </button>
+        </div>
       </div>
     );
   }
