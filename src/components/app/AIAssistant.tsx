@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { 
   MessageSquare, 
   Send, 
@@ -333,16 +333,16 @@ What would be most helpful for you right now?`
   }
 
   return (
-    <div className="flex flex-col h-full max-h-[calc(100vh-8rem)] bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+    <div className="flex flex-col h-full max-h-[calc(100vh-8rem)] bg-card rounded-xl shadow-sm border border-border">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600">
+      <div className="flex items-center justify-between p-4 border-b border-border dark:border-gray-600">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-semibold text-gray-900 dark:text-white">AI Study Abroad Advisor</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Powered by advanced AI</p>
+            <h1 className="font-semibold text-foreground">AI Study Abroad Advisor</h1>
+            <p className="text-sm text-muted-foreground">Powered by advanced AI</p>
           </div>
         </div>
         
@@ -352,7 +352,7 @@ What would be most helpful for you right now?`
               setMessages([])
               setConversationStarted(false)
             }}
-            className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 text-muted-foreground hover:text-gray-600 dark:hover:text-muted-foreground rounded-lg hover:bg-muted transition-colors"
             title="Start new conversation"
           >
             <RotateCcw className="h-4 w-4" />
@@ -362,22 +362,22 @@ What would be most helpful for you right now?`
 
       {/* Quick Actions */}
       {messages.length <= 1 && (
-        <div className="p-4 border-b border-gray-200 dark:border-gray-600">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Quick actions to get started:</p>
+        <div className="p-4 border-b border-border dark:border-gray-600">
+          <p className="text-sm text-muted-foreground mb-3">Quick actions to get started:</p>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
             {quickActions.map((action) => (
               <button
                 key={action.id}
                 onClick={() => handleQuickAction(action)}
-                className="p-3 text-left border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+                className="p-3 text-left border border-border dark:border-gray-600 rounded-lg hover:bg-muted transition-colors group"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300">
+                  <span className="text-primary group-hover:text-indigo-700 dark:group-hover:text-indigo-300">
                     {action.icon}
                   </span>
-                  <span className="font-medium text-sm text-gray-900 dark:text-white">{action.label}</span>
+                  <span className="font-medium text-sm text-foreground">{action.label}</span>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{action.description}</p>
+                <p className="text-xs text-muted-foreground">{action.description}</p>
               </button>
             ))}
           </div>
@@ -395,7 +395,7 @@ What would be most helpful for you right now?`
               {/* Avatar */}
               <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                 message.type === 'user' 
-                  ? 'bg-indigo-600 text-white' 
+                  ? 'bg-primary text-primary-foreground' 
                   : 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
               }`}>
                 {message.type === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -405,8 +405,8 @@ What would be most helpful for you right now?`
               <div className={`flex flex-col ${message.type === 'user' ? 'items-end' : 'items-start'}`}>
                 <div className={`px-4 py-2 rounded-2xl ${
                   message.type === 'user'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-foreground'
                 }`}>
                   <div className="whitespace-pre-wrap">{message.content}</div>
                 </div>
@@ -416,15 +416,15 @@ What would be most helpful for you right now?`
                   <div className="flex items-center gap-1 mt-1">
                     <button
                       onClick={() => copyMessage(message.content)}
-                      className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded transition-colors"
+                      className="p-1 text-muted-foreground hover:text-gray-600 dark:hover:text-muted-foreground rounded transition-colors"
                       title="Copy message"
                     >
                       <Copy className="h-3 w-3" />
                     </button>
-                    <button className="p-1 text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 rounded transition-colors">
+                    <button className="p-1 text-muted-foreground hover:text-chart-1 dark:hover:text-green-400 rounded transition-colors">
                       <ThumbsUp className="h-3 w-3" />
                     </button>
-                    <button className="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 rounded transition-colors">
+                    <button className="p-1 text-muted-foreground hover:text-destructive dark:hover:text-red-400 rounded transition-colors">
                       <ThumbsDown className="h-3 w-3" />
                     </button>
                   </div>
@@ -437,7 +437,7 @@ What would be most helpful for you right now?`
                       <button
                         key={index}
                         onClick={() => handleActionClick(action)}
-                        className="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors inline-flex items-center gap-1"
+                        className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm hover:bg-primary/90 transition-colors inline-flex items-center gap-1"
                       >
                         <ExternalLink className="h-3 w-3" />
                         {action.label}
@@ -453,7 +453,7 @@ What would be most helpful for you right now?`
                       <button
                         key={index}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-lg text-sm hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+                        className="bg-muted dark:bg-gray-600 text-foreground px-3 py-1 rounded-lg text-sm hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
                       >
                         {suggestion}
                       </button>
@@ -461,7 +461,7 @@ What would be most helpful for you right now?`
                   </div>
                 )}
                 
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <span className="text-xs text-muted-foreground mt-1">
                   {message.timestamp.toLocaleTimeString()}
                 </span>
               </div>
@@ -476,7 +476,7 @@ What would be most helpful for you right now?`
               <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
                 <Bot className="h-4 w-4 text-white" />
               </div>
-              <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-2xl">
+              <div className="bg-muted px-4 py-2 rounded-2xl">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-gray-400 dark:text-gray-500 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-gray-400 dark:text-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -491,7 +491,7 @@ What would be most helpful for you right now?`
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-200 dark:border-gray-600">
+      <div className="p-4 border-t border-border dark:border-gray-600">
         <div className="flex items-center gap-2">
           <div className="flex-1 relative">
             <input
@@ -500,15 +500,15 @@ What would be most helpful for you right now?`
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputMessage)}
               placeholder="Ask me anything about studying abroad..."
-              className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
+              className="w-full px-4 py-3 pr-12 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-primary bg-input text-foreground resize-none"
               disabled={isTyping}
             />
             <button
               onClick={() => setIsListening(!isListening)}
               className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-lg transition-colors ${
                 isListening 
-                  ? 'text-red-600 hover:text-red-700 bg-red-50 dark:bg-red-900/20' 
-                  : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
+                  ? 'text-destructive hover:text-red-700 bg-destructive/10' 
+                  : 'text-muted-foreground hover:text-gray-600 dark:hover:text-muted-foreground'
               }`}
             >
               {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -518,13 +518,13 @@ What would be most helpful for you right now?`
           <button
             onClick={() => handleSendMessage(inputMessage)}
             disabled={!inputMessage.trim() || isTyping}
-            className="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-primary text-primary-foreground p-3 rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <Send className="h-5 w-5" />
           </button>
         </div>
         
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+        <p className="text-xs text-muted-foreground mt-2 text-center">
           AI responses are for guidance only. Always verify information with official sources.
         </p>
       </div>

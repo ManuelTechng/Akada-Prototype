@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   User, 
   Mail, 
@@ -1147,7 +1147,7 @@ const ProfileSettings: React.FC = () => {
       
       {/* Loading state */}
       {loading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-border p-10 mb-8 flex flex-col items-center justify-center">
+        <div className="bg-card rounded-xl shadow-sm border border-border p-10 mb-8 flex flex-col items-center justify-center">
           <Loader2 className="h-10 w-10 text-primary animate-spin mb-4" />
           <p className="text-muted-foreground">Loading your profile data...</p>
         </div>
