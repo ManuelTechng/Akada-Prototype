@@ -16,20 +16,23 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import ProgramCard from './ProgramCard'
 import type { Program } from '../../lib/types'
-import { 
-  fetchPersonalizedRecommendations, 
-  refreshRecommendations, 
+import {
+  fetchPersonalizedRecommendations,
+  refreshRecommendations,
   getUserRecommendations,
-  type RecommendationCategory 
+  type RecommendationCategory
 } from '../../lib/recommendations'
 import CreateApplicationModal from './CreateApplicationModal'
+import { useSavedPrograms } from '../../hooks/useSavedPrograms'
+import { useMemo } from 'react'
 
 // RecommendationCategory interface is now imported from recommendations.ts
 
 const RecommendedPrograms: React.FC = () => {
   const navigate = useNavigate()
   const { user, profile } = useAuth()
-  
+  const { savedPrograms, saveProgram, unsaveProgram } = useSavedPrograms(user?.id)
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [recommendations, setRecommendations] = useState<RecommendationCategory[]>([])
@@ -38,6 +41,11 @@ const RecommendedPrograms: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false)
   const [showApplicationModal, setShowApplicationModal] = useState(false)
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null)
+
+  // Create a Set of saved program IDs for O(1) lookup
+  const savedProgramIds = useMemo(() => {
+    return new Set(savedPrograms.map(sp => sp.program_id))
+  }, [savedPrograms])
 
   // Icon mapping for categories
   const getCategoryIcon = (iconName: string) => {
@@ -137,10 +145,20 @@ const RecommendedPrograms: React.FC = () => {
     return recommendations.reduce((total, category) => total + category.programs.length, 0)
   }
 
+  // Handle save/unsave program
+  const handleSaveToggle = async (programId: string) => {
+    const isSaved = savedProgramIds.has(programId)
+    if (isSaved) {
+      await unsaveProgram(programId)
+    } else {
+      await saveProgram(programId)
+    }
+  }
+
   const handleApplyToProgram = (programId: string) => {
     // Find the program from the recommendations
     let foundProgram: Program | null = null
-    
+
     for (const category of recommendations) {
       const program = category.programs.find((p: any) => p.id === programId)
       if (program) {
@@ -148,7 +166,7 @@ const RecommendedPrograms: React.FC = () => {
         break
       }
     }
-    
+
     if (foundProgram) {
       setSelectedProgram(foundProgram)
       setShowApplicationModal(true)
@@ -324,7 +342,10 @@ const RecommendedPrograms: React.FC = () => {
                       showMatchScore={true}
                       showRecommendationBadge={true}
                       compact={activeCategory !== category.id}
-                      onApply={handleApplyToProgram}
+                      isSaved={savedProgramIds.has(program.id)}
+                      onSave={() => handleSaveToggle(program.id)}
+                      onUnsave={() => handleSaveToggle(program.id)}
+                      onViewDetails={() => navigate(`/app/programs/${program.id}`)}
                     />
                   ))}
               </div>
