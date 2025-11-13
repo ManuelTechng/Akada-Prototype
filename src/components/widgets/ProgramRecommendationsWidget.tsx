@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   SparklesIcon,
   ChevronRightIcon,
@@ -9,10 +9,19 @@ import { useRecommendations } from '../../hooks/useDashboard'
 import { cn } from '../../lib/utils'
 import SkeletonLoader from '../ui/SkeletonLoader'
 import ProgramCard from '../app/ProgramCard'
+import { useSavedPrograms } from '../../hooks/useSavedPrograms'
+import { useAuth } from '../../contexts/AuthContext'
 
 export const ProgramRecommendationsWidget: React.FC<{ className?: string }> = ({ className }) => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { recommendationsData, loading, error } = useRecommendations()
+  const { savedPrograms, saveProgram, unsaveProgram } = useSavedPrograms(user?.id)
+
+  // Create a Set of saved program IDs for O(1) lookup
+  const savedProgramIds = useMemo(() => {
+    return new Set(savedPrograms.map(sp => sp.program_id))
+  }, [savedPrograms])
 
   if (loading) {
     return <SkeletonLoader.DashboardWidget className={className} />
@@ -64,6 +73,21 @@ export const ProgramRecommendationsWidget: React.FC<{ className?: string }> = ({
 
   const { topMatches } = recommendationsData
 
+  // Handle save/unsave program
+  const handleSaveToggle = async (programId: string) => {
+    const isSaved = savedProgramIds.has(programId)
+    if (isSaved) {
+      await unsaveProgram(programId)
+    } else {
+      await saveProgram(programId)
+    }
+  }
+
+  // Handle view details
+  const handleViewDetails = (programId: string) => {
+    navigate(`/app/programs/${programId}`)
+  }
+
   return (
     <div
       className={cn(
@@ -101,6 +125,10 @@ export const ProgramRecommendationsWidget: React.FC<{ className?: string }> = ({
             showMatchScore={true}
             showRecommendationBadge={true}
             compact={true}
+            isSaved={savedProgramIds.has(program.id)}
+            onSave={() => handleSaveToggle(program.id)}
+            onUnsave={() => handleSaveToggle(program.id)}
+            onViewDetails={() => handleViewDetails(program.id)}
           />
         ))}
       </div>
