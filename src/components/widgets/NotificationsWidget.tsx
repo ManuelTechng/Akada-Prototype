@@ -5,6 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useSmartNotifications } from '../../hooks/useSmartNotifications';
 
+/**
+ * Renders a notifications widget that shows up to three non-dismissed notifications with actions and a dismiss option.
+ *
+ * The header displays an urgent count when greater than zero and an empty state when there are no visible notifications.
+ * Clicking an action navigates to the notification's action path; dismissing a notification hides it locally.
+ *
+ * @returns A React element rendering the notifications widget
+ */
 export function NotificationsWidget() {
   const navigate = useNavigate();
   const { notifications, urgentCount } = useSmartNotifications();
@@ -90,5 +98,4 @@ export function NotificationsWidget() {
     </Card>
   );
 }
-
 
