@@ -292,31 +292,31 @@ const ProgramDetailPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                <div className="bg-accent/50 rounded-lg p-4 border border-border">
-                  <div className="flex items-center text-muted-foreground mb-2">
-                    <Clock className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">Duration</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div className="bg-card/50 dark:bg-muted/30 rounded-lg p-5 border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                    <Clock className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase tracking-wider">Duration</span>
                   </div>
-                  <p className="text-2xl font-bold text-foreground">2 Years</p>
+                  <p className="text-2xl font-bold text-foreground mb-1">2 Years</p>
                   <p className="text-sm text-muted-foreground">Full-time</p>
                 </div>
 
-                <div className="bg-accent/50 rounded-lg p-4 border border-border">
-                  <div className="flex items-center text-muted-foreground mb-2">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">Start Date</span>
+                <div className="bg-card/50 dark:bg-muted/30 rounded-lg p-5 border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase tracking-wider">Start Date</span>
                   </div>
-                  <p className="text-2xl font-bold text-foreground">Fall 2025</p>
+                  <p className="text-2xl font-bold text-foreground mb-1">Fall 2025</p>
                   <p className="text-sm text-muted-foreground">September</p>
                 </div>
 
-                <div className="bg-accent/50 rounded-lg p-4 border border-border">
-                  <div className="flex items-center text-muted-foreground mb-2">
-                    <Award className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">Degree</span>
+                <div className="bg-card/50 dark:bg-muted/30 rounded-lg p-5 border border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                    <Award className="w-4 h-4" />
+                    <span className="text-xs font-medium uppercase tracking-wider">Degree</span>
                   </div>
-                  <p className="text-2xl font-bold text-foreground">{program.degree_type}</p>
+                  <p className="text-2xl font-bold text-foreground mb-1">{program.degree_type}</p>
                   <p className="text-sm text-muted-foreground">Master's Level</p>
                 </div>
               </div>
