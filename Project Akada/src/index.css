@@ -1,0 +1,443 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --font-sans: Plus Jakarta Sans, sans-serif;
+  --font-serif: Lora, serif;
+  --font-mono: IBM Plex Mono, monospace;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* HSL Color System - Akada Theme (Light Mode) */
+  --background: 0 0% 99.22%;           /* #fdfdfd */
+  --foreground: 0 0% 0%;               /* #000000 */
+  --card: 0 0% 99.22%;                 /* #fdfdfd */
+  --card-foreground: 0 0% 0%;          /* #000000 */
+  --popover: 0 0% 98.82%;              /* #fcfcfc */
+  --popover-foreground: 0 0% 0%;       /* #000000 */
+  --primary: 261 100% 60%;             /* #7033ff */
+  --primary-foreground: 0 0% 100%;     /* #ffffff */
+  --secondary: 216 24% 94%;            /* #edf0f4 */
+  --secondary-foreground: 0 0% 3%;     /* #080808 */
+  --muted: 0 0% 96%;                   /* #f5f5f5 */
+  --muted-foreground: 0 0% 32%;        /* #525252 */
+  --accent: 223 100% 94%;              /* #e2ebff */
+  --accent-foreground: 216 76% 49%;    /* #1e69dc */
+  --destructive: 357 72% 60%;          /* #e54b4f */
+  --destructive-foreground: 0 0% 100%; /* #ffffff */
+  --border: 240 10% 91%;               /* #e7e7ee */
+  --input: 0 0% 92%;                   /* #ebebeb */
+  --ring: 0 0% 0%;                     /* #000000 */
+  --chart-1: 145 54% 54%;
+  --chart-2: 261 100% 60%;
+  --chart-3: 25 98% 58%;
+  --chart-4: 217 77% 55%;
+  --chart-5: 0 0% 45%;
+  --sidebar: 211 50% 97%;              /* #f5f8fb */
+  --sidebar-foreground: 0 0% 0%;       /* #000000 */
+  --sidebar-primary: 0 0% 0%;          /* #000000 */
+  --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+  --sidebar-accent: 0 0% 92%;          /* #ebebeb */
+  --sidebar-accent-foreground: 0 0% 0%; /* #000000 */
+  --sidebar-border: 0 0% 92%;          /* #ebebeb */
+  --sidebar-ring: 0 0% 0%;             /* #000000 */
+  --radius: 1.4rem;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 3px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.16;
+  --shadow-color: hsl(0 0% 0%);
+  --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
+  --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
+  --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
+  --shadow: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
+  --shadow-md: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 2px 4px -1px hsl(0 0% 0% / 0.16);
+  --shadow-lg: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 4px 6px -1px hsl(0 0% 0% / 0.16);
+  --shadow-xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 8px 10px -1px hsl(0 0% 0% / 0.16);
+  --shadow-2xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.40);
+  --tracking-normal: -0.025em;
+  --spacing: 0.27rem;
+}
+
+.dark {
+  /* HSL Color System - Akada Theme (Dark Mode) */
+  --background: 220 12% 11%;           /* #1a1b1e */
+  --foreground: 0 0% 94%;              /* #f0f0f0 */
+  --card: 221 8% 14%;                  /* #222327 */
+  --card-foreground: 0 0% 94%;         /* #f0f0f0 */
+  --popover: 221 8% 14%;               /* #222327 */
+  --popover-foreground: 0 0% 94%;      /* #f0f0f0 */
+  --primary: 261 100% 68%;             /* #8c5cff */
+  --primary-foreground: 0 0% 100%;     /* #ffffff */
+  --secondary: 225 10% 18%;            /* #2a2c33 */
+  --secondary-foreground: 0 0% 94%;    /* #f0f0f0 */
+  --muted: 225 10% 18%;                /* #2a2c33 */
+  --muted-foreground: 0 0% 63%;        /* #a0a0a0 */
+  --accent: 216 33% 17%;               /* #1e293b */
+  --accent-foreground: 208 100% 73%;   /* #79c0ff */
+  --destructive: 0 91% 71%;            /* #f87171 */
+  --destructive-foreground: 0 0% 100%; /* #ffffff */
+  --border: 222 9% 20%;                /* #33353a */
+  --input: 222 9% 20%;                 /* #33353a */
+  --ring: 261 100% 68%;                /* #8c5cff */
+  --chart-1: 142 69% 58%;
+  --chart-2: 261 100% 68%;
+  --chart-3: 0 91% 71%;
+  --chart-4: 217 88% 65%;
+  --chart-5: 0 0% 63%;
+  --sidebar: 240 11% 9%;               /* #161618 */
+  --sidebar-foreground: 0 0% 94%;      /* #f0f0f0 */
+  --sidebar-primary: 261 100% 68%;     /* #8c5cff */
+  --sidebar-primary-foreground: 0 0% 100%; /* #ffffff */
+  --sidebar-accent: 225 10% 18%;       /* #2a2c33 */
+  --sidebar-accent-foreground: 261 100% 68%; /* #8c5cff */
+  --sidebar-border: 222 9% 20%;        /* #33353a */
+  --sidebar-ring: 261 100% 68%;        /* #8c5cff */
+}
+
+@layer base {
+  html, body, #root {
+    min-height: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    /* CSS variables for react-select light mode */
+    --select-bg: hsl(var(--background));
+    --select-border: hsl(var(--border));
+    --select-text: hsl(var(--foreground));
+    --select-hover: hsl(var(--accent));
+    --select-multi-bg: hsl(var(--primary) / 0.1);
+    --select-multi-text: hsl(var(--primary));
+  }
+
+  .dark body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    /* Dark mode variables for react-select */
+    --select-bg: hsl(var(--background));
+    --select-border: hsl(var(--border));
+    --select-text: hsl(var(--foreground));
+    --select-hover: hsl(var(--accent));
+    --select-multi-bg: hsl(var(--primary) / 0.2);
+    --select-multi-text: hsl(var(--primary-foreground));
+  }
+
+  body.darkMode {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    --select-bg: hsl(var(--background));
+    --select-border: hsl(var(--border));
+    --select-text: hsl(var(--foreground));
+    --select-hover: hsl(var(--accent));
+    --select-multi-bg: hsl(var(--primary) / 0.2);
+    --select-multi-text: hsl(var(--primary-foreground));
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  body {
+    letter-spacing: var(--tracking-normal);
+  }
+}
+
+.font-heading {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.card-hover:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Custom progress bar styling */
+.progress-bar {
+  @apply h-2 bg-gray-200 rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full rounded-full transition-all duration-500 ease-out;
+}
+
+/* Ensure proper scrolling */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Gen Z Landing Page Animations */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 0.6s ease-out;
+}
+
+.animate-slide-in-top {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 1s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Glassmorphism shimmer animation */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+/* Grid layout for dashboard cards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+/* Figma Design Utility Classes - Updated to HSL Color System */
+.figma-card {
+  @apply rounded-3xl border shadow-lg;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  backdrop-filter: blur(12px);
+}
+
+.dark .figma-card {
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 28px 60px -28px rgba(7, 12, 28, 0.85);
+}
+
+.figma-card-content {
+  @apply p-5 sm:p-6;
+}
+
+.figma-notification-card {
+  @apply p-4 rounded-lg border transition-colors;
+  background: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+
+.figma-notification-card:hover {
+  border-color: hsl(var(--border) / 0.6);
+}
+
+.dark .figma-notification-card {
+  background: hsl(var(--muted));
+}
+
+.figma-button-primary {
+  @apply rounded-lg text-sm font-medium transition-all;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.figma-button-secondary {
+  @apply rounded-lg text-sm font-medium transition-all;
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+.figma-text-primary {
+  color: hsl(var(--foreground));
+}
+
+.figma-text-secondary {
+  color: hsl(var(--muted-foreground));
+}
+
+  /* Open Sans Font Utilities */
+  .font-open-sans {
+    font-family: var(--font-sans);
+  }
+
+  .font-light {
+    font-weight: var(--font-weight-light);
+  }
+
+  .font-normal {
+    font-weight: var(--font-weight-normal);
+  }
+
+  .font-medium {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .font-semibold {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .font-bold {
+    font-weight: var(--font-weight-bold);
+  }

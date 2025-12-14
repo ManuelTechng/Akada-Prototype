@@ -1,58 +1,47 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# BMAD and AI Agent Tool Folders (ignore at repo root)
+.bmad/
+.bmad-core/
+.bmad-user-memory/
+.agent/
+.agentvibes/
+.bolt/
+.claude/
+.codex/
+.cursor/
+.roo/
+.taskmaster/
+.history/
 
-node_modules
-dist
-dist-ssr
-*.local
+# Configuration files
+.roomodes
+.taskmasterconfig
+.windsurfrules
+.mcp.json
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Documentation and planning (generated)
+docs/
+project-plan/
+PRPs/
+reports/
+tasks/
+
+# Build artifacts
+build-output.txt
+debug_apps.log
+console log.md
+
+# Old/archived code
+old-code/
+bmad-custom-src/
+bmad-custom-modules-src/
+
+# OS files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+_ul
 
-# Added by Claude Task Master
-dev-debug.log
-# Dependency directories
-node_modules/
-# Environment variables
-.env
-.vscode
-# OS specific
-
-# Task files
-# tasks.json
-# tasks/ 
-
-# Documentation and analysis files
+# Analysis files (generated)
+project_analysis.md
 *_REVIEW.md
 *_ANALYSIS.md
 *_SUMMARY.md
-*_STATUS.md
-*_FIX.md
-*_COMPLETE.md
-*_COMPLETION.md
-PROFILE_*.md
-CRUD_*.md
-TASK_*.md
-*_REPORT.md
-*_IMPLEMENTATION_*.md
-
-# Windows reserved filenames
-nul
-NUL
-
-# Documentation
-/docs

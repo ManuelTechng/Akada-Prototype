@@ -1,0 +1,73 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+*.local
+
+# OS specific
+
+# Configuration and Tool Folders
+.bmad-core/
+.bolt/
+.claude/
+.cursor/
+.roo/
+.taskmaster/
+.history/
+
+# Documentation and Planning
+docs/
+project-plan/
+PRPs/
+reports/
+tasks/
+
+# Task files
+# tasks.json (commented out if you want to track this)
+
+# Documentation and analysis files
+*_REVIEW.md
+*_ANALYSIS.md
+*_SUMMARY.md
+*_STATUS.md
+*_FIX.md
+*_COMPLETE.md
+*_COMPLETION.md
+PROFILE_*.md
+CRUD_*.md
+TASK_*.md
+*_REPORT.md
+*_IMPLEMENTATION_*.md
+
+# Added by Claude Task Master
+dev-debug.log
+
+# Windows reserved filenames
+nul
+NUL
