@@ -2,6 +2,8 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -46,6 +48,32 @@ const DesignSystemDemo = lazy(() => import('./pages/DesignSystemDemo'));
 
 // Development tools
 const CacheControls = lazy(() => import('./components/dev/CacheControls'));
+
+// Configure React Query Client with optimized defaults
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Cache data for 5 minutes
+      gcTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000,
+
+      // Retry failed requests 3 times with exponential backoff
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+
+      // Refetch on window focus (helps keep data fresh)
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+
+      // Don't refetch on mount if data is still fresh
+      refetchOnMount: false,
+    },
+    mutations: {
+      // Retry mutations once
+      retry: 1,
+    },
+  },
+});
 
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
@@ -296,15 +324,19 @@ function AppRoutes() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <AuthProvider>
-          <SubscriptionProvider>
-            <AppWithProviders />
-            <Analytics />
-            <SpeedInsights />
-          </SubscriptionProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <SubscriptionProvider>
+              <AppWithProviders />
+              <Analytics />
+              <SpeedInsights />
+            </SubscriptionProvider>
+          </AuthProvider>
+        </ThemeProvider>
+        {/* React Query DevTools - only visible in development */}
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }
