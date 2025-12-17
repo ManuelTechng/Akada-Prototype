@@ -1,0 +1,5 @@
+azure-functions
+duckduckgo-search
+trafilatura
+lxml_html_clean
+aiohttp
